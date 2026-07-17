@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>升龍旅行社｜網站管理後台</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@700;900&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--ochre:#C9973A;--lacquer:#9E2B1F;--lake:#17352C;--paper:#F6EFDF;--ink:#211B14;--hairline:rgba(33,27,20,.18)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Noto Sans TC',sans-serif;background:var(--paper);color:var(--ink);line-height:1.7;min-height:100vh}
+h1,h2,h3{font-family:'Noto Serif TC',serif;color:var(--lake)}
+button{font-family:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--lacquer);outline-offset:2px}
+
+/* 登入畫面 */
+.login-screen{min-height:100vh;display:grid;place-items:center;background:linear-gradient(160deg,#EED9A3,#C9973A)}
+.login-card{background:#FFFDF6;border-radius:10px;padding:44px 40px;width:min(400px,92vw);box-shadow:0 20px 50px rgba(33,27,20,.25);border-top:6px solid var(--lacquer)}
+.login-card h1{font-size:24px;margin-bottom:4px}
+.login-card .sub{font-size:13px;color:#7A7060;margin-bottom:26px;letter-spacing:.1em}
+.field{margin-bottom:18px}
+.field label{display:block;font-size:13.5px;font-weight:500;margin-bottom:6px;color:var(--lake)}
+.field input,.field textarea{width:100%;border:1px solid var(--hairline);border-radius:5px;padding:11px 13px;font-size:15px;font-family:inherit;background:#FFF}
+.field input:focus,.field textarea:focus{border-color:var(--lacquer);outline:none}
+.field textarea{min-height:96px;resize:vertical}
+.btn{width:100%;background:var(--lacquer);color:var(--paper);border:none;border-radius:5px;padding:13px;font-size:15.5px;font-weight:500;letter-spacing:.1em;transition:.2s}
+.btn:hover{background:#7E2118}
+.err{color:var(--lacquer);font-size:13.5px;margin-top:12px;display:none}
+.warn{margin-top:22px;font-size:12.5px;color:#8A6D2B;background:#F7EDCF;border:1px solid #E4CE8F;border-radius:5px;padding:10px 13px}
+
+/* 後台主畫面 */
+.dash{display:none}
+.dash-header{background:var(--lake);color:var(--paper);padding:0 28px;height:62px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10}
+.dash-header .brand{display:flex;gap:11px;align-items:center;font-family:'Noto Serif TC';font-weight:700;font-size:17px;letter-spacing:.1em}
+.brand-mark{width:32px;height:32px;background:var(--lacquer);border-radius:4px;display:grid;place-items:center;font-size:16px}
+.logout{background:transparent;border:1px solid rgba(246,239,223,.4);color:var(--paper);border-radius:4px;padding:7px 16px;font-size:13.5px}
+.logout:hover{background:rgba(246,239,223,.12)}
+.dash-body{max-width:1100px;margin:0 auto;padding:36px 24px 80px;display:grid;grid-template-columns:1fr 380px;gap:32px;align-items:start}
+@media(max-width:960px){.dash-body{grid-template-columns:1fr}}
+.panel{background:#FFFDF6;border:1px solid var(--hairline);border-radius:8px;padding:28px}
+.panel h2{font-size:19px;margin-bottom:4px}
+.panel .hint{font-size:13px;color:#7A7060;margin-bottom:22px}
+fieldset{border:none;margin-bottom:26px}
+fieldset legend{font-size:12px;letter-spacing:.35em;color:var(--lacquer);font-weight:700;margin-bottom:14px}
+.side{position:sticky;top:86px;display:grid;gap:20px}
+.side .btn{margin-bottom:10px}
+.btn-ghost{width:100%;background:transparent;border:1.5px solid var(--lake);color:var(--lake);border-radius:5px;padding:12px;font-size:14.5px;font-weight:500}
+.btn-ghost:hover{background:var(--lake);color:var(--paper)}
+.toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--lake);color:var(--paper);padding:12px 26px;border-radius:6px;font-size:14.5px;transition:transform .3s;box-shadow:0 10px 30px rgba(0,0,0,.3)}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.preview-frame{width:100%;height:460px;border:1px solid var(--hairline);border-radius:6px;background:#FFF}
+.steps{font-size:13.5px;color:#4A4335;background:#F1E8D2;border-radius:6px;padding:16px 18px}
+.steps b{color:var(--lake)}
+.steps ol{padding-left:20px;margin-top:8px}
+.steps li{margin-bottom:5px}
+</style>
+</head>
+<body>
+
+<!-- ===== 登入 ===== -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-card">
+    <h1>升龍旅行社</h1>
+    <div class="sub">網站管理後台 ADMIN</div>
+    <div class="field">
+      <label for="acc">帳號</label>
+      <input id="acc" type="text" autocomplete="username">
+    </div>
+    <div class="field">
+      <label for="pwd">密碼</label>
+      <input id="pwd" type="password" autocomplete="current-password">
+    </div>
+    <button class="btn" onclick="doLogin()">登入</button>
+    <div class="err" id="loginErr">帳號或密碼錯誤</div>
+    <div class="warn">⚠️ 此為前端示範版登入，密碼寫在程式碼內、任何人檢視原始碼皆可看到，僅供 Demo 使用，請勿放置真實機密資料。</div>
+  </div>
+</div>
+
+<!-- ===== 後台 ===== -->
+<div class="dash" id="dash">
+  <div class="dash-header">
+    <div class="brand"><span class="brand-mark">龍</span>升龍旅行社・管理後台</div>
+    <button class="logout" onclick="doLogout()">登出</button>
+  </div>
+  <div class="dash-body">
+    <div class="panel">
+      <h2>網站內容編輯</h2>
+      <div class="hint">修改後點右側「儲存變更」暫存於此瀏覽器，點「下載 index.html」產生正式檔案。</div>
+      <form id="editForm"></form>
+    </div>
+    <div class="side">
+      <div class="panel">
+        <h2 style="font-size:16px;margin-bottom:14px">操作</h2>
+        <button class="btn" onclick="saveAll()">💾 儲存變更</button>
+        <button class="btn-ghost" style="margin-bottom:10px" onclick="previewSite()">👁 預覽網站</button>
+        <button class="btn-ghost" style="margin-bottom:10px" onclick="downloadSite()">⬇️ 下載 index.html</button>
+        <button class="btn-ghost" onclick="resetAll()">↩️ 還原預設內容</button>
+      </div>
+      <div class="steps">
+        <b>更新網站流程</b>
+        <ol>
+          <li>編輯內容 → 儲存變更</li>
+          <li>下載 index.html</li>
+          <li>上傳到 GitHub repo 覆蓋原檔（Add file → Upload files）</li>
+          <li>等 1–2 分鐘 GitHub Pages 自動部署</li>
+        </ol>
+      </div>
+      <div class="panel" id="previewPanel" style="display:none">
+        <h2 style="font-size:16px;margin-bottom:14px">預覽</h2>
+        <iframe class="preview-frame" id="previewFrame" title="網站預覽"></iframe>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const TEMPLATE = "<!DOCTYPE html>\n<html lang=\"zh-Hant\">\n<head>\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n\n<!-- ===== SEO 核心設定 ===== -->\n<title>%%SEO_TITLE%%<\/title>\n<meta name=\"description\" content=\"%%SEO_DESC%%\">\n<meta name=\"keywords\" content=\"河內旅遊, 越南自由行, 河內自由行, 下龍灣一日遊, 寧平陸龍灣, 沙壩旅遊, 河內包車, 河內中文導遊, 越南簽證代辦, 河內行程推薦, 越南北部旅遊, 河內旅行社\">\n<meta name=\"author\" content=\"升龍旅行社 Thang Long Travel\">\n<link rel=\"canonical\" href=\"https://www.shenlongtravel.com/\">\n\n<!-- Open Graph（社群分享）-->\n<meta property=\"og:type\" content=\"website\">\n<meta property=\"og:title\" content=\"升龍旅行社｜河內旅遊專家 - 中文服務・在地深度行程\">\n<meta property=\"og:description\" content=\"下龍灣、寧平、沙壩、河內市區行程一站搞定。包車、導遊、簽證，中文溝通零障礙。\">\n<meta property=\"og:url\" content=\"https://www.shenlongtravel.com/\">\n<meta property=\"og:locale\" content=\"zh_TW\">\n<meta property=\"og:site_name\" content=\"升龍旅行社\">\n\n<!-- JSON-LD 結構化資料：TravelAgency -->\n<script type=\"application/ld+json\">\n{\n  \"@context\": \"https://schema.org\",\n  \"@type\": \"TravelAgency\",\n  \"name\": \"升龍旅行社 Thang Long Travel\",\n  \"description\": \"河內在地中文旅遊服務：下龍灣、寧平、沙壩行程、包車與導遊。\",\n  \"areaServed\": [\"河內\", \"下龍灣\", \"寧平\", \"沙壩\", \"越南北部\"],\n  \"availableLanguage\": [\"zh-Hant\", \"vi\", \"en\"],\n  \"address\": {\n    \"@type\": \"PostalAddress\",\n    \"addressLocality\": \"Hoàn Kiếm\",\n    \"addressRegion\": \"Hà Nội\",\n    \"addressCountry\": \"VN\"\n  }\n}\n<\/script>\n\n<link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">\n<link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>\n<link href=\"https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&family=Cormorant+Garamond:ital,wght@0,500;1,500&display=swap\" rel=\"stylesheet\">\n\n<style>\n:root{\n  --ochre:#C9973A;        /* 河內老城牆黃 */\n  --ochre-light:#E4BC66;\n  --lacquer:#9E2B1F;      /* 越南漆器紅 */\n  --lake:#17352C;         /* 還劍湖深綠 */\n  --paper:#F6EFDF;        /* 米紙白 */\n  --ink:#211B14;\n  --hairline:rgba(33,27,20,.18);\n}\n*{margin:0;padding:0;box-sizing:border-box}\nhtml{scroll-behavior:smooth}\nbody{\n  font-family:'Noto Sans TC',sans-serif;\n  background:var(--paper);\n  color:var(--ink);\n  line-height:1.75;\n}\nh1,h2,h3,.serif{font-family:'Noto Serif TC',serif}\n.latin{font-family:'Cormorant Garamond',serif;letter-spacing:.35em;text-transform:uppercase}\nimg{max-width:100%;display:block}\na{color:inherit;text-decoration:none}\n.wrap{max-width:1120px;margin:0 auto;padding:0 24px}\n:focus-visible{outline:3px solid var(--lacquer);outline-offset:3px}\n@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}\n\n/* ===== Header ===== */\nheader{\n  position:sticky;top:0;z-index:50;\n  background:rgba(246,239,223,.92);backdrop-filter:blur(8px);\n  border-bottom:1px solid var(--hairline);\n}\n.nav{display:flex;align-items:center;justify-content:space-between;height:68px}\n.logo{display:flex;align-items:center;gap:12px}\n.logo-mark{\n  width:40px;height:40px;background:var(--lacquer);color:var(--paper);\n  display:grid;place-items:center;font-family:'Noto Serif TC';font-weight:900;font-size:20px;\n  border-radius:4px;\n}\n.logo-name{font-family:'Noto Serif TC';font-weight:700;font-size:19px;letter-spacing:.12em}\n.logo-sub{font-size:10px;letter-spacing:.3em;color:var(--lacquer)}\nnav.menu{display:flex;gap:32px;font-size:15px}\nnav.menu a{padding:6px 0;border-bottom:2px solid transparent;transition:border-color .2s}\nnav.menu a:hover{border-bottom-color:var(--lacquer)}\n.cta-btn{\n  background:var(--lacquer);color:var(--paper);padding:10px 22px;border-radius:4px;\n  font-weight:500;letter-spacing:.08em;transition:background .2s;\n}\n.cta-btn:hover{background:#7E2118}\n@media(max-width:820px){nav.menu{display:none}}\n\n/* ===== Hero ===== */\n.hero{\n  position:relative;overflow:hidden;\n  background:linear-gradient(160deg,#EED9A3 0%,var(--ochre-light) 45%,var(--ochre) 100%);\n  border-bottom:6px solid var(--lacquer);\n}\n.hero-inner{\n  display:grid;grid-template-columns:auto 1fr;gap:48px;\n  padding:88px 0 96px;align-items:center;position:relative;\n}\n/* 直排「升龍」— 招牌元素 */\n.vertical-title{\n  writing-mode:vertical-rl;\n  font-family:'Noto Serif TC';font-weight:900;\n  font-size:clamp(88px,12vw,148px);line-height:1.05;\n  color:var(--lake);letter-spacing:.08em;\n  border-right:3px solid var(--lake);\n  border-left:3px solid var(--lake);\n  padding:12px 18px;\n  animation:fadeUp .8s ease both;\n}\n.hero-copy{animation:fadeUp .8s .15s ease both}\n.hero-eyebrow{\n  display:inline-block;font-size:13px;letter-spacing:.35em;\n  color:var(--lacquer);border:1px solid var(--lacquer);\n  padding:5px 14px;margin-bottom:22px;border-radius:2px;\n}\n.hero h1{\n  font-size:clamp(30px,4.4vw,50px);font-weight:700;line-height:1.35;\n  color:var(--lake);margin-bottom:20px;\n}\n.hero h1 em{font-style:normal;color:var(--lacquer)}\n.hero p{max-width:34em;font-size:17px;color:#3A3226;margin-bottom:34px}\n.hero-actions{display:flex;gap:16px;flex-wrap:wrap}\n.btn-ghost{\n  border:1.5px solid var(--lake);color:var(--lake);\n  padding:12px 26px;border-radius:4px;font-weight:500;transition:.2s;\n}\n.btn-ghost:hover{background:var(--lake);color:var(--paper)}\n.btn-solid{\n  background:var(--lake);color:var(--paper);\n  padding:12px 26px;border-radius:4px;font-weight:500;transition:.2s;\n}\n.btn-solid:hover{background:var(--lacquer)}\n/* 背景龍形線條 */\n.dragon-line{\n  position:absolute;right:-60px;bottom:-30px;width:520px;opacity:.16;pointer-events:none;\n}\n@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}\n@media(max-width:820px){\n  .hero-inner{grid-template-columns:1fr;padding:56px 0 72px}\n  .vertical-title{writing-mode:horizontal-tb;border:none;border-bottom:3px solid var(--lake);padding:0 0 10px;font-size:64px}\n}\n\n/* ===== Section 標題 ===== */\nsection{padding:88px 0}\n.sec-head{margin-bottom:52px}\n.sec-eyebrow{font-size:12px;letter-spacing:.4em;color:var(--lacquer);margin-bottom:10px}\n.sec-head h2{font-size:clamp(26px,3.4vw,38px);font-weight:700;color:var(--lake)}\n.sec-head p{margin-top:12px;color:#4A4335;max-width:46em}\n\n/* ===== 行程卡片 ===== */\n.tours{background:var(--paper)}\n.tour-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:26px}\n.tour-card{\n  background:#FFFDF6;border:1px solid var(--hairline);border-radius:6px;\n  overflow:hidden;display:flex;flex-direction:column;\n  transition:transform .25s,box-shadow .25s;\n}\n.tour-card:hover{transform:translateY(-6px);box-shadow:0 14px 32px rgba(33,27,20,.14)}\n.tour-visual{\n  height:150px;display:grid;place-items:center;\n  font-family:'Noto Serif TC';font-weight:900;font-size:44px;color:rgba(246,239,223,.95);\n  letter-spacing:.15em;\n}\n.tv-1{background:linear-gradient(135deg,#17352C,#2E5C4B)}\n.tv-2{background:linear-gradient(135deg,#9E2B1F,#C9973A)}\n.tv-3{background:linear-gradient(135deg,#2C4A63,#6E93A8)}\n.tv-4{background:linear-gradient(135deg,#5B4322,#C9973A)}\n.tour-body{padding:22px 22px 26px;flex:1;display:flex;flex-direction:column}\n.tour-body h3{font-size:20px;color:var(--lake);margin-bottom:8px}\n.tour-tag{font-size:12px;color:var(--lacquer);letter-spacing:.12em;margin-bottom:10px}\n.tour-body p{font-size:14.5px;color:#4A4335;flex:1}\n.tour-price{\n  margin-top:18px;padding-top:14px;border-top:1px dashed var(--hairline);\n  display:flex;justify-content:space-between;align-items:baseline;\n}\n.tour-price strong{font-family:'Noto Serif TC';font-size:20px;color:var(--lacquer)}\n.tour-price span{font-size:12px;color:#7A7060}\n\n/* ===== 服務 ===== */\n.services{background:var(--lake);color:var(--paper)}\n.services .sec-eyebrow{color:var(--ochre-light)}\n.services .sec-head h2{color:var(--paper)}\n.services .sec-head p{color:#C9C2AE}\n.svc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1px;background:rgba(246,239,223,.18)}\n.svc{background:var(--lake);padding:34px 28px}\n.svc-num{font-family:'Cormorant Garamond',serif;font-size:15px;letter-spacing:.3em;color:var(--ochre-light);margin-bottom:14px}\n.svc h3{font-size:19px;margin-bottom:10px;color:var(--paper)}\n.svc p{font-size:14.5px;color:#C9C2AE}\n\n/* ===== 為什麼選我們 ===== */\n.why-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:40px}\n.why h3{font-size:18px;color:var(--lake);margin-bottom:8px;padding-left:16px;border-left:4px solid var(--lacquer)}\n.why p{font-size:15px;color:#4A4335}\n\n/* ===== FAQ ===== */\n.faq{background:#EFE6CF}\ndetails{\n  background:#FFFDF6;border:1px solid var(--hairline);border-radius:6px;\n  margin-bottom:14px;padding:20px 24px;\n}\ndetails summary{\n  cursor:pointer;font-family:'Noto Serif TC';font-weight:700;font-size:17px;color:var(--lake);\n  list-style:none;display:flex;justify-content:space-between;align-items:center;\n}\ndetails summary::after{content:\"＋\";color:var(--lacquer);font-size:20px}\ndetails[open] summary::after{content:\"－\"}\ndetails p{margin-top:14px;font-size:15px;color:#4A4335}\n\n/* ===== 聯絡 ===== */\n.contact{background:var(--paper)}\n.contact-box{\n  background:linear-gradient(135deg,var(--lacquer),#7E2118);\n  color:var(--paper);border-radius:10px;padding:56px 48px;\n  display:grid;grid-template-columns:1.2fr 1fr;gap:40px;align-items:center;\n}\n.contact-box h2{font-size:clamp(24px,3vw,34px);margin-bottom:14px}\n.contact-box p{color:#F0DFC8;font-size:15.5px}\n.contact-list{display:grid;gap:14px;font-size:15.5px}\n.contact-list div{display:flex;gap:12px;align-items:center}\n.contact-list b{min-width:72px;color:var(--ochre-light);font-weight:500}\n@media(max-width:760px){.contact-box{grid-template-columns:1fr;padding:40px 28px}}\n\n/* ===== Footer ===== */\nfooter{background:var(--ink);color:#B5AC98;padding:44px 0;font-size:13.5px}\n.foot{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap}\n.foot-keywords{margin-top:22px;font-size:12px;color:#6E6656;line-height:2}\n<\/style>\n<\/head>\n<body>\n\n<header>\n  <div class=\"wrap nav\">\n    <a href=\"#top\" class=\"logo\" aria-label=\"升龍旅行社首頁\">\n      <span class=\"logo-mark\">龍<\/span>\n      <span>\n        <span class=\"logo-name\">升龍旅行社<\/span><br>\n        <span class=\"logo-sub latin\">Thang Long Travel<\/span>\n      <\/span>\n    <\/a>\n    <nav class=\"menu\" aria-label=\"主選單\">\n      <a href=\"#tours\">熱門行程<\/a>\n      <a href=\"#services\">服務項目<\/a>\n      <a href=\"#why\">為什麼選我們<\/a>\n      <a href=\"#faq\">常見問題<\/a>\n    <\/nav>\n    <a href=\"#contact\" class=\"cta-btn\">立即諮詢<\/a>\n  <\/div>\n<\/header>\n\n<!-- ===== Hero ===== -->\n<div class=\"hero\" id=\"top\">\n  <div class=\"wrap hero-inner\">\n    <div class=\"vertical-title serif\" aria-hidden=\"true\">升龍<\/div>\n    <div class=\"hero-copy\">\n      <span class=\"hero-eyebrow\">河內在地・中文服務・台灣人經營<\/span>\n      <h1>%%HERO_H1%%<\/h1>\n      <p>%%HERO_P%%<\/p>\n      <div class=\"hero-actions\">\n        <a href=\"#tours\" class=\"btn-solid\">看熱門行程<\/a>\n        <a href=\"#contact\" class=\"btn-ghost\">免費行程諮詢<\/a>\n      <\/div>\n    <\/div>\n    <svg class=\"dragon-line\" viewBox=\"0 0 520 300\" fill=\"none\" aria-hidden=\"true\">\n      <path d=\"M10 260 C 90 200, 60 140, 150 130 S 260 190, 330 140 S 400 40, 480 70 C 510 82, 505 120, 470 118 C 445 116, 445 88, 468 86\" stroke=\"#17352C\" stroke-width=\"10\" stroke-linecap=\"round\"/>\n      <circle cx=\"487\" cy=\"60\" r=\"7\" fill=\"#17352C\"/>\n    <\/svg>\n  <\/div>\n<\/div>\n\n<!-- ===== 熱門行程 ===== -->\n<section class=\"tours\" id=\"tours\">\n  <div class=\"wrap\">\n    <div class=\"sec-head\">\n      <div class=\"sec-eyebrow\">POPULAR TOURS<\/div>\n      <h2>河內出發・熱門行程<\/h2>\n      <p>從河內市區出發，一日遊或多日深度行程皆可客製。以下為最受台灣旅客歡迎的越南北部行程。<\/p>\n    <\/div>\n    <div class=\"tour-grid\">\n      <article class=\"tour-card\">\n        <div class=\"tour-visual tv-3\" aria-hidden=\"true\">下龍灣<\/div>\n        <div class=\"tour-body\">\n          <div class=\"tour-tag\">世界自然遺產・一日遊／兩天一夜<\/div>\n          <h3>下龍灣遊船之旅<\/h3>\n          <p>海上桂林石灰岩奇景，含遊船、驚訝洞、獨木舟體驗與船上海鮮午餐。可升級豪華遊船過夜行程。<\/p>\n          <div class=\"tour-price\"><strong>%%PRICE_HALONG%%<\/strong><span>河內飯店接送<\/span><\/div>\n        <\/div>\n      <\/article>\n      <article class=\"tour-card\">\n        <div class=\"tour-visual tv-1\" aria-hidden=\"true\">寧平<\/div>\n        <div class=\"tour-body\">\n          <div class=\"tour-tag\">陸龍灣・一日遊<\/div>\n          <h3>寧平陸龍灣・長安生態<\/h3>\n          <p>搭乘手搖船穿越鐘乳石洞與稻田河谷，登臥龍山展望台俯瞰三谷全景，順遊華閭古都。<\/p>\n          <div class=\"tour-price\"><strong>%%PRICE_NINHBINH%%<\/strong><span>含門票與午餐<\/span><\/div>\n        <\/div>\n      <\/article>\n      <article class=\"tour-card\">\n        <div class=\"tour-visual tv-4\" aria-hidden=\"true\">沙壩<\/div>\n        <div class=\"tour-body\">\n          <div class=\"tour-tag\">梯田山城・兩天一夜<\/div>\n          <h3>沙壩梯田深度行程<\/h3>\n          <p>越南北部高山梯田與少數民族村落，含番西邦峰纜車、貓貓村健行，四季景色各異。<\/p>\n          <div class=\"tour-price\"><strong>%%PRICE_SAPA%%<\/strong><span>含住宿與交通<\/span><\/div>\n        <\/div>\n      <\/article>\n      <article class=\"tour-card\">\n        <div class=\"tour-visual tv-2\" aria-hidden=\"true\">河內<\/div>\n        <div class=\"tour-body\">\n          <div class=\"tour-tag\">市區導覽・半日／一日<\/div>\n          <h3>河內老城深度散策<\/h3>\n          <p>三十六古街、還劍湖、文廟、火車街與蛋咖啡體驗，由中文導遊帶路，聽懂河內的故事。<\/p>\n          <div class=\"tour-price\"><strong>%%PRICE_HANOI%%<\/strong><span>中文導遊帶隊<\/span><\/div>\n        <\/div>\n      <\/article>\n    <\/div>\n  <\/div>\n<\/section>\n\n<!-- ===== 服務項目 ===== -->\n<section class=\"services\" id=\"services\">\n  <div class=\"wrap\">\n    <div class=\"sec-head\">\n      <div class=\"sec-eyebrow\">SERVICES<\/div>\n      <h2>一站式河內旅遊服務<\/h2>\n      <p>不只賣行程——從落地到回程，所有需要在地協助的環節，我們都能用中文處理。<\/p>\n    <\/div>\n    <div class=\"svc-grid\">\n      <div class=\"svc\">\n        <div class=\"svc-num\">I<\/div>\n        <h3>河內包車服務<\/h3>\n        <p>機場接送、市區包車、跨城市長途包車。車型從四人座到十六人座，司機熟悉台灣旅客習慣。<\/p>\n      <\/div>\n      <div class=\"svc\">\n        <div class=\"svc-num\">II<\/div>\n        <h3>中文導遊<\/h3>\n        <p>持證中文導遊隨行，行程解說、餐廳點餐、購物議價都不用比手畫腳。<\/p>\n      <\/div>\n      <div class=\"svc\">\n        <div class=\"svc-num\">III<\/div>\n        <h3>越南簽證協助<\/h3>\n        <p>電子簽證申請指引與文件確認，避免資料錯誤導致入境延誤。<\/p>\n      <\/div>\n      <div class=\"svc\">\n        <div class=\"svc-num\">IV<\/div>\n        <h3>客製化行程規劃<\/h3>\n        <p>蜜月、親子、員工旅遊、攝影團——依預算與天數量身安排越南北部行程。<\/p>\n      <\/div>\n    <\/div>\n  <\/div>\n<\/section>\n\n<!-- ===== 為什麼選我們 ===== -->\n<section id=\"why\">\n  <div class=\"wrap\">\n    <div class=\"sec-head\">\n      <div class=\"sec-eyebrow\">WHY US<\/div>\n      <h2>為什麼選擇升龍旅行社<\/h2>\n    <\/div>\n    <div class=\"why-grid\">\n      <div class=\"why\">\n        <h3>河內在地團隊<\/h3>\n        <p>團隊常駐河內，路況、天氣、店家近況即時掌握，不是遠端轉包的行程。<\/p>\n      <\/div>\n      <div class=\"why\">\n        <h3>中文溝通零時差<\/h3>\n        <p>LINE 直接聯繫台灣窗口，出發前、旅途中隨時有人回覆。<\/p>\n      <\/div>\n      <div class=\"why\">\n        <h3>報價透明<\/h3>\n        <p>行程費用一次列清，無隱藏購物站、無強制小費，收據齊全可核銷。<\/p>\n      <\/div>\n      <div class=\"why\">\n        <h3>彈性客製<\/h3>\n        <p>兩人成行也接，行程順序、餐廳、停留時間都能依需求調整。<\/p>\n      <\/div>\n    <\/div>\n  <\/div>\n<\/section>\n\n<!-- ===== FAQ（SEO 長尾關鍵字）===== -->\n<section class=\"faq\" id=\"faq\">\n  <div class=\"wrap\">\n    <div class=\"sec-head\">\n      <div class=\"sec-eyebrow\">FAQ<\/div>\n      <h2>河內旅遊常見問題<\/h2>\n    <\/div>\n    <details>\n      <summary>台灣人去越南需要簽證嗎？<\/summary>\n      <p>需要。台灣旅客可線上申請越南電子簽證（E-visa），建議出發前至少 7 個工作天辦理。我們提供申請流程指引與文件確認服務。<\/p>\n    <\/details>\n    <details>\n      <summary>河內自由行大概要安排幾天？<\/summary>\n      <p>建議 4–6 天：河內市區 1–2 天，下龍灣一日遊或兩天一夜，寧平陸龍灣一日遊。若加沙壩梯田則建議 6 天以上。<\/p>\n    <\/details>\n    <details>\n      <summary>下龍灣一日遊和兩天一夜怎麼選？<\/summary>\n      <p>時間有限選一日遊即可看到主要景點；想體驗海上日出、船上過夜的悠閒感，推薦兩天一夜豪華遊船行程。<\/p>\n    <\/details>\n    <details>\n      <summary>河內包車怎麼計費？<\/summary>\n      <p>依車型與行程距離報價，市區半日、全日與跨城市長途均有固定價目，報價含油資、過路費與司機費用，無隱藏收費。<\/p>\n    <\/details>\n  <\/div>\n<\/section>\n\n<!-- ===== 聯絡 ===== -->\n<section class=\"contact\" id=\"contact\">\n  <div class=\"wrap\">\n    <div class=\"contact-box\">\n      <div>\n        <h2>開始規劃你的河內之旅<\/h2>\n        <p>告訴我們出發日期、人數與想去的地方，24 小時內回覆完整行程建議與報價。<\/p>\n      <\/div>\n      <div class=\"contact-list\">\n        <div><b>LINE<\/b> %%CONTACT_LINE%%<\/div>\n        <div><b>Email<\/b> %%CONTACT_EMAIL%%<\/div>\n        <div><b>電話<\/b> %%CONTACT_PHONE%%<\/div>\n        <div><b>營業時間<\/b> %%CONTACT_HOURS%%<\/div>\n      <\/div>\n    <\/div>\n  <\/div>\n<\/section>\n\n<footer>\n  <div class=\"wrap\">\n    <div class=\"foot\">\n      <div>\n        <strong style=\"color:#F6EFDF;font-family:'Noto Serif TC'\">升龍旅行社<\/strong>　Thang Long Travel<br>\n        河內在地・中文旅遊服務\n      <\/div>\n      <div>© 2026 升龍旅行社 Thang Long Travel. All rights reserved.<\/div>\n    <\/div>\n    <p class=\"foot-keywords\">河內旅遊｜越南自由行｜河內自由行｜下龍灣一日遊｜寧平陸龍灣｜沙壩旅遊｜河內包車｜河內中文導遊｜越南簽證｜越南北部旅遊｜河內行程推薦<\/p>\n  <\/div>\n<\/footer>\n\n<\/body>\n<\/html>\n";
+const FIELDS = {"SEO_TITLE": {"default": "升龍旅行社｜河內旅遊專家 - 下龍灣、寧平、沙壩行程・包車・中文導遊", "label": "SEO 標題（title）", "type": "text"}, "SEO_DESC": {"default": "升龍旅行社深耕河內在地服務，提供越南河內自由行規劃、下龍灣一日遊、寧平陸龍灣行程、沙壩梯田之旅、河內包車與中文導遊服務。台灣人在地經營，行程透明、報價清楚。", "label": "SEO 描述（meta description）", "type": "textarea"}, "HERO_H1": {"default": "河內旅遊，交給<em>住在河內的人</em>來安排", "label": "首頁大標題（可含 <em> 標籤）", "type": "text"}, "HERO_P": {"default": "升龍——河內的古名，意為「飛升之龍」。我們以河內為家，提供越南自由行規劃、下龍灣與寧平一日遊、沙壩深度行程、河內包車與中文導遊服務。行程透明、報價清楚，用中文就能搞定整趟越南北部旅遊。", "label": "首頁介紹文字", "type": "textarea"}, "PRICE_HALONG": {"default": "NT$ 1,850 起", "label": "下龍灣 價格", "type": "text"}, "PRICE_NINHBINH": {"default": "NT$ 1,650 起", "label": "寧平 價格", "type": "text"}, "PRICE_SAPA": {"default": "NT$ 3,900 起", "label": "沙壩 價格", "type": "text"}, "PRICE_HANOI": {"default": "NT$ 950 起", "label": "河內散策 價格", "type": "text"}, "CONTACT_LINE": {"default": "@shenlongtravel", "label": "LINE ID", "type": "text"}, "CONTACT_EMAIL": {"default": "hello@shenlongtravel.com", "label": "Email", "type": "text"}, "CONTACT_PHONE": {"default": "+84 9XX XXX XXX（河內）", "label": "電話", "type": "text"}, "CONTACT_HOURS": {"default": "每日 09:00–21:00（台灣時間）", "label": "營業時間", "type": "text"}};
+const STORE_KEY = "shenlong_site_content";
+
+/* ---- 登入（Demo 用，非真實安全機制）---- */
+const ADMIN_USER = "123";
+const ADMIN_PASS = "123";
+
+function doLogin(){
+  const ok = document.getElementById("acc").value === ADMIN_USER
+          && document.getElementById("pwd").value === ADMIN_PASS;
+  document.getElementById("loginErr").style.display = ok ? "none" : "block";
+  if(ok){
+    sessionStorage.setItem("shenlong_admin","1");
+    showDash();
+  }
+}
+function doLogout(){
+  sessionStorage.removeItem("shenlong_admin");
+  location.reload();
+}
+function showDash(){
+  document.getElementById("loginScreen").style.display="none";
+  document.getElementById("dash").style.display="block";
+}
+document.getElementById("pwd").addEventListener("keydown",e=>{if(e.key==="Enter")doLogin()});
+
+/* ---- 內容編輯 ---- */
+function loadValues(){
+  try{ return JSON.parse(localStorage.getItem(STORE_KEY)) || {}; }catch(e){ return {}; }
+}
+function buildForm(){
+  const saved = loadValues();
+  const groups = {
+    "SEO 設定":["SEO_TITLE","SEO_DESC"],
+    "首頁文案":["HERO_H1","HERO_P"],
+    "行程價格":["PRICE_HALONG","PRICE_NINHBINH","PRICE_SAPA","PRICE_HANOI"],
+    "聯絡資訊":["CONTACT_LINE","CONTACT_EMAIL","CONTACT_PHONE","CONTACT_HOURS"]
+  };
+  const form = document.getElementById("editForm");
+  form.innerHTML = "";
+  for(const [gname,keys] of Object.entries(groups)){
+    const fs = document.createElement("fieldset");
+    fs.innerHTML = "<legend>"+gname+"</legend>";
+    for(const key of keys){
+      const f = FIELDS[key];
+      const val = saved[key] !== undefined ? saved[key] : f.default;
+      const div = document.createElement("div");
+      div.className = "field";
+      const inputHtml = f.type === "textarea"
+        ? '<textarea id="f_'+key+'"></textarea>'
+        : '<input type="text" id="f_'+key+'">';
+      div.innerHTML = '<label for="f_'+key+'">'+f.label+'</label>'+inputHtml;
+      fs.appendChild(div);
+      // 設定值（避免 HTML 注入到屬性）
+      setTimeout(()=>{ document.getElementById("f_"+key).value = val; },0);
+    }
+    form.appendChild(fs);
+  }
+}
+function collect(){
+  const out = {};
+  for(const key of Object.keys(FIELDS)){
+    out[key] = document.getElementById("f_"+key).value;
+  }
+  return out;
+}
+function saveAll(){
+  localStorage.setItem(STORE_KEY, JSON.stringify(collect()));
+  toast("已儲存變更（存在此瀏覽器）");
+}
+function resetAll(){
+  if(!confirm("確定要還原成預設內容？此瀏覽器內的修改將被清除。")) return;
+  localStorage.removeItem(STORE_KEY);
+  buildForm();
+  toast("已還原預設內容");
+}
+function renderHtml(){
+  let html = TEMPLATE;
+  const vals = collect();
+  for(const [key,val] of Object.entries(vals)){
+    html = html.split("%%"+key+"%%").join(val);
+  }
+  return html;
+}
+function previewSite(){
+  const panel = document.getElementById("previewPanel");
+  panel.style.display = "block";
+  const frame = document.getElementById("previewFrame");
+  frame.srcdoc = renderHtml();
+  toast("已更新預覽");
+}
+function downloadSite(){
+  const blob = new Blob([renderHtml()],{type:"text/html;charset=utf-8"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "index.html";
+  a.click();
+  URL.revokeObjectURL(a.href);
+  toast("已下載 index.html，請上傳至 GitHub");
+}
+function toast(msg){
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(t._h);
+  t._h = setTimeout(()=>t.classList.remove("show"),2400);
+}
+
+/* 初始化 */
+buildForm();
+if(sessionStorage.getItem("shenlong_admin")==="1") showDash();
+</script>
+</body>
+</html>
