@@ -47,6 +47,60 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   })();
 
+  // ===== 定制行程表單：優先送到 Google Sheet，未設定或失敗時退回 mailto =====
+  // 部署好 Google Apps Script 網頁應用程式後，把網址貼在下面這行取代預設值
+  var GOOGLE_SHEET_ENDPOINT = 'PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE';
+
+  (function () {
+    var form = document.getElementById('itinerary-form');
+    if (!form) return;
+
+    var isSimplified = (form.querySelector('[name="lang"]') || {}).value === 'zh-Hans';
+
+    function buildMailtoBody() {
+      var lines = [];
+      var fields = form.querySelectorAll('input[name], select[name], textarea[name]');
+      fields.forEach(function (el) {
+        if (el.type === 'hidden') return;
+        var labelEl = form.querySelector('label[for="' + el.id + '"]');
+        var label = labelEl ? labelEl.textContent : el.name;
+        var value = el.value ? el.value.trim() : '';
+        if (value) lines.push(label + '：' + value);
+      });
+      return lines.join('\n');
+    }
+
+    function fallbackMailto() {
+      var to = form.getAttribute('data-mailto') || '';
+      var subject = form.getAttribute('data-subject') || '';
+      var body = buildMailtoBody();
+      window.location.href = 'mailto:' + to + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+    }
+
+    function showSuccess() {
+      var msg = isSimplified
+        ? '<p class="serif" style="font-size:19px">✓ 已收到您的需求，我们会尽快与您联系。</p>'
+        : '<p class="serif" style="font-size:19px">✓ 已收到您的需求，我們會盡快與您聯繫。</p>';
+      form.innerHTML = msg;
+    }
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      var sheetConfigured = GOOGLE_SHEET_ENDPOINT && GOOGLE_SHEET_ENDPOINT.indexOf('PASTE_') === -1;
+
+      if (!sheetConfigured) {
+        fallbackMailto();
+        return;
+      }
+
+      var formData = new FormData(form);
+      fetch(GOOGLE_SHEET_ENDPOINT, { method: 'POST', mode: 'no-cors', body: formData })
+        .then(function () { showSuccess(); })
+        .catch(function () { fallbackMailto(); });
+    });
+  })();
+
   var toggle = document.querySelector('.widget-toggle');
   var panel = document.querySelector('.contact-panel');
   if (!toggle || !panel) return;

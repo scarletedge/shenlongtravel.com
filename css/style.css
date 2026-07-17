@@ -252,6 +252,26 @@ footer{background:var(--ink);color:#B9AF9B;padding:64px 0 32px;font-size:13.5px}
 .lang-switch span{color:var(--line-strong)}
 @media(max-width:860px){.lang-switch{order:-1}}
 
+/* ===== 團隊成員卡片 ===== */
+.team-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1px;background:var(--line)}
+.team-card{background:var(--paper);padding:36px 30px;text-align:center}
+.team-avatar{
+  width:76px;height:76px;border-radius:50%;margin:0 auto 20px;
+  display:grid;place-items:center;background:var(--ink);color:var(--paper);
+  font-family:'Noto Serif TC',serif;font-size:22px;letter-spacing:.05em;
+}
+.team-card h3{font-size:17px;margin-bottom:4px}
+.team-card .role{font-size:12.5px;color:var(--gold);letter-spacing:.08em;margin-bottom:14px;display:block}
+.team-card p{font-size:13.5px;color:var(--muted)}
+.team-card .contact-hint{
+  display:block;margin-top:14px;padding-top:14px;border-top:1px solid var(--line);
+  font-size:12.5px;color:var(--accent);
+}
+.team-card .placeholder-tag{
+  display:inline-block;margin-top:12px;font-size:11px;color:var(--accent);
+  border:1px dashed var(--accent);padding:3px 10px;border-radius:20px;
+}
+
 /* ===== Utility ===== */
 .mt-lg{margin-top:64px}
 .center{text-align:center}

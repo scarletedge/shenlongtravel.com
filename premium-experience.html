@@ -141,21 +141,21 @@
       <p>我們不提供固定套裝行程。告訴我們您的預算、天數與目的，團隊將為您規劃專屬路線。</p>
     </div>
 
-    <form class="form-box" action="mailto:vietnam@shenlongtravel.com" method="post" enctype="text/plain">
+    <form class="form-box itinerary-form" id="itinerary-form" data-mailto="vietnam@shenlongtravel.com" data-subject="越南定制行程需求" novalidate>
       <div class="form-row">
         <div class="field">
           <label for="budget">預算範圍</label>
-          <input id="budget" name="預算範圍" type="text" placeholder="例：每人 NT$ 30,000 – 50,000">
+          <input id="budget" name="budget" type="text" placeholder="例：每人 NT$ 30,000 – 50,000">
         </div>
         <div class="field">
           <label for="days">天數</label>
-          <input id="days" name="天數" type="text" placeholder="例：5天4夜">
+          <input id="days" name="days" type="text" placeholder="例：5天4夜">
         </div>
       </div>
       <div class="form-row">
         <div class="field">
           <label for="purpose">此行目的</label>
-          <select id="purpose" name="此行目的">
+          <select id="purpose" name="purpose">
             <option>商務</option>
             <option>度假</option>
             <option>考察</option>
@@ -164,14 +164,17 @@
         </div>
         <div class="field">
           <label for="people">人數</label>
-          <input id="people" name="人數" type="text" placeholder="例：4人">
+          <input id="people" name="people" type="text" placeholder="例：4人">
         </div>
       </div>
       <div class="field mt-lg" style="margin-bottom:22px">
         <label for="note">其他需求說明</label>
-        <textarea id="note" name="其他需求說明" rows="4" placeholder="想去的地點、特殊安排、日期等"></textarea>
+        <textarea id="note" name="note" rows="4" placeholder="想去的地點、特殊安排、日期等"></textarea>
       </div>
+      <input type="hidden" name="lang" value="zh-Hant">
+      <input type="hidden" name="source" value="premium-experience.html">
       <button type="submit" class="submit-btn">送出定制需求</button>
+      <p style="font-size:12.5px;color:var(--muted);margin-top:12px">送出後團隊將盡快與您聯繫，通常於1個工作天內回覆。</p>
     </form>
 
     <div class="grid cols-2 mt-lg">
