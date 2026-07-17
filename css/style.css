@@ -48,7 +48,7 @@ header{
 }
 .nav{display:flex;align-items:center;justify-content:space-between;height:72px}
 .logo{display:flex;align-items:center;gap:10px}
-.logo-mark{width:26px;height:26px}
+.logo-mark{width:34px;height:34px;object-fit:contain;flex-shrink:0}
 .logo-mark path{stroke:var(--ink);stroke-width:6;fill:none;stroke-linecap:round}
 .logo-text{display:flex;flex-direction:column;line-height:1.2}
 .logo-name{font-family:'Noto Serif TC';font-weight:700;font-size:17px;letter-spacing:.1em}
@@ -236,3 +236,44 @@ footer{background:var(--ink);color:#B9AF9B;padding:64px 0 32px;font-size:13.5px}
 /* ===== Utility ===== */
 .mt-lg{margin-top:64px}
 .center{text-align:center}
+
+/* ===== Logo 浮水印 ===== */
+.bg-watermark{
+  position:absolute;pointer-events:none;user-select:none;
+  opacity:.07;z-index:0;
+}
+.hero{position:relative;overflow:hidden}
+.hero .bg-watermark{
+  width:440px;height:440px;top:-60px;right:-80px;object-fit:contain;
+}
+.hero .hero-inner{position:relative;z-index:1}
+.brand-promise{position:relative;overflow:hidden}
+.brand-promise .bg-watermark{
+  width:320px;height:320px;top:50%;left:50%;transform:translate(-50%,-50%);object-fit:contain;
+}
+.brand-promise .wrap{position:relative;z-index:1}
+@media(max-width:700px){
+  .hero .bg-watermark{width:260px;height:260px;top:-30px;right:-60px}
+}
+
+/* ===== 卡片簡約圖標 ===== */
+.card svg.icon{width:30px;height:30px;margin-bottom:16px;display:block}
+.card svg.icon path,.card svg.icon circle,.card svg.icon line{
+  stroke:var(--accent);stroke-width:1.5;fill:none;stroke-linecap:round;stroke-linejoin:round;
+}
+
+/* ===== 頻道追蹤按鈕列 ===== */
+.channel-row{display:flex;gap:14px;flex-wrap:wrap;margin-top:24px}
+
+/* ===== 淡點狀背景紋理（簡約裝飾） ===== */
+.dot-texture{
+  position:relative;
+}
+.dot-texture::before{
+  content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;
+  background-image:radial-gradient(var(--line-strong) 1px, transparent 1px);
+  background-size:22px 22px;
+  mask-image:linear-gradient(to bottom, transparent, black 30%, black 70%, transparent);
+  -webkit-mask-image:linear-gradient(to bottom, transparent, black 30%, black 70%, transparent);
+}
+.dot-texture > *{position:relative;z-index:1}
