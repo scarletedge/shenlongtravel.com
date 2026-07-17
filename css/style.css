@@ -233,6 +233,25 @@ footer{background:var(--ink);color:#B9AF9B;padding:64px 0 32px;font-size:13.5px}
 .widget-toggle:hover{background:var(--accent)}
 .widget-toggle svg{width:24px;height:24px}
 
+/* ===== 語言偵測提示條 ===== */
+.lang-banner{
+  display:none;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap;
+  background:var(--ink);color:var(--paper);padding:12px 24px;font-size:13.5px;text-align:center;
+  position:relative;z-index:70;
+}
+.lang-banner.show{display:flex}
+.lang-banner a.switch-btn{background:var(--gold);color:var(--ink);padding:6px 16px;border-radius:20px;font-size:13px}
+.lang-banner button.dismiss-btn{background:none;border:1px solid rgba(255,255,255,.3);color:var(--paper);padding:6px 14px;border-radius:20px;font-size:13px;cursor:pointer}
+.lang-banner button.dismiss-btn:hover{border-color:var(--paper)}
+
+/* ===== 語言切換器 ===== */
+.lang-switch{display:flex;align-items:center;gap:2px;font-size:12.5px;color:var(--muted)}
+.lang-switch a{padding:4px 8px;border-radius:20px;transition:background .2s,color .2s}
+.lang-switch a:hover{color:var(--ink)}
+.lang-switch a.active{background:var(--ink);color:var(--paper)}
+.lang-switch span{color:var(--line-strong)}
+@media(max-width:860px){.lang-switch{order:-1}}
+
 /* ===== Utility ===== */
 .mt-lg{margin-top:64px}
 .center{text-align:center}
