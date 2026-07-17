@@ -1,0 +1,238 @@
+/* =========================================================
+   升龍旅行社 ShenLong Travel — 共用樣式表
+   風格：簡約東方（Minimal Oriental）
+   ========================================================= */
+
+:root{
+  --paper:#F7F4EC;
+  --paper-alt:#EFE9DB;
+  --ink:#211C15;
+  --muted:#6B6255;
+  --accent:#A23B2E;     /* 漆器紅，僅重點使用 */
+  --accent-deep:#7E2A20;
+  --gold:#B98F45;       /* 金線，用於數字／分隔 */
+  --line:rgba(33,28,21,.12);
+  --line-strong:rgba(33,28,21,.24);
+  --radius:2px;
+  --max:1080px;
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Noto Sans TC',sans-serif;
+  background:var(--paper);
+  color:var(--ink);
+  line-height:1.8;
+  font-size:16px;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,.serif{font-family:'Noto Serif TC',serif;font-weight:700;letter-spacing:.02em}
+.eyebrow{
+  font-family:'Cormorant Garamond',serif;font-style:italic;
+  font-size:13px;letter-spacing:.32em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:14px;display:block;
+}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+ul{list-style:none}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 24px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ===== Header ===== */
+header{
+  position:sticky;top:0;z-index:60;
+  background:rgba(247,244,236,.94);backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--line);
+}
+.nav{display:flex;align-items:center;justify-content:space-between;height:72px}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-mark{width:26px;height:26px}
+.logo-mark path{stroke:var(--ink);stroke-width:6;fill:none;stroke-linecap:round}
+.logo-text{display:flex;flex-direction:column;line-height:1.2}
+.logo-name{font-family:'Noto Serif TC';font-weight:700;font-size:17px;letter-spacing:.1em}
+.logo-sub{font-family:'Cormorant Garamond',serif;font-size:10px;letter-spacing:.3em;color:var(--muted);text-transform:uppercase}
+nav.menu{display:flex;gap:36px;font-size:14.5px}
+nav.menu a{padding:8px 0;border-bottom:1px solid transparent;transition:border-color .2s,color .2s;color:var(--ink)}
+nav.menu a:hover,nav.menu a[aria-current="page"]{border-bottom-color:var(--accent);color:var(--accent)}
+.cta-btn{
+  border:1px solid var(--ink);color:var(--ink);padding:9px 20px;
+  font-size:14px;letter-spacing:.06em;border-radius:var(--radius);
+  transition:background .2s,color .2s;white-space:nowrap;
+}
+.cta-btn:hover{background:var(--ink);color:var(--paper)}
+.menu-toggle{display:none;background:none;border:none;font-size:22px;color:var(--ink);cursor:pointer}
+@media(max-width:860px){
+  nav.menu{display:none}
+  .menu-toggle{display:block}
+  nav.menu.mobile-open{
+    display:flex;flex-direction:column;gap:0;position:absolute;top:72px;left:0;right:0;
+    background:var(--paper);border-bottom:1px solid var(--line);padding:8px 24px 20px;
+  }
+  nav.menu.mobile-open a{padding:14px 0;border-bottom:1px solid var(--line)}
+}
+
+/* ===== Breadcrumb ===== */
+.breadcrumb{padding:18px 0;font-size:12.5px;color:var(--muted);border-bottom:1px solid var(--line)}
+.breadcrumb a{color:var(--muted)}
+.breadcrumb a:hover{color:var(--accent)}
+.breadcrumb span{margin:0 8px}
+
+/* ===== Hero ===== */
+.hero{padding:96px 0 84px;border-bottom:1px solid var(--line)}
+.hero-inner{max-width:760px}
+.hero h1{font-size:clamp(28px,4vw,46px);line-height:1.4;margin-bottom:22px}
+.hero h1 em{font-style:normal;color:var(--accent)}
+.hero p.lead{font-size:17px;color:var(--muted);max-width:42em;margin-bottom:34px}
+.hero-actions{display:flex;gap:14px;flex-wrap:wrap}
+.btn-solid{background:var(--ink);color:var(--paper);padding:13px 28px;border-radius:var(--radius);font-size:14.5px;letter-spacing:.05em;transition:background .2s}
+.btn-solid:hover{background:var(--accent)}
+.btn-ghost{border:1px solid var(--line-strong);color:var(--ink);padding:12px 27px;border-radius:var(--radius);font-size:14.5px;letter-spacing:.05em;transition:border-color .2s,color .2s}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent)}
+
+/* ===== Section shell ===== */
+section{padding:96px 0}
+section.alt{background:var(--paper-alt)}
+section + section{border-top:1px solid var(--line)}
+.sec-head{max-width:640px;margin-bottom:56px}
+.sec-head h2{font-size:clamp(24px,3vw,34px);margin-bottom:14px}
+.sec-head p{color:var(--muted);font-size:15.5px}
+
+/* ===== 三層總覽卡片（首頁）===== */
+.tier-list{display:flex;flex-direction:column;gap:1px;background:var(--line)}
+.tier-row{
+  background:var(--paper);padding:44px 6px;
+  display:grid;grid-template-columns:64px 1fr auto;gap:28px;align-items:start;
+  transition:background .2s;
+}
+.tier-row:hover{background:var(--paper-alt)}
+.tier-num{font-family:'Cormorant Garamond',serif;font-size:15px;letter-spacing:.2em;color:var(--gold)}
+.tier-row h3{font-size:20px;margin-bottom:10px}
+.tier-row p{color:var(--muted);font-size:14.5px;max-width:46em}
+.tier-tags{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.tier-tags span{font-size:12px;color:var(--muted);border:1px solid var(--line-strong);padding:4px 10px;border-radius:20px}
+.tier-row .go{align-self:center;font-size:13.5px;color:var(--accent);white-space:nowrap;border-bottom:1px solid var(--accent);padding-bottom:2px}
+@media(max-width:700px){.tier-row{grid-template-columns:1fr}.tier-row .go{justify-self:start}}
+
+/* ===== 一般 Grid 卡片 ===== */
+.grid{display:grid;gap:1px;background:var(--line)}
+.grid.cols-3{grid-template-columns:repeat(3,1fr)}
+.grid.cols-2{grid-template-columns:repeat(2,1fr)}
+@media(max-width:820px){.grid.cols-3,.grid.cols-2{grid-template-columns:1fr}}
+.card{background:var(--paper);padding:36px 30px}
+.card h3{font-size:18px;margin-bottom:10px}
+.card p{font-size:14.5px;color:var(--muted)}
+
+/* ===== 流程步驟 ===== */
+.process{display:flex;gap:0;margin:40px 0;flex-wrap:wrap}
+.process-step{flex:1;min-width:150px;position:relative;padding:0 20px 0 0}
+.process-step:not(:last-child)::after{content:"";position:absolute;top:9px;right:0;width:100%;height:1px;background:var(--line-strong)}
+.process-step .n{width:18px;height:18px;border-radius:50%;background:var(--ink);color:var(--paper);font-size:11px;display:grid;place-items:center;margin-bottom:14px;position:relative;z-index:2}
+.process-step h4{font-size:15px;margin-bottom:6px}
+.process-step p{font-size:13px;color:var(--muted)}
+
+/* ===== 統計數字 ===== */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);margin-top:48px}
+.stat{background:var(--paper);padding:32px 24px;text-align:left}
+.stat .num{font-family:'Noto Serif TC';font-size:clamp(30px,4vw,42px);color:var(--accent);line-height:1}
+.stat .label{font-size:13px;color:var(--muted);margin-top:10px}
+@media(max-width:700px){.stats{grid-template-columns:1fr}}
+
+/* ===== 車型卡片 ===== */
+.fleet-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1px;background:var(--line)}
+.fleet-card{background:var(--paper);padding:30px 26px;position:relative}
+.fleet-card.biz{background:var(--paper-alt)}
+.fleet-card .badge{font-size:11px;letter-spacing:.15em;color:var(--gold);text-transform:uppercase;margin-bottom:12px;display:block}
+.fleet-card h3{font-size:19px;margin-bottom:8px}
+.fleet-card p{font-size:13.5px;color:var(--muted)}
+.fleet-icon{width:42px;height:26px;margin-bottom:16px}
+.fleet-icon path{stroke:var(--ink);stroke-width:3;fill:none;stroke-linejoin:round;stroke-linecap:round}
+.fleet-card.biz .fleet-icon path{stroke:var(--accent)}
+
+/* ===== 表單 ===== */
+.form-box{background:var(--paper-alt);border:1px solid var(--line);padding:44px;border-radius:var(--radius)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-bottom:22px}
+@media(max-width:700px){.form-row{grid-template-columns:1fr}}
+.field{display:flex;flex-direction:column;gap:8px}
+.field label{font-size:13px;color:var(--muted);letter-spacing:.04em}
+.field input,.field select,.field textarea{
+  border:none;border-bottom:1px solid var(--line-strong);background:transparent;
+  padding:10px 2px;font-family:inherit;font-size:15px;color:var(--ink);
+}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-bottom-color:var(--accent)}
+.submit-btn{margin-top:12px;background:var(--ink);color:var(--paper);border:none;padding:14px 34px;font-size:14.5px;letter-spacing:.06em;border-radius:var(--radius);cursor:pointer;transition:background .2s}
+.submit-btn:hover{background:var(--accent)}
+
+/* ===== 案例佔位卡 ===== */
+.case-placeholder{border:1px dashed var(--line-strong);padding:30px 26px;color:var(--muted);font-size:13.5px;text-align:center}
+.case-placeholder strong{display:block;color:var(--ink);font-size:15px;margin-bottom:8px;font-family:'Noto Serif TC'}
+
+/* ===== 部落格 / 影片 ===== */
+.blog-cat{margin-bottom:8px}
+.video-frame{position:relative;padding-top:56.25%;background:var(--ink);margin-bottom:20px}
+.video-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.blog-points{font-size:14px;color:var(--muted)}
+.blog-points li{padding:6px 0;border-top:1px solid var(--line)}
+.blog-points li:first-child{border-top:none}
+.channel-cta{display:inline-flex;align-items:center;gap:10px;border:1px solid var(--line-strong);padding:12px 22px;border-radius:var(--radius);font-size:14px;transition:border-color .2s,color .2s}
+.channel-cta:hover{border-color:var(--accent);color:var(--accent)}
+
+/* ===== 對照表 ===== */
+table.compare{width:100%;border-collapse:collapse;margin-top:20px}
+table.compare th,table.compare td{text-align:left;padding:16px 18px;border-top:1px solid var(--line);font-size:14.5px;vertical-align:top}
+table.compare th{font-family:'Noto Serif TC';font-weight:700;color:var(--muted);font-size:13px;letter-spacing:.08em}
+table.compare td:first-child{color:var(--muted)}
+table.compare td:last-child{color:var(--ink)}
+
+/* ===== Divider signature (dragon line) ===== */
+.divider-signature{padding:64px 0;display:flex;justify-content:center}
+.divider-signature svg{width:100%;max-width:420px;height:auto;opacity:.55}
+.divider-signature path{stroke:var(--gold);stroke-width:1.4;fill:none}
+
+/* ===== 品牌承諾語 ===== */
+.brand-promise{text-align:center;padding:80px 0}
+.brand-promise p{font-family:'Noto Serif TC';font-size:clamp(20px,2.6vw,28px);line-height:1.7}
+.brand-promise p em{font-style:normal;color:var(--accent)}
+.brand-promise .divider{width:40px;height:1px;background:var(--gold);margin:20px auto}
+
+/* ===== Footer ===== */
+footer{background:var(--ink);color:#B9AF9B;padding:64px 0 32px;font-size:13.5px}
+.foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:40px;padding-bottom:40px;border-bottom:1px solid rgba(255,255,255,.12)}
+@media(max-width:760px){.foot-grid{grid-template-columns:1fr;gap:28px}}
+.foot-grid h4{color:#F0EBDD;font-family:'Noto Serif TC';font-size:14px;letter-spacing:.08em;margin-bottom:16px}
+.foot-grid p,.foot-grid a{display:block;margin-bottom:8px;color:#B9AF9B}
+.foot-grid a:hover{color:#F0EBDD}
+.foot-bottom{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;padding-top:24px;font-size:12px;color:#7D735F}
+
+/* ===== 懸浮諮詢按鈕 Sticky Contact Widget ===== */
+.contact-widget{position:fixed;right:22px;bottom:22px;z-index:80;display:flex;flex-direction:column;align-items:flex-end;gap:12px}
+.contact-panel{
+  background:var(--paper);border:1px solid var(--line-strong);border-radius:var(--radius);
+  padding:18px;width:240px;box-shadow:0 12px 32px rgba(33,28,21,.16);
+  display:none;flex-direction:column;gap:14px;
+}
+.contact-panel.open{display:flex}
+.contact-panel .ch{display:flex;align-items:center;gap:12px}
+.contact-panel .ch img.qr{width:64px;height:64px;border:1px solid var(--line);flex-shrink:0}
+.contact-panel .ch .ch-name{font-size:13.5px;font-weight:700}
+.contact-panel .ch .ch-hint{font-size:11.5px;color:var(--muted)}
+.contact-panel .ch a.chat-link{font-size:12px;color:var(--accent);border-bottom:1px solid var(--accent)}
+/* 桌面顯示 QR code、隱藏點擊連結；手機顯示點擊連結、隱藏 QR code */
+.qr-only{display:block}
+.link-only{display:none}
+@media(max-width:768px){
+  .qr-only{display:none}
+  .link-only{display:block}
+}
+.widget-toggle{
+  width:56px;height:56px;border-radius:50%;background:var(--ink);color:var(--paper);
+  display:grid;place-items:center;border:none;cursor:pointer;box-shadow:0 8px 20px rgba(33,28,21,.28);
+  transition:background .2s;
+}
+.widget-toggle:hover{background:var(--accent)}
+.widget-toggle svg{width:24px;height:24px}
+
+/* ===== Utility ===== */
+.mt-lg{margin-top:64px}
+.center{text-align:center}
