@@ -176,7 +176,7 @@
       <h2>老司機是誰？</h2>
       <p>不是客服話術，是真的有這幾個人在幫你跑。</p>
     </div>
-    <div class="team-grid">
+    <div class="team-grid" id="team-grid">
       <div class="team-card">
         <div class="team-avatar">J</div>
         <h3>Joey Cheng</h3>
@@ -284,6 +284,32 @@
   </button>
 </div>
 
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
+<script src="js/firebase-config.js"></script>
 <script src="js/widget.js"></script>
+<script>
+(function () {
+  if (typeof FIREBASE_READY === 'undefined' || !FIREBASE_READY) return;
+  var grid = document.getElementById('team-grid');
+  if (!grid) return;
+  db.collection('teamMembers').orderBy('order').get().then(function (snap) {
+    if (snap.empty) return; // 沒有雲端資料，維持頁面上原本寫好的內容
+    var html = '';
+    snap.forEach(function (doc) {
+      var d = doc.data();
+      html +=
+        '<div class="team-card">' +
+        '<div class="team-avatar">' + (d.initial || '') + '</div>' +
+        '<h3>' + (d.nameEn || '') + '</h3>' +
+        '<span class="role">' + (d.roleHant || '') + '</span>' +
+        '<p>' + (d.bioHant || '') + '</p>' +
+        (d.hintHant ? '<span class="contact-hint">→ ' + d.hintHant + '</span>' : '') +
+        '</div>';
+    });
+    grid.innerHTML = html;
+  }).catch(function () { /* 連線失敗，維持頁面上原本寫好的內容 */ });
+})();
+</script>
 </body>
 </html>

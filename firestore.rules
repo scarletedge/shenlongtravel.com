@@ -1,0 +1,35 @@
+/* =========================================================
+   Firestore 安全規則
+   把這整份內容貼到 Firebase Console →
+   Firestore Database → 規則（Rules）分頁，取代原本的內容，
+   然後按「發布」。
+
+   邏輯：
+   - 所有人都可以「讀取」資料（公開網站要顯示價格、團隊介紹）
+   - 只有「已登入」的帳號（也就是妳幫員工建的後台帳號）
+     才可以「寫入／修改／刪除」資料
+   ========================================================= */
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    match /siteSettings/{docId} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+
+    match /visaPrices/{docId} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+
+    match /teamMembers/{docId} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+
+    // 之後新增其他資料表（例如包車、部落格文章），
+    // 照上面的格式複製一段貼在這裡即可。
+  }
+}
