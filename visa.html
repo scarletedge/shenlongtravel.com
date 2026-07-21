@@ -161,6 +161,107 @@
   </div>
 </section>
 
+<!-- ===== 詳細價目表 ===== -->
+<section id="price-list">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Price List</span>
+      <h2>簽證價格表</h2>
+      <p>選好類型、天數與時效，馬上看到報價——截圖傳給客服即可開始辦理。以下同時顯示美金與越南盾參考金額。</p>
+    </div>
+
+    <!-- ===== 互動報價計算機 ===== -->
+    <div class="calc-box mt-lg" id="visa-calc">
+      <div class="calc-step">
+        <label>1. 簽證類型</label>
+        <div class="calc-pills" id="calc-category">
+          <button type="button" class="calc-pill" data-value="arrival">落地簽證</button>
+          <button type="button" class="calc-pill" data-value="embassy">使館貼紙簽</button>
+          <button type="button" class="calc-pill" data-value="evisa">電子簽證加急</button>
+        </div>
+      </div>
+      <div class="calc-step">
+        <label>2. 停留天數與入境次數</label>
+        <select class="calc-select" id="calc-duration" disabled><option>請先選擇簽證類型</option></select>
+      </div>
+      <div class="calc-step">
+        <label>3. 辦理時效</label>
+        <select class="calc-select" id="calc-speed" disabled><option>請先選擇天數與次數</option></select>
+      </div>
+      <div class="calc-result" id="calc-result">
+        <span style="color:var(--muted);font-size:14px">選擇以上選項後，這裡會顯示報價</span>
+      </div>
+    </div>
+
+    <div class="mt-lg"></div>
+
+    <div class="price-table-wrap">
+      <h3>落地簽證（落地批文）</h3>
+      <p class="sub">入境時於機場現場換發簽證，適合大多數短期赴越行程</p>
+      <table class="price">
+        <thead><tr><th>停留天數</th><th>入境次數</th><th>辦理時效</th><th>價格</th></tr></thead>
+        <tbody>
+          <tr><td>15天</td><td>單次</td><td>3–4個工作日</td><td>US$3.69<span class="vnd-ref">≈ 97,000₫</span></td></tr>
+          <tr><td>15天</td><td>單次</td><td>1個工作日</td><td>US$5.91<span class="vnd-ref">≈ 155,000₫</span></td></tr>
+          <tr><td>15天</td><td>單次</td><td>當天出簽（11:00前送件）</td><td>US$17.72<span class="vnd-ref">≈ 464,000₫</span></td></tr>
+          <tr><td>30天</td><td>單次</td><td>3–4個工作日</td><td>US$5.17<span class="vnd-ref">≈ 135,000₫</span></td></tr>
+          <tr><td>30天</td><td>單次</td><td>1個工作日</td><td>US$7.38<span class="vnd-ref">≈ 193,000₫</span></td></tr>
+          <tr><td>30天</td><td>單次</td><td>當天出簽（11:00前送件）</td><td>US$20.67<span class="vnd-ref">≈ 542,000₫</span></td></tr>
+          <tr><td>30天</td><td>多次</td><td>5個工作日</td><td class="ask">價格詳詢</td></tr>
+          <tr><td>30天</td><td>多次</td><td>3–4個工作日</td><td class="ask">價格詳詢</td></tr>
+          <tr><td>30天</td><td>多次</td><td>1個工作日</td><td>US$17.72<span class="vnd-ref">≈ 464,000₫</span></td></tr>
+        </tbody>
+      </table>
+      <p class="price-note">11:00後送件仍可當天出簽，15天／30天皆以US$17.72（約464,000₫）計算，截止15:00前送件；另有1小時／2小時特急件服務，價格請洽詢客服。</p>
+    </div>
+
+    <div class="price-table-wrap">
+      <h3>使館貼紙簽（領館另紙簽）</h3>
+      <p class="sub">由越南駐外使館核發，簽證黏貼於護照內頁，效力較高</p>
+      <table class="price">
+        <thead><tr><th>停留天數</th><th>入境次數</th><th>辦理時效</th><th>價格</th></tr></thead>
+        <tbody>
+          <tr><td>15天</td><td>單次</td><td>3–4個工作日（4工後生效）</td><td>US$35.44<span class="vnd-ref">≈ 928,000₫</span></td></tr>
+          <tr><td>15天</td><td>單次</td><td>1個工作日（1工後生效）</td><td>US$41.35<span class="vnd-ref">≈ 1,083,000₫</span></td></tr>
+          <tr><td>15天</td><td>單次</td><td>當天出簽</td><td class="ask">價格詳詢</td></tr>
+          <tr><td>15天</td><td>單次</td><td>4小時加急</td><td class="ask">價格詳詢</td></tr>
+          <tr><td>30天</td><td>單次</td><td>3–4個工作日（4工後生效）</td><td>US$38.40<span class="vnd-ref">≈ 1,006,000₫</span></td></tr>
+          <tr><td>30天</td><td>單次</td><td>1個工作日（1工後生效）</td><td>US$44.30<span class="vnd-ref">≈ 1,160,000₫</span></td></tr>
+          <tr><td>30天</td><td>單次</td><td>當天出簽</td><td class="ask">價格詳詢</td></tr>
+          <tr><td>30天</td><td>單次</td><td>4小時加急</td><td class="ask">價格詳詢</td></tr>
+          <tr><td>30天</td><td>多次</td><td>1–2個工作日</td><td>US$81.22<span class="vnd-ref">≈ 2,127,000₫</span></td></tr>
+        </tbody>
+      </table>
+      <p class="price-note">出簽後需間隔1個或4個工作日方可正式生效入境，實際生效時間依辦理時效而定，送件前會事先告知。</p>
+    </div>
+
+    <div class="price-table-wrap">
+      <h3>電子簽證加急（商務簽／旅遊簽同價）</h3>
+      <p class="sub">線上申請的電子簽證，加急服務適合行程確定、時間較趕的旅客</p>
+      <table class="price">
+        <thead><tr><th>停留天數</th><th>入境次數</th><th>辦理時效</th><th>價格</th></tr></thead>
+        <tbody>
+          <tr><td>90天</td><td>單次</td><td>4個工作日</td><td>US$36.92<span class="vnd-ref">≈ 967,000₫</span></td></tr>
+          <tr><td>90天</td><td>多次</td><td>4個工作日</td><td>US$66.45<span class="vnd-ref">≈ 1,741,000₫</span></td></tr>
+          <tr><td>90天</td><td>單次</td><td>3個工作日</td><td>US$35.44<span class="vnd-ref">≈ 928,000₫</span></td></tr>
+          <tr><td>90天</td><td>多次</td><td>3個工作日</td><td>US$63.50<span class="vnd-ref">≈ 1,663,000₫</span></td></tr>
+          <tr><td>90天</td><td>單次</td><td>2個工作日（截止15:30）</td><td>US$44.30<span class="vnd-ref">≈ 1,160,000₫</span></td></tr>
+          <tr><td>90天</td><td>多次</td><td>2個工作日（截止15:30）</td><td>US$73.84<span class="vnd-ref">≈ 1,934,000₫</span></td></tr>
+          <tr><td>90天</td><td>單次</td><td>1個工作日（截止15:30）</td><td>US$51.69<span class="vnd-ref">≈ 1,354,000₫</span></td></tr>
+          <tr><td>90天</td><td>多次</td><td>1個工作日（截止15:30）</td><td>US$81.22<span class="vnd-ref">≈ 2,127,000₫</span></td></tr>
+          <tr><td>90天</td><td>單次</td><td>特急件・當天出簽（截止9:30）</td><td>US$66.45<span class="vnd-ref">≈ 1,741,000₫</span></td></tr>
+          <tr><td>90天</td><td>多次</td><td>特急件・當天出簽（截止9:30）</td><td>US$95.99<span class="vnd-ref">≈ 2,514,000₫</span></td></tr>
+          <tr><td>90天</td><td>單次</td><td>4小時加急（截止14:30）</td><td>US$81.22<span class="vnd-ref">≈ 2,127,000₫</span></td></tr>
+          <tr><td>90天</td><td>多次</td><td>4小時加急（截止14:30）</td><td>US$110.76<span class="vnd-ref">≈ 2,901,000₫</span></td></tr>
+        </tbody>
+      </table>
+      <p class="price-note">4小時加急套餐：當天9:30前備妥資料，約13:00出簽；當天14:30前備妥資料，約19:00出簽。</p>
+    </div>
+
+    <p class="center mt-lg"><a href="#" class="btn-solid" onclick="document.querySelector('.widget-toggle').click();return false;">私訊我們開始辦理 →</a></p>
+  </div>
+</section>
+
 <section>
   <div class="wrap">
     <div class="sec-head">
@@ -244,5 +345,113 @@
 </div>
 
 <script src="js/widget.js"></script>
+<script>
+(function () {
+  // 匯率設定：之後匯率變動，只要改這兩個數字即可全站自動更新換算
+  var CNY_TO_USD = 1 / 6.7716;
+  var CNY_TO_VND = 3868;
+
+  // 資料來源：人民幣（CNY）批發價
+  var PRICES = [
+    ['arrival','15','單次','3–4個工作日',25],
+    ['arrival','15','單次','1個工作日',40],
+    ['arrival','15','單次','當天出簽（11:00前送件）',120],
+    ['arrival','30','單次','3–4個工作日',35],
+    ['arrival','30','單次','1個工作日',50],
+    ['arrival','30','單次','當天出簽（11:00前送件）',140],
+    ['arrival','30','多次','5個工作日',null],
+    ['arrival','30','多次','3–4個工作日',null],
+    ['arrival','30','多次','1個工作日',120],
+    ['embassy','15','單次','3–4個工作日（4工後生效）',240],
+    ['embassy','15','單次','1個工作日（1工後生效）',280],
+    ['embassy','15','單次','當天出簽',null],
+    ['embassy','15','單次','4小時加急',null],
+    ['embassy','30','單次','3–4個工作日（4工後生效）',260],
+    ['embassy','30','單次','1個工作日（1工後生效）',300],
+    ['embassy','30','單次','當天出簽',null],
+    ['embassy','30','單次','4小時加急',null],
+    ['embassy','30','多次','1–2個工作日',550],
+    ['evisa','90','單次','4個工作日',250],
+    ['evisa','90','多次','4個工作日',450],
+    ['evisa','90','單次','3個工作日',240],
+    ['evisa','90','多次','3個工作日',430],
+    ['evisa','90','單次','2個工作日（截止15:30）',300],
+    ['evisa','90','多次','2個工作日（截止15:30）',500],
+    ['evisa','90','單次','1個工作日（截止15:30）',350],
+    ['evisa','90','多次','1個工作日（截止15:30）',550],
+    ['evisa','90','單次','特急件・當天出簽（截止9:30）',450],
+    ['evisa','90','多次','特急件・當天出簽（截止9:30）',650],
+    ['evisa','90','單次','4小時加急（截止14:30）',550],
+    ['evisa','90','多次','4小時加急（截止14:30）',750],
+  ];
+
+  var catBtns = document.querySelectorAll('#calc-category .calc-pill');
+  var durationSel = document.getElementById('calc-duration');
+  var speedSel = document.getElementById('calc-speed');
+  var resultBox = document.getElementById('calc-result');
+  if (!catBtns.length) return;
+
+  var state = { category: null, duration: null, speed: null };
+
+  function fmtPrice(cny) {
+    if (cny === null) {
+      return '<span class="price-ask">價格詳詢</span><div class="hint">此選項需人工報價，請私訊客服洽詢。</div>';
+    }
+    var usd = (cny * CNY_TO_USD).toFixed(2);
+    var vnd = Math.round(cny * CNY_TO_VND / 1000) * 1000;
+    return '<div class="price-usd">US$' + usd + '</div>' +
+      '<div class="price-vnd">≈ ' + vnd.toLocaleString('en-US') + '₫</div>' +
+      '<div class="hint">螢幕截圖這個結果，私訊右下角諮詢按鈕給客服即可開始辦理。</div>';
+  }
+
+  function updateDurationOptions() {
+    var rows = PRICES.filter(function (r) { return r[0] === state.category; });
+    var seen = {}, opts = [];
+    rows.forEach(function (r) {
+      var key = r[1] + '天・' + r[2];
+      if (!seen[key]) { seen[key] = true; opts.push({ key: key, stay: r[1], entry: r[2] }); }
+    });
+    durationSel.innerHTML = '<option value="">請選擇</option>' +
+      opts.map(function (o) { return '<option value="' + o.stay + '|' + o.entry + '">' + o.key + '</option>'; }).join('');
+    durationSel.disabled = false;
+    speedSel.innerHTML = '<option>請先選擇天數與次數</option>';
+    speedSel.disabled = true;
+    resultBox.innerHTML = '<span style="color:var(--muted);font-size:14px">選擇以上選項後，這裡會顯示報價</span>';
+  }
+
+  function updateSpeedOptions() {
+    var rows = PRICES.filter(function (r) {
+      return r[0] === state.category && (r[1] + '|' + r[2]) === state.duration;
+    });
+    speedSel.innerHTML = '<option value="">請選擇</option>' +
+      rows.map(function (r, i) { return '<option value="' + i + '">' + r[3] + '</option>'; }).join('');
+    speedSel.disabled = false;
+    speedSel.dataset.rows = JSON.stringify(rows);
+    resultBox.innerHTML = '<span style="color:var(--muted);font-size:14px">選擇以上選項後，這裡會顯示報價</span>';
+  }
+
+  catBtns.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      catBtns.forEach(function (b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      state.category = btn.dataset.value;
+      updateDurationOptions();
+    });
+  });
+
+  durationSel.addEventListener('change', function () {
+    state.duration = durationSel.value;
+    if (!state.duration) return;
+    updateSpeedOptions();
+  });
+
+  speedSel.addEventListener('change', function () {
+    var rows = JSON.parse(speedSel.dataset.rows || '[]');
+    var row = rows[Number(speedSel.value)];
+    if (!row) return;
+    resultBox.innerHTML = fmtPrice(row[4]);
+  });
+})();
+</script>
 </body>
 </html>
