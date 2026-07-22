@@ -927,7 +927,6 @@ document.addEventListener('DOMContentLoaded', function () {
       '<div class="admin-row">' +
         '<div class="admin-field"><label>出行目的</label><input value="' + arr(d.purposes) + '" disabled></div>' +
         '<div class="admin-field"><label>酒店預算</label><input value="' + (d.hotelBudget || '—') + '" disabled></div>' +
-        '<div class="admin-field"><label>餐飲預算</label><input value="' + (d.diningBudget || '—') + '" disabled></div>' +
       '</div>' +
       '<div class="admin-row">' +
         '<div class="admin-field"><label>餐飲比例</label><input value="頂級' + (ratio.top || 0) + '%／高端' + (ratio.mid || 0) + '%／地道' + (ratio.low || 0) + '%" disabled></div>' +

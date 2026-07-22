@@ -302,23 +302,19 @@
             <label class="radio-card"><input type="radio" name="hotelBudget" value="尚無概念，請根據行程推薦"><span class="txt"><strong>尚無概念</strong><span>請根據行程推薦</span></span></label>
           </div>
         </div>
-        <div class="field" style="margin-bottom:14px">
-          <label>餐飲預算偏好（每人／每餐，越南盾）</label>
-          <div class="radio-card-group" data-group="diningBudget">
-            <label class="radio-card"><input type="radio" name="diningBudget" value="壕無上限／米其林頂級（1,000,000₫以上）"><span class="txt"><strong>壕無上限／米其林頂級</strong><span>1,000,000₫ 以上</span></span></label>
-            <label class="radio-card"><input type="radio" name="diningBudget" value="高端在地精緻餐飲（500,000–999,999₫）"><span class="txt"><strong>高端在地精緻餐飲</strong><span>500,000 – 999,999₫</span></span></label>
-            <label class="radio-card"><input type="radio" name="diningBudget" value="平價地道／特色小吃（100,000–499,999₫）"><span class="txt"><strong>平價地道／特色小吃</strong><span>100,000 – 499,999₫</span></span></label>
-            <label class="radio-card"><input type="radio" name="diningBudget" value="尚無概念，請根據行程推薦"><span class="txt"><strong>尚無概念</strong><span>請根據行程推薦</span></span></label>
-          </div>
-        </div>
         <div class="field">
-          <label>餐飲比例分配（三格約加總100%，僅供參考）</label>
+          <label>餐飲比例分配（每人／每餐，越南盾；三格約加總100%，僅供參考）</label>
           <div class="mini-num-row">
-            <div class="field"><label style="font-size:12px">頂級／米其林 %</label><input class="it-ratio" id="it-ratio-top" type="number" min="0" max="100" placeholder="建議 20"></div>
-            <div class="field"><label style="font-size:12px">高端精緻 %</label><input class="it-ratio" id="it-ratio-mid" type="number" min="0" max="100" placeholder="建議 50"></div>
-            <div class="field"><label style="font-size:12px">平價地道 %</label><input class="it-ratio" id="it-ratio-low" type="number" min="0" max="100" placeholder="建議 30"></div>
+            <div class="field"><label style="font-size:12px">頂級／米其林（1,000,000₫+） %</label><input class="it-ratio" id="it-ratio-top" type="number" min="0" max="100" placeholder="建議 20"></div>
+            <div class="field"><label style="font-size:12px">高端精緻（500,000–999,999₫） %</label><input class="it-ratio" id="it-ratio-mid" type="number" min="0" max="100" placeholder="建議 50"></div>
+            <div class="field"><label style="font-size:12px">平價地道（100,000–499,999₫） %</label><input class="it-ratio" id="it-ratio-low" type="number" min="0" max="100" placeholder="建議 30"></div>
           </div>
           <p class="mini-num-sum" id="it-ratio-sum">目前加總：0%</p>
+        </div>
+
+        <div class="budget-estimate" id="it-budget-estimate">
+          <span class="be-label">即時預估行程總預算</span>
+          <p class="be-empty">選好人數、天數、酒店預算與餐飲比例後，這裡會自動估算</p>
         </div>
       </div>
 
@@ -794,6 +790,7 @@
       radio.addEventListener('change', function () {
         group.querySelectorAll('.radio-card').forEach(function (c) { c.classList.remove('selected'); });
         radio.closest('.radio-card').classList.add('selected');
+        updateBudgetEstimate();
       });
     });
   });
@@ -807,11 +804,79 @@
     ratioSumEl.textContent = '目前加總：' + sum + '%';
     ratioSumEl.classList.toggle('ok', sum === 100);
   }
-  ratioInputs.forEach(function (i) { i.addEventListener('input', updateRatioSum); });
+  ratioInputs.forEach(function (i) { i.addEventListener('input', function () { updateRatioSum(); updateBudgetEstimate(); }); });
+
+  // ===== 即時預算試算 =====
+  var HOTEL_TIER_VND = {
+    '奢華頂級（3,000,000₫以上）': 4000000,
+    '高端精品（1,500,000–2,999,999₫）': 2250000,
+    '舒適經濟（1,500,000₫以下）': 1000000
+  };
+  var DINING_TIER_VND = { top: 1500000, mid: 750000, low: 300000 };
+  var VND_TO_USD = (1 / 6.7716) / 3868; // 沿用全站CNY匯率換算出的美金對越南盾比例
+  var estimateBox = document.getElementById('it-budget-estimate');
+
+  function parseCount(str) {
+    var m = (str || '').match(/\d+/);
+    return m ? parseInt(m[0], 10) : 0;
+  }
+
+  function updateBudgetEstimate() {
+    var daysVal = document.getElementById('it-days').value;
+    var m = daysVal.match(/(\d+)天(\d+)晚/);
+    var daysCount = m ? parseInt(m[1], 10) : 0;
+    var nightsCount = m ? parseInt(m[2], 10) : 0;
+
+    var adults = parseCount(document.getElementById('it-adults').value);
+    var children = parseCount(document.getElementById('it-children').value);
+    var seniors = parseCount(document.getElementById('it-seniors').value);
+    var people = adults + children + seniors;
+
+    var hotelChecked = form.querySelector('input[name="hotelBudget"]:checked');
+    var hotelPerNight = hotelChecked ? HOTEL_TIER_VND[hotelChecked.value] : undefined;
+
+    var top = parseInt(document.getElementById('it-ratio-top').value, 10) || 0;
+    var mid = parseInt(document.getElementById('it-ratio-mid').value, 10) || 0;
+    var low = parseInt(document.getElementById('it-ratio-low').value, 10) || 0;
+    var hasRatio = (top + mid + low) > 0;
+
+    if (!daysCount || !people || (!hotelChecked && !hasRatio)) {
+      estimateBox.innerHTML = '<span class="be-label">即時預估行程總預算</span><p class="be-empty">選好人數、天數、酒店預算與餐飲比例後，這裡會自動估算</p>';
+      return;
+    }
+
+    var rooms = Math.ceil(people / 2);
+    var hotelTotal = (hotelPerNight && nightsCount) ? rooms * nightsCount * hotelPerNight : 0;
+
+    var perMealAvg = hasRatio ? (top * DINING_TIER_VND.top + mid * DINING_TIER_VND.mid + low * DINING_TIER_VND.low) / 100 : 0;
+    var diningTotal = perMealAvg * 2 * daysCount * people; // 假設每人每天2餐由我們安排
+
+    var total = hotelTotal + diningTotal;
+    var low2 = Math.round(total * 0.85 / 100000) * 100000;
+    var high2 = Math.round(total * 1.15 / 100000) * 100000;
+    var usdLow = (low2 * VND_TO_USD).toFixed(0);
+    var usdHigh = (high2 * VND_TO_USD).toFixed(0);
+
+    var notes = [];
+    if (!hotelChecked) notes.push('尚未選擇酒店預算，此估算僅含餐飲');
+    else if (hotelChecked.value.indexOf('尚無概念') !== -1) notes.push('酒店預算選擇「尚無概念」，此估算僅含餐飲');
+    if (!hasRatio) notes.push('尚未填寫餐飲比例，此估算僅含酒店');
+    notes.push('房間數以雙人房估算（' + rooms + '間），餐飲以每人每天2餐估算');
+
+    estimateBox.innerHTML =
+      '<span class="be-label">即時預估行程總預算（不含機票／簽證／包車等其他項目）</span>' +
+      '<div class="be-range">' + low2.toLocaleString('en-US') + ' – ' + high2.toLocaleString('en-US') + ' ₫</div>' +
+      '<div class="be-range-usd">約 US$' + Number(usdLow).toLocaleString('en-US') + ' – US$' + Number(usdHigh).toLocaleString('en-US') + '</div>' +
+      '<div class="be-note">' + notes.join('；') + '。實際報價將由團隊依完整需求確認後提供，此數字僅供您先有個底。</div>';
+  }
 
   // ===== 機場選單（沿用快速通關的機場資料） =====
   var arriveAirportSel = document.getElementById('it-arrive-airport');
   var departAirportSel = document.getElementById('it-depart-airport');
+  ['it-days', 'it-adults', 'it-children', 'it-seniors'].forEach(function (id) {
+    document.getElementById(id).addEventListener('input', updateBudgetEstimate);
+    document.getElementById(id).addEventListener('change', updateBudgetEstimate);
+  });
   db.collection('fastTrackServices').get().then(function (snap) {
     var opts = [];
     snap.forEach(function (doc) { var d = doc.data(); opts.push({ id: doc.id, name: d.nameHant, order: d.order || 0 }); });
@@ -849,7 +914,6 @@
       days: document.getElementById('it-days').value,
       purposes: tagState.purpose || [],
       hotelBudget: (form.querySelector('input[name="hotelBudget"]:checked') || {}).value || '',
-      diningBudget: (form.querySelector('input[name="diningBudget"]:checked') || {}).value || '',
       diningRatio: {
         top: document.getElementById('it-ratio-top').value || '',
         mid: document.getElementById('it-ratio-mid').value || '',
