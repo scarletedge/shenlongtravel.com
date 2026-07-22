@@ -66,6 +66,12 @@ service cloud.firestore {
       allow read, update, delete: if request.auth != null;
     }
 
+    match /itineraryRequests/{docId} {
+      // 客戶送出定制行程需求（不含護照等敏感資料）
+      allow create: if true;
+      allow read, update, delete: if request.auth != null;
+    }
+
     // 之後新增其他資料表（例如包車、部落格文章），
     // 照上面的格式複製一段貼在這裡即可。
   }

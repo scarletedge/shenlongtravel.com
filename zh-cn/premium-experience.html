@@ -208,44 +208,261 @@
     <div class="sec-head">
       <span class="eyebrow">02 · Tailored Itinerary</span>
       <h2>私人定制行程——『混』出你的排面</h2>
-      <p>我们不提供固定套装行程。告诉我们你的预算、天数与目的，团队将为你规划专属路线。</p>
+      <p>我们不提供固定套装行程。告诉我们你的细节，团队将为你规划专属路线——不确定的栏位可以跳过，先填你知道的部分就好。</p>
     </div>
 
-    <form class="form-box itinerary-form" id="itinerary-form" data-mailto="vietnam@shenlongtravel.com" data-subject="越南定制行程需求" novalidate>
-      <div class="form-row">
-        <div class="field">
-          <label for="budget">预算范围</label>
-          <input id="budget" name="budget" type="text" placeholder="例：每人 ¥6,000 – 10,000">
+    <div class="form-box" id="itin-form">
+
+      <!-- 模块1：行程总览 -->
+      <div class="itin-module">
+        <div class="itin-module-head"><span class="num">01 / 05</span><h3>行程总览</h3></div>
+
+        <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);margin-bottom:14px;cursor:pointer">
+          <input type="checkbox" id="it-arrive-not-booked" style="accent-color:var(--accent);width:16px;height:16px"> 机票尚未预订（先确定行程，还没订机票也没关系）
+        </label>
+        <div id="it-arrive-fields">
+          <div class="form-row">
+            <div class="field">
+              <label for="it-arrive-date">预计抵达日期</label>
+              <input id="it-arrive-date" type="date">
+            </div>
+            <div class="field">
+              <label for="it-arrive-time">抵达时间</label>
+              <input id="it-arrive-time" type="time">
+            </div>
+          </div>
+          <div class="field" style="margin-bottom:22px">
+            <label for="it-arrive-airport">抵达机场</label>
+            <select id="it-arrive-airport"><option value="">请选择或稍后于备注说明</option></select>
+          </div>
         </div>
-        <div class="field">
-          <label for="days">天数</label>
-          <input id="days" name="days" type="text" placeholder="例：5天4晚">
+        <div class="field" id="it-arrive-month-wrap" style="display:none;margin-bottom:22px">
+          <label for="it-arrive-month">预计出发月份</label>
+          <input id="it-arrive-month" type="month">
         </div>
-      </div>
-      <div class="form-row">
-        <div class="field">
-          <label for="purpose">此行目的</label>
-          <select id="purpose" name="purpose">
-            <option>商务</option>
-            <option>度假</option>
-            <option>考察</option>
-            <option>其他</option>
+
+        <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);margin-bottom:14px;cursor:pointer">
+          <input type="checkbox" id="it-depart-not-booked" style="accent-color:var(--accent);width:16px;height:16px"> 回程机票尚未预订
+        </label>
+        <div id="it-depart-fields">
+          <div class="form-row">
+            <div class="field">
+              <label for="it-depart-date">预计离境日期</label>
+              <input id="it-depart-date" type="date">
+            </div>
+            <div class="field">
+              <label for="it-depart-time">离境时间</label>
+              <input id="it-depart-time" type="time">
+            </div>
+          </div>
+          <div class="field" style="margin-bottom:22px">
+            <label for="it-depart-airport">离境机场</label>
+            <select id="it-depart-airport"><option value="">请选择或稍后于备注说明</option></select>
+          </div>
+        </div>
+        <div class="field" id="it-depart-month-wrap" style="display:none;margin-bottom:22px">
+          <label for="it-depart-month">预计回程月份</label>
+          <input id="it-depart-month" type="month">
+        </div>
+
+        <div class="field" style="margin-bottom:22px">
+          <label for="it-days">行程天数</label>
+          <select id="it-days">
+            <option value="">请选择</option>
+            <option>3天2晚</option><option>4天3晚</option><option>5天4晚</option>
+            <option>6天5晚</option><option>7天6晚</option><option>更长／自订</option>
           </select>
         </div>
         <div class="field">
-          <label for="people">人数</label>
-          <input id="people" name="people" type="text" placeholder="例：4人">
+          <label>出行目的（可复选）</label>
+          <div class="tag-select" data-group="purpose">
+            <button type="button" data-value="商务考察">商务考察</button>
+            <button type="button" data-value="公司团建">公司团建</button>
+            <button type="button" data-value="休闲度假">休闲度假</button>
+            <button type="button" data-value="奢华蜜月">奢华蜜月</button>
+            <button type="button" data-value="深度文化">深度文化</button>
+            <button type="button" data-value="高尔夫之旅">高尔夫之旅</button>
+            <button type="button" data-value="其它">其它</button>
+          </div>
         </div>
       </div>
-      <div class="field mt-lg" style="margin-bottom:22px">
-        <label for="note">其他需求说明</label>
-        <textarea id="note" name="note" rows="4" placeholder="想去的地点、特殊安排、日期等"></textarea>
+
+      <!-- 模块2：精准预算设置 -->
+      <div class="itin-module">
+        <div class="itin-module-head"><span class="num">02 / 05</span><h3>精准预算设置</h3></div>
+        <div class="field" style="margin-bottom:22px">
+          <label>每晚酒店预算（每房／每晚，越南盾）</label>
+          <div class="radio-card-group" data-group="hotelBudget">
+            <label class="radio-card"><input type="radio" name="hotelBudget" value="奢华顶级（3,000,000₫以上）"><span class="txt"><strong>奢华顶级</strong><span>3,000,000₫ 以上</span></span></label>
+            <label class="radio-card"><input type="radio" name="hotelBudget" value="高端精品（1,500,000–2,999,999₫）"><span class="txt"><strong>高端精品</strong><span>1,500,000 – 2,999,999₫</span></span></label>
+            <label class="radio-card"><input type="radio" name="hotelBudget" value="舒适经济（1,500,000₫以下）"><span class="txt"><strong>舒适经济</strong><span>1,500,000₫ 以下</span></span></label>
+            <label class="radio-card"><input type="radio" name="hotelBudget" value="尚无概念，请根据行程推荐"><span class="txt"><strong>尚无概念</strong><span>请根据行程推荐</span></span></label>
+          </div>
+        </div>
+        <div class="field" style="margin-bottom:14px">
+          <label>餐饮预算偏好（每人／每餐，越南盾）</label>
+          <div class="radio-card-group" data-group="diningBudget">
+            <label class="radio-card"><input type="radio" name="diningBudget" value="豪无上限／米其林顶级（1,000,000₫以上）"><span class="txt"><strong>豪无上限／米其林顶级</strong><span>1,000,000₫ 以上</span></span></label>
+            <label class="radio-card"><input type="radio" name="diningBudget" value="高端在地精致餐饮（500,000–999,999₫）"><span class="txt"><strong>高端在地精致餐饮</strong><span>500,000 – 999,999₫</span></span></label>
+            <label class="radio-card"><input type="radio" name="diningBudget" value="平价地道／特色小吃（100,000–499,999₫）"><span class="txt"><strong>平价地道／特色小吃</strong><span>100,000 – 499,999₫</span></span></label>
+            <label class="radio-card"><input type="radio" name="diningBudget" value="尚无概念，请根据行程推荐"><span class="txt"><strong>尚无概念</strong><span>请根据行程推荐</span></span></label>
+          </div>
+        </div>
+        <div class="field">
+          <label>整趟行程餐饮比例分配（三格加总约100%，仅供参考不用精算）</label>
+          <div class="mini-num-row">
+            <div class="field"><label style="font-size:12px">顶级／米其林 %</label><input class="it-ratio" id="it-ratio-top" type="number" min="0" max="100" placeholder="0"></div>
+            <div class="field"><label style="font-size:12px">高端精致 %</label><input class="it-ratio" id="it-ratio-mid" type="number" min="0" max="100" placeholder="0"></div>
+            <div class="field"><label style="font-size:12px">平价地道 %</label><input class="it-ratio" id="it-ratio-low" type="number" min="0" max="100" placeholder="0"></div>
+          </div>
+          <p class="mini-num-sum" id="it-ratio-sum">目前加总：0%</p>
+        </div>
       </div>
-      <input type="hidden" name="lang" value="zh-Hans">
-      <input type="hidden" name="source" value="zh-cn/premium-experience.html">
-      <button type="submit" class="submit-btn">提交定制需求</button>
-      <p style="font-size:12.5px;color:var(--muted);margin-top:12px">提交后团队将尽快与您联系，通常于1个工作日内回复。</p>
-    </form>
+
+      <!-- 模块3：成员结构与同行细节 -->
+      <div class="itin-module">
+        <div class="itin-module-head"><span class="num">03 / 05</span><h3>成员结构与同行细节</h3></div>
+        <div class="form-row">
+          <div class="field">
+            <label for="it-adults">成人数</label>
+            <input id="it-adults" type="text" placeholder="例：4">
+          </div>
+          <div class="field">
+            <label for="it-children">儿童数（含年龄）</label>
+            <input id="it-children" type="text" placeholder="例：1位，6岁">
+          </div>
+        </div>
+        <div class="field" style="margin-bottom:22px">
+          <label for="it-seniors">长辈数（含年龄）</label>
+          <input id="it-seniors" type="text" placeholder="例：2位，65岁、68岁">
+        </div>
+        <div class="form-row">
+          <div class="field">
+            <label for="it-nationality">国籍（涉及签证安排）</label>
+            <input id="it-nationality" type="text" placeholder="例：中国大陆">
+          </div>
+          <div class="field">
+            <label for="it-luggage">托运行李数量（件）</label>
+            <input id="it-luggage" type="text" placeholder="例：6件">
+          </div>
+        </div>
+        <div class="field" style="margin-bottom:22px">
+          <label>偏好沟通语言（可复选）</label>
+          <div class="tag-select" data-group="languages">
+            <button type="button" data-value="中文">中文</button>
+            <button type="button" data-value="粤语">粤语</button>
+            <button type="button" data-value="英文">英文</button>
+            <button type="button" data-value="越语">越语</button>
+          </div>
+        </div>
+        <div class="field">
+          <label for="it-special-luggage">大型特规行李（高尔夫球包／轮椅／推车等，无则留空）</label>
+          <input id="it-special-luggage" type="text" placeholder="例：高尔夫球包 x2">
+        </div>
+      </div>
+
+      <!-- 模块4：区域与风格偏好 -->
+      <div class="itin-module">
+        <div class="itin-module-head"><span class="num">04 / 05</span><h3>区域与风格偏好</h3></div>
+        <div class="field" style="margin-bottom:22px">
+          <label>意向区域（可复选）</label>
+          <p style="font-size:12px;color:var(--muted);margin-bottom:10px">北部：河内、下龙湾、宁平、沙坝　中部：岘港、会安、顺化、芽庄　南部：胡志明市、美奈、富国岛</p>
+          <div class="tag-select" data-group="regions">
+            <button type="button" data-value="河内">河内</button>
+            <button type="button" data-value="下龙湾">下龙湾</button>
+            <button type="button" data-value="宁平">宁平</button>
+            <button type="button" data-value="沙坝">沙坝</button>
+            <button type="button" data-value="岘港">岘港</button>
+            <button type="button" data-value="会安">会安</button>
+            <button type="button" data-value="顺化">顺化</button>
+            <button type="button" data-value="芽庄">芽庄</button>
+            <button type="button" data-value="胡志明市">胡志明市</button>
+            <button type="button" data-value="美奈">美奈</button>
+            <button type="button" data-value="富国岛">富国岛</button>
+            <button type="button" data-value="尚无概念，由专业团队全权规划">尚无概念，由专业团队全权规划</button>
+          </div>
+        </div>
+        <div class="field">
+          <label>行程节奏</label>
+          <div class="tag-select" data-group="pace" data-single="true">
+            <button type="button" data-value="紧凑丰富">紧凑丰富</button>
+            <button type="button" data-value="松弛度假">松弛度假</button>
+            <button type="button" data-value="夜猫／夜生活偏好">夜猫／夜生活偏好</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 模块5：管家式加值服务（选填，折叠） -->
+      <details class="itin-module optional">
+        <summary><h3 style="font-size:16px">05 / 05　管家式加值服务与细节（选填）</h3><span class="arrow">▾</span></summary>
+        <div class="body">
+          <div class="field" style="margin-bottom:22px">
+            <label>落地接驳与签证</label>
+            <div class="tag-select" data-group="addons">
+              <button type="button" data-value="VIP机场快速通关">VIP机场快速通关</button>
+              <button type="button" data-value="签证代办">签证代办</button>
+              <button type="button" data-value="eSIM/上网卡代办">eSIM/上网卡代办</button>
+              <button type="button" data-value="包车服务">包车服务</button>
+              <button type="button" data-value="专属语言导游">专属语言导游</button>
+            </div>
+          </div>
+          <div class="field" style="margin-bottom:22px">
+            <label>饮食禁忌</label>
+            <div class="tag-select" data-group="dietary">
+              <button type="button" data-value="全素/蛋奶素">全素/蛋奶素</button>
+              <button type="button" data-value="不吃牛肉">不吃牛肉</button>
+              <button type="button" data-value="不吃猪肉">不吃猪肉</button>
+              <button type="button" data-value="不吃海鲜">不吃海鲜</button>
+              <button type="button" data-value="严格食物过敏">严格食物过敏</button>
+            </div>
+            <input id="it-dietary-note" type="text" placeholder="严格过敏请说明过敏原" style="margin-top:10px;border:none;border-bottom:1px solid var(--line-strong);background:transparent;padding:8px 2px;width:100%;font-family:inherit;font-size:14px">
+          </div>
+          <div class="field" style="margin-bottom:22px">
+            <label>仪式感与特别安排</label>
+            <div class="tag-select" data-group="special">
+              <button type="button" data-value="生日/周年庆祝">生日/周年庆祝</button>
+              <button type="button" data-value="高尔夫球场预订">高尔夫球场预订</button>
+              <button type="button" data-value="随行摄影师/航拍">随行摄影师/航拍</button>
+              <button type="button" data-value="商务资源对接/考察">商务资源对接/考察</button>
+            </div>
+          </div>
+          <div class="field">
+            <label>开票需求</label>
+            <div class="tag-select" data-group="invoice" data-single="true">
+              <button type="button" data-value="个人">个人</button>
+              <button type="button" data-value="企业对公发票/Invoice">企业对公发票/Invoice</button>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <div class="field mt-lg" style="margin-bottom:22px">
+        <label for="it-note">其他需求说明</label>
+        <textarea id="it-note" rows="4" placeholder="还有什么想让我们知道的，都可以写在这里"></textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="field">
+          <label for="it-contact-method">您惯用的联系平台</label>
+          <select id="it-contact-method">
+            <option value="WhatsApp">WhatsApp</option>
+            <option value="Zalo">Zalo</option>
+            <option value="LINE">LINE</option>
+            <option value="微信">微信 WeChat</option>
+            <option value="电话">电话（直接拨打）</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="it-contact">账号或号码</label>
+          <input id="it-contact" type="text" placeholder="例：+86 13800138000 或 账号ID">
+        </div>
+      </div>
+
+      <p style="font-size:12px;color:var(--muted);margin:10px 0 18px">请务必选对联系平台，方便客服一次联系上您。通过表单送出：24小时内回复；直接私信右下角客服：1–2小时内回复。</p>
+
+      <button type="button" class="submit-btn" id="it-submit-btn">送出定制需求</button>
+      <div id="it-result" style="margin-top:16px"></div>
+    </div>
 
     <div class="grid cols-2 mt-lg">
       <div class="case-placeholder">
@@ -478,6 +695,163 @@
 <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
 <script src="../js/firebase-config.js"></script>
 <script src="../js/widget.js"></script>
+<script>
+(function () {
+  if (typeof FIREBASE_READY === 'undefined' || !FIREBASE_READY) return;
+
+  function genRequestId(prefix) {
+    var d = new Date();
+    var ymd = String(d.getFullYear()).slice(2) + String(d.getMonth() + 1).padStart(2, '0') + String(d.getDate()).padStart(2, '0');
+    var rand = Math.random().toString(36).slice(2, 6).toUpperCase();
+    return prefix + ymd + '-' + rand;
+  }
+
+  var form = document.getElementById('itin-form');
+  if (!form) return;
+
+  // ===== 机票尚未预订：切换日期栏位与月份栏位 =====
+  function setupTicketToggle(checkboxId, fieldsId, monthWrapId) {
+    var checkbox = document.getElementById(checkboxId);
+    var fields = document.getElementById(fieldsId);
+    var monthWrap = document.getElementById(monthWrapId);
+    checkbox.addEventListener('change', function () {
+      if (checkbox.checked) {
+        fields.style.display = 'none';
+        monthWrap.style.display = 'block';
+      } else {
+        fields.style.display = '';
+        monthWrap.style.display = 'none';
+      }
+    });
+  }
+  setupTicketToggle('it-arrive-not-booked', 'it-arrive-fields', 'it-arrive-month-wrap');
+  setupTicketToggle('it-depart-not-booked', 'it-depart-fields', 'it-depart-month-wrap');
+
+  var tagState = {};
+  form.querySelectorAll('.tag-select').forEach(function (group) {
+    var key = group.dataset.group;
+    var single = group.dataset.single === 'true';
+    tagState[key] = [];
+    group.querySelectorAll('button').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var val = btn.dataset.value;
+        if (single) {
+          group.querySelectorAll('button').forEach(function (b) { b.classList.remove('active'); });
+          btn.classList.add('active');
+          tagState[key] = [val];
+        } else {
+          btn.classList.toggle('active');
+          if (btn.classList.contains('active')) {
+            tagState[key].push(val);
+          } else {
+            tagState[key] = tagState[key].filter(function (v) { return v !== val; });
+          }
+        }
+      });
+    });
+  });
+
+  form.querySelectorAll('.radio-card-group').forEach(function (group) {
+    group.querySelectorAll('input[type="radio"]').forEach(function (radio) {
+      radio.addEventListener('change', function () {
+        group.querySelectorAll('.radio-card').forEach(function (c) { c.classList.remove('selected'); });
+        radio.closest('.radio-card').classList.add('selected');
+      });
+    });
+  });
+
+  var ratioInputs = form.querySelectorAll('.it-ratio');
+  var ratioSumEl = document.getElementById('it-ratio-sum');
+  function updateRatioSum() {
+    var sum = 0;
+    ratioInputs.forEach(function (i) { sum += parseInt(i.value, 10) || 0; });
+    ratioSumEl.textContent = '目前加总：' + sum + '%';
+    ratioSumEl.classList.toggle('ok', sum === 100);
+  }
+  ratioInputs.forEach(function (i) { i.addEventListener('input', updateRatioSum); });
+
+  var arriveAirportSel = document.getElementById('it-arrive-airport');
+  var departAirportSel = document.getElementById('it-depart-airport');
+  db.collection('fastTrackServices').get().then(function (snap) {
+    var opts = [];
+    snap.forEach(function (doc) { var d = doc.data(); opts.push({ id: doc.id, name: d.nameSimp || d.nameHant, order: d.order || 0 }); });
+    opts.sort(function (a, b) { return a.order - b.order; });
+    var html = '<option value="">请选择或稍后于备注说明</option>' + opts.map(function (o) {
+      return '<option value="' + o.name + '">' + o.name + '</option>';
+    }).join('');
+    arriveAirportSel.innerHTML = html;
+    departAirportSel.innerHTML = html;
+  }).catch(function () { /* 沿用预设空白选单即可，不影响表单其他部分 */ });
+
+  var submitBtn = document.getElementById('it-submit-btn');
+  var resultBox = document.getElementById('it-result');
+
+  submitBtn.addEventListener('click', function () {
+    var contact = document.getElementById('it-contact').value.trim();
+    if (!contact) { alert('请填写联系账号或号码，方便我们主动与您联系报价'); document.getElementById('it-contact').focus(); return; }
+
+    var contactMethod = document.getElementById('it-contact-method').value;
+    var reqId = genRequestId('TR');
+
+    var data = {
+      requestId: reqId,
+      arriveNotBooked: document.getElementById('it-arrive-not-booked').checked,
+      arriveDate: document.getElementById('it-arrive-date').value,
+      arriveTime: document.getElementById('it-arrive-time').value,
+      arriveAirport: arriveAirportSel.value,
+      arriveMonth: document.getElementById('it-arrive-month').value,
+      departNotBooked: document.getElementById('it-depart-not-booked').checked,
+      departDate: document.getElementById('it-depart-date').value,
+      departTime: document.getElementById('it-depart-time').value,
+      departAirport: departAirportSel.value,
+      departMonth: document.getElementById('it-depart-month').value,
+      days: document.getElementById('it-days').value,
+      purposes: tagState.purpose || [],
+      hotelBudget: (form.querySelector('input[name="hotelBudget"]:checked') || {}).value || '',
+      diningBudget: (form.querySelector('input[name="diningBudget"]:checked') || {}).value || '',
+      diningRatio: {
+        top: document.getElementById('it-ratio-top').value || '',
+        mid: document.getElementById('it-ratio-mid').value || '',
+        low: document.getElementById('it-ratio-low').value || ''
+      },
+      adults: document.getElementById('it-adults').value.trim(),
+      children: document.getElementById('it-children').value.trim(),
+      seniors: document.getElementById('it-seniors').value.trim(),
+      nationality: document.getElementById('it-nationality').value.trim(),
+      luggage: document.getElementById('it-luggage').value.trim(),
+      specialLuggage: document.getElementById('it-special-luggage').value.trim(),
+      languages: tagState.languages || [],
+      regions: tagState.regions || [],
+      pace: (tagState.pace || [])[0] || '',
+      addons: tagState.addons || [],
+      dietary: tagState.dietary || [],
+      dietaryNote: document.getElementById('it-dietary-note').value.trim(),
+      special: tagState.special || [],
+      invoice: (tagState.invoice || [])[0] || '',
+      note: document.getElementById('it-note').value.trim(),
+      contactMethod: contactMethod,
+      contact: contactMethod + '：' + contact,
+      status: '待報价',
+      lang: 'zh-Hans',
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    };
+
+    submitBtn.disabled = true;
+    db.collection('itineraryRequests').add(data).then(function () {
+      resultBox.innerHTML =
+        '<div class="request-id-box">' +
+        '<div class="id">' + reqId + '</div>' +
+        '<div class="hint">已收到您的定制需求，通过表单送出将于24小时内回复；若想更快，欢迎直接私信右下角客服，1–2小时内回复。</div>' +
+        '</div>';
+      submitBtn.textContent = '✓ 已送出';
+    }).catch(function (err) {
+      resultBox.innerHTML = '<p style="color:var(--accent);font-size:13px">送出失败，请直接私信右下角客服为您安排。</p>';
+      console.error(err);
+      submitBtn.disabled = false;
+    });
+  });
+})();
+</script>
 <script>
 (function () {
   function genRequestId(prefix) {

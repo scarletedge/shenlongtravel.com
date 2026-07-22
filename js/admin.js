@@ -46,6 +46,7 @@ document.addEventListener('DOMContentLoaded', function () {
       loadFleetRoutes();
       loadFasttrackServices();
       loadFasttrackRequests();
+      loadItineraryRequests();
     } else {
       loginScreen.style.display = 'flex';
       adminShell.classList.remove('show');
@@ -894,6 +895,91 @@ document.addEventListener('DOMContentLoaded', function () {
           if (!confirm('確定要刪除這筆需求嗎？')) return;
           var card = btn.closest('.admin-card');
           db.collection('fastTrackRequests').doc(card.dataset.id).delete().then(function () { showToast('已刪除'); loadFasttrackRequests(); });
+        });
+      });
+    });
+  }
+
+  /* =========================================================
+     定制行程需求管理
+     ========================================================= */
+  var itineraryListEl = document.getElementById('itinerary-requests-list');
+  var ITIN_STATUS_OPTIONS = ['待報價', '已報價', '已成交', '已結束'];
+
+  function arr(v) { return (v && v.length) ? v.join('、') : '—'; }
+
+  function itineraryCardHTML(id, d) {
+    d = d || {};
+    var created = d.createdAt && d.createdAt.toDate ? d.createdAt.toDate().toLocaleString('zh-TW') : '—';
+    var ratio = d.diningRatio || {};
+    return (
+      '<div class="admin-card" data-id="' + id + '">' +
+      '<div class="admin-row">' +
+        '<div class="admin-field"><label>需求編號</label><input value="' + (d.requestId || '') + '" disabled></div>' +
+        '<div class="admin-field"><label style="color:var(--accent);font-weight:700">📞 聯絡方式</label><input value="' + (d.contact || '') + '" disabled style="font-weight:700;color:var(--accent)"></div>' +
+        '<div class="admin-field"><label>送出時間</label><input value="' + created + '" disabled></div>' +
+      '</div>' +
+      '<div class="admin-row">' +
+        '<div class="admin-field"><label>抵達</label><input value="' + (d.arriveNotBooked ? '機票未訂，預計 ' + (d.arriveMonth || '未填') : [d.arriveDate, d.arriveTime, d.arriveAirport].filter(Boolean).join(' ') || '—') + '" disabled></div>' +
+        '<div class="admin-field"><label>離境</label><input value="' + (d.departNotBooked ? '機票未訂，預計 ' + (d.departMonth || '未填') : [d.departDate, d.departTime, d.departAirport].filter(Boolean).join(' ') || '—') + '" disabled></div>' +
+        '<div class="admin-field"><label>天數</label><input value="' + (d.days || '—') + '" disabled></div>' +
+      '</div>' +
+      '<div class="admin-row">' +
+        '<div class="admin-field"><label>出行目的</label><input value="' + arr(d.purposes) + '" disabled></div>' +
+        '<div class="admin-field"><label>酒店預算</label><input value="' + (d.hotelBudget || '—') + '" disabled></div>' +
+        '<div class="admin-field"><label>餐飲預算</label><input value="' + (d.diningBudget || '—') + '" disabled></div>' +
+      '</div>' +
+      '<div class="admin-row">' +
+        '<div class="admin-field"><label>餐飲比例</label><input value="頂級' + (ratio.top || 0) + '%／高端' + (ratio.mid || 0) + '%／地道' + (ratio.low || 0) + '%" disabled></div>' +
+        '<div class="admin-field"><label>成人／兒童／長輩</label><input value="' + [d.adults, d.children, d.seniors].filter(Boolean).join('／') + '" disabled></div>' +
+        '<div class="admin-field"><label>國籍</label><input value="' + (d.nationality || '—') + '" disabled></div>' +
+      '</div>' +
+      '<div class="admin-row">' +
+        '<div class="admin-field"><label>語言</label><input value="' + arr(d.languages) + '" disabled></div>' +
+        '<div class="admin-field"><label>行李</label><input value="' + [d.luggage, d.specialLuggage].filter(Boolean).join('，') + '" disabled></div>' +
+        '<div class="admin-field"><label>意向區域</label><input value="' + arr(d.regions) + '" disabled></div>' +
+      '</div>' +
+      '<div class="admin-row">' +
+        '<div class="admin-field"><label>行程節奏</label><input value="' + (d.pace || '—') + '" disabled></div>' +
+        '<div class="admin-field"><label>加值服務</label><input value="' + arr(d.addons) + '" disabled></div>' +
+        '<div class="admin-field"><label>飲食禁忌</label><input value="' + (arr(d.dietary) + (d.dietaryNote ? '（' + d.dietaryNote + '）' : '')) + '" disabled></div>' +
+      '</div>' +
+      '<div class="admin-row">' +
+        '<div class="admin-field"><label>特別安排</label><input value="' + arr(d.special) + '" disabled></div>' +
+        '<div class="admin-field"><label>開票需求</label><input value="' + (d.invoice || '—') + '" disabled></div>' +
+        '<div class="admin-field"><label>處理狀態</label><select class="f-status">' +
+          ITIN_STATUS_OPTIONS.map(function (s) { return '<option' + (d.status === s ? ' selected' : '') + '>' + s + '</option>'; }).join('') +
+        '</select></div>' +
+      '</div>' +
+      (d.note ? '<div class="admin-field" style="margin-bottom:14px"><label>其他備註</label><input value="' + d.note + '" disabled></div>' : '') +
+      '<div class="admin-actions">' +
+        '<button class="btn-save save-itinerary">儲存狀態</button>' +
+        '<button class="btn-delete delete-itinerary">刪除</button>' +
+      '</div>' +
+      '</div>'
+    );
+  }
+
+  function loadItineraryRequests() {
+    itineraryListEl.innerHTML = '<div class="admin-loading">載入中…</div>';
+    db.collection('itineraryRequests').orderBy('createdAt', 'desc').get().then(function (snap) {
+      if (snap.empty) { itineraryListEl.innerHTML = '<p class="desc">目前沒有客戶定制行程需求。</p>'; return; }
+      var html = '';
+      snap.forEach(function (doc) { html += itineraryCardHTML(doc.id, doc.data()); });
+      itineraryListEl.innerHTML = html;
+      itineraryListEl.querySelectorAll('.save-itinerary').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var card = btn.closest('.admin-card');
+          db.collection('itineraryRequests').doc(card.dataset.id).set({
+            status: card.querySelector('.f-status').value
+          }, { merge: true }).then(function () { showToast('已更新狀態'); loadItineraryRequests(); });
+        });
+      });
+      itineraryListEl.querySelectorAll('.delete-itinerary').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          if (!confirm('確定要刪除這筆定制行程需求嗎？')) return;
+          var card = btn.closest('.admin-card');
+          db.collection('itineraryRequests').doc(card.dataset.id).delete().then(function () { showToast('已刪除'); loadItineraryRequests(); });
         });
       });
     });
