@@ -309,11 +309,11 @@
           </div>
         </div>
         <div class="field">
-          <label>整趟行程餐饮比例分配（三格加总约100%，仅供参考不用精算）</label>
+          <label>餐饮比例分配（三格约加总100%，仅供参考）</label>
           <div class="mini-num-row">
-            <div class="field"><label style="font-size:12px">顶级／米其林 %</label><input class="it-ratio" id="it-ratio-top" type="number" min="0" max="100" placeholder="0"></div>
-            <div class="field"><label style="font-size:12px">高端精致 %</label><input class="it-ratio" id="it-ratio-mid" type="number" min="0" max="100" placeholder="0"></div>
-            <div class="field"><label style="font-size:12px">平价地道 %</label><input class="it-ratio" id="it-ratio-low" type="number" min="0" max="100" placeholder="0"></div>
+            <div class="field"><label style="font-size:12px">顶级／米其林 %</label><input class="it-ratio" id="it-ratio-top" type="number" min="0" max="100" placeholder="建议 20"></div>
+            <div class="field"><label style="font-size:12px">高端精致 %</label><input class="it-ratio" id="it-ratio-mid" type="number" min="0" max="100" placeholder="建议 50"></div>
+            <div class="field"><label style="font-size:12px">平价地道 %</label><input class="it-ratio" id="it-ratio-low" type="number" min="0" max="100" placeholder="建议 30"></div>
           </div>
           <p class="mini-num-sum" id="it-ratio-sum">目前加总：0%</p>
         </div>
@@ -353,6 +353,8 @@
             <button type="button" data-value="粤语">粤语</button>
             <button type="button" data-value="英文">英文</button>
             <button type="button" data-value="越语">越语</button>
+            <button type="button" data-value="日语">日语</button>
+            <button type="button" data-value="韩语">韩语</button>
           </div>
         </div>
         <div class="field">
@@ -363,23 +365,42 @@
 
       <!-- 模块4：区域与风格偏好 -->
       <div class="itin-module">
-        <div class="itin-module-head"><span class="num">04 / 05</span><h3>区域与风格偏好</h3></div>
+        <div class="itin-module-head"><span class="num">04 / 05</span><h3>区域与风格偏好　<span style="font-size:12px;color:var(--gold);font-weight:400">— 带您玩最想玩的地方</span></h3></div>
         <div class="field" style="margin-bottom:22px">
-          <label>意向区域（可复选）</label>
-          <p style="font-size:12px;color:var(--muted);margin-bottom:10px">北部：河内、下龙湾、宁平、沙坝　中部：岘港、会安、顺化、芽庄　南部：胡志明市、美奈、富国岛</p>
-          <div class="tag-select" data-group="regions">
-            <button type="button" data-value="河内">河内</button>
-            <button type="button" data-value="下龙湾">下龙湾</button>
-            <button type="button" data-value="宁平">宁平</button>
-            <button type="button" data-value="沙坝">沙坝</button>
-            <button type="button" data-value="岘港">岘港</button>
-            <button type="button" data-value="会安">会安</button>
-            <button type="button" data-value="顺化">顺化</button>
-            <button type="button" data-value="芽庄">芽庄</button>
-            <button type="button" data-value="胡志明市">胡志明市</button>
-            <button type="button" data-value="美奈">美奈</button>
-            <button type="button" data-value="富国岛">富国岛</button>
-            <button type="button" data-value="尚无概念，由专业团队全权规划">尚无概念，由专业团队全权规划</button>
+          <label>意向区域（可复选，想去哪就点哪）</label>
+          <div class="region-groups mt-lg" style="margin-top:14px">
+            <div class="region-group">
+              <span class="region-label">北部</span>
+              <div class="tag-select" data-group="regions">
+                <button type="button" data-value="河内">河内</button>
+                <button type="button" data-value="下龙湾">下龙湾</button>
+                <button type="button" data-value="宁平">宁平</button>
+                <button type="button" data-value="沙坝">沙坝</button>
+              </div>
+            </div>
+            <div class="region-group">
+              <span class="region-label">中部</span>
+              <div class="tag-select" data-group="regions">
+                <button type="button" data-value="岘港">岘港</button>
+                <button type="button" data-value="会安">会安</button>
+                <button type="button" data-value="顺化">顺化</button>
+                <button type="button" data-value="芽庄">芽庄</button>
+              </div>
+            </div>
+            <div class="region-group">
+              <span class="region-label">南部</span>
+              <div class="tag-select" data-group="regions">
+                <button type="button" data-value="胡志明市">胡志明市</button>
+                <button type="button" data-value="美奈">美奈</button>
+                <button type="button" data-value="富国岛">富国岛</button>
+              </div>
+            </div>
+            <div class="region-group">
+              <span class="region-label">　</span>
+              <div class="tag-select" data-group="regions">
+                <button type="button" data-value="尚无概念，由专业团队全权规划">✨ 尚无概念，由专业团队全权规划</button>
+              </div>
+            </div>
           </div>
         </div>
         <div class="field">
@@ -393,9 +414,12 @@
       </div>
 
       <!-- 模块5：管家式加值服务（选填，折叠） -->
-      <details class="itin-module optional">
-        <summary><h3 style="font-size:16px">05 / 05　管家式加值服务与细节（选填）</h3><span class="arrow">▾</span></summary>
-        <div class="body">
+      <div class="itin-module optional" style="padding:0;border:none;background:none">
+        <button type="button" class="itin-toggle-btn" id="itin-optional-toggle">
+          <h3>05 / 05　管家式加值服务与细节（选填）</h3>
+          <span class="arrow">▾</span>
+        </button>
+        <div class="itin-collapsible-body" id="itin-optional-body">
           <div class="field" style="margin-bottom:22px">
             <label>落地接驳与签证</label>
             <div class="tag-select" data-group="addons">
@@ -434,7 +458,7 @@
             </div>
           </div>
         </div>
-      </details>
+      </div>
 
       <div class="field mt-lg" style="margin-bottom:22px">
         <label for="it-note">其他需求说明</label>
@@ -726,6 +750,14 @@
   }
   setupTicketToggle('it-arrive-not-booked', 'it-arrive-fields', 'it-arrive-month-wrap');
   setupTicketToggle('it-depart-not-booked', 'it-depart-fields', 'it-depart-month-wrap');
+
+  // ===== 模块5：展开／收合按钮 =====
+  var optionalToggle = document.getElementById('itin-optional-toggle');
+  var optionalBody = document.getElementById('itin-optional-body');
+  optionalToggle.addEventListener('click', function () {
+    optionalToggle.classList.toggle('open');
+    optionalBody.classList.toggle('open');
+  });
 
   var tagState = {};
   form.querySelectorAll('.tag-select').forEach(function (group) {

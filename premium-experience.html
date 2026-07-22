@@ -312,11 +312,11 @@
           </div>
         </div>
         <div class="field">
-          <label>整趟行程餐飲比例分配（三格加總約100%，僅供參考不用精算）</label>
+          <label>餐飲比例分配（三格約加總100%，僅供參考）</label>
           <div class="mini-num-row">
-            <div class="field"><label style="font-size:12px">頂級／米其林 %</label><input class="it-ratio" id="it-ratio-top" type="number" min="0" max="100" placeholder="0"></div>
-            <div class="field"><label style="font-size:12px">高端精緻 %</label><input class="it-ratio" id="it-ratio-mid" type="number" min="0" max="100" placeholder="0"></div>
-            <div class="field"><label style="font-size:12px">平價地道 %</label><input class="it-ratio" id="it-ratio-low" type="number" min="0" max="100" placeholder="0"></div>
+            <div class="field"><label style="font-size:12px">頂級／米其林 %</label><input class="it-ratio" id="it-ratio-top" type="number" min="0" max="100" placeholder="建議 20"></div>
+            <div class="field"><label style="font-size:12px">高端精緻 %</label><input class="it-ratio" id="it-ratio-mid" type="number" min="0" max="100" placeholder="建議 50"></div>
+            <div class="field"><label style="font-size:12px">平價地道 %</label><input class="it-ratio" id="it-ratio-low" type="number" min="0" max="100" placeholder="建議 30"></div>
           </div>
           <p class="mini-num-sum" id="it-ratio-sum">目前加總：0%</p>
         </div>
@@ -356,6 +356,8 @@
             <button type="button" data-value="粵語">粵語</button>
             <button type="button" data-value="英文">英文</button>
             <button type="button" data-value="越語">越語</button>
+            <button type="button" data-value="日語">日語</button>
+            <button type="button" data-value="韓語">韓語</button>
           </div>
         </div>
         <div class="field">
@@ -366,23 +368,42 @@
 
       <!-- 模組4：區域與風格偏好 -->
       <div class="itin-module">
-        <div class="itin-module-head"><span class="num">04 / 05</span><h3>區域與風格偏好</h3></div>
+        <div class="itin-module-head"><span class="num">04 / 05</span><h3>區域與風格偏好　<span style="font-size:12px;color:var(--gold);font-weight:400">— 帶您玩最想玩的地方</span></h3></div>
         <div class="field" style="margin-bottom:22px">
-          <label>意向區域（可複選）</label>
-          <p style="font-size:12px;color:var(--muted);margin-bottom:10px">北部：河內、下龍灣、寧平、沙壩　中部：峴港、會安、順化、芽莊　南部：胡志明市、美奈、富國島</p>
-          <div class="tag-select" data-group="regions">
-            <button type="button" data-value="河內">河內</button>
-            <button type="button" data-value="下龍灣">下龍灣</button>
-            <button type="button" data-value="寧平">寧平</button>
-            <button type="button" data-value="沙壩">沙壩</button>
-            <button type="button" data-value="峴港">峴港</button>
-            <button type="button" data-value="會安">會安</button>
-            <button type="button" data-value="順化">順化</button>
-            <button type="button" data-value="芽莊">芽莊</button>
-            <button type="button" data-value="胡志明市">胡志明市</button>
-            <button type="button" data-value="美奈">美奈</button>
-            <button type="button" data-value="富國島">富國島</button>
-            <button type="button" data-value="尚無概念，由專業團隊全權規劃">尚無概念，由專業團隊全權規劃</button>
+          <label>意向區域（可複選，想去哪就點哪）</label>
+          <div class="region-groups mt-lg" style="margin-top:14px">
+            <div class="region-group">
+              <span class="region-label">北部</span>
+              <div class="tag-select" data-group="regions">
+                <button type="button" data-value="河內">河內</button>
+                <button type="button" data-value="下龍灣">下龍灣</button>
+                <button type="button" data-value="寧平">寧平</button>
+                <button type="button" data-value="沙壩">沙壩</button>
+              </div>
+            </div>
+            <div class="region-group">
+              <span class="region-label">中部</span>
+              <div class="tag-select" data-group="regions">
+                <button type="button" data-value="峴港">峴港</button>
+                <button type="button" data-value="會安">會安</button>
+                <button type="button" data-value="順化">順化</button>
+                <button type="button" data-value="芽莊">芽莊</button>
+              </div>
+            </div>
+            <div class="region-group">
+              <span class="region-label">南部</span>
+              <div class="tag-select" data-group="regions">
+                <button type="button" data-value="胡志明市">胡志明市</button>
+                <button type="button" data-value="美奈">美奈</button>
+                <button type="button" data-value="富國島">富國島</button>
+              </div>
+            </div>
+            <div class="region-group">
+              <span class="region-label">　</span>
+              <div class="tag-select" data-group="regions">
+                <button type="button" data-value="尚無概念，由專業團隊全權規劃">✨ 尚無概念，由專業團隊全權規劃</button>
+              </div>
+            </div>
           </div>
         </div>
         <div class="field">
@@ -396,9 +417,12 @@
       </div>
 
       <!-- 模組5：管家式加值服務（選填，折疊） -->
-      <details class="itin-module optional">
-        <summary><h3 style="font-size:16px">05 / 05　管家式加值服務與細節（選填）</h3><span class="arrow">▾</span></summary>
-        <div class="body">
+      <div class="itin-module optional" style="padding:0;border:none;background:none">
+        <button type="button" class="itin-toggle-btn" id="itin-optional-toggle">
+          <h3>05 / 05　管家式加值服務與細節（選填）</h3>
+          <span class="arrow">▾</span>
+        </button>
+        <div class="itin-collapsible-body" id="itin-optional-body">
           <div class="field" style="margin-bottom:22px">
             <label>落地接駁與簽證</label>
             <div class="tag-select" data-group="addons">
@@ -437,7 +461,7 @@
             </div>
           </div>
         </div>
-      </details>
+      </div>
 
       <div class="field mt-lg" style="margin-bottom:22px">
         <label for="it-note">其他需求說明</label>
@@ -730,6 +754,14 @@
   }
   setupTicketToggle('it-arrive-not-booked', 'it-arrive-fields', 'it-arrive-month-wrap');
   setupTicketToggle('it-depart-not-booked', 'it-depart-fields', 'it-depart-month-wrap');
+
+  // ===== 模組5：展開／收合按鈕 =====
+  var optionalToggle = document.getElementById('itin-optional-toggle');
+  var optionalBody = document.getElementById('itin-optional-body');
+  optionalToggle.addEventListener('click', function () {
+    optionalToggle.classList.toggle('open');
+    optionalBody.classList.toggle('open');
+  });
 
   // ===== 標籤式多選／單選 =====
   var tagState = {};
