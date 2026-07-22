@@ -283,8 +283,12 @@ footer{background:var(--ink);color:#B9AF9B;padding:64px 0 32px;font-size:13.5px}
 }
 .featured-banner h2{color:var(--paper);font-size:clamp(22px,3vw,30px);margin-bottom:10px}
 .featured-banner p{color:#B9AF9B;font-size:14.5px;max-width:38em}
-.featured-banner .btn-solid{background:var(--accent)}
+.featured-banner .btn-solid{background:var(--accent);flex-shrink:0;white-space:nowrap}
 .featured-banner .btn-solid:hover{background:var(--gold);color:var(--ink)}
+@media(max-width:700px){
+  .featured-banner .wrap{flex-direction:column;align-items:flex-start}
+  .featured-banner .btn-solid{margin-top:10px}
+}
 
 /* ===== 包車計算機：模式切換 ===== */
 .mode-toggle{display:flex;gap:10px;margin-bottom:24px}

@@ -335,7 +335,24 @@
         <label>4. 人數與其他需求</label>
         <input class="calc-select" id="guide-note" type="text" placeholder="例：4人，其中有長輩，希望步調放慢">
       </div>
-      <div class="admin-actions" style="margin-top:8px">
+      <div class="form-row" style="margin-top:18px">
+        <div class="field">
+          <label for="guide-contact-method">您慣用的聯絡平台</label>
+          <select id="guide-contact-method">
+            <option value="WhatsApp">WhatsApp</option>
+            <option value="Zalo">Zalo</option>
+            <option value="LINE">LINE</option>
+            <option value="WeChat">WeChat</option>
+            <option value="電話">電話（直接撥打）</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="guide-contact">帳號或號碼</label>
+          <input id="guide-contact" type="text" placeholder="例：+886 912345678 或 帳號ID">
+        </div>
+      </div>
+      <p style="font-size:12px;color:var(--muted);margin:10px 0 0">請務必選對平台，這樣客服才能一次就聯繫上您。透過表單送出：24小時內回覆；直接私訊右下角客服：1–2小時內回覆。</p>
+      <div class="admin-actions" style="margin-top:14px">
         <button class="btn-save" id="guide-submit" style="flex:1;padding:13px">送出配對需求</button>
       </div>
       <div id="guide-result" style="margin-top:18px"></div>
@@ -495,8 +512,11 @@
   var guideResult = document.getElementById('guide-result');
   guideSubmitBtn.addEventListener('click', function () {
     if (!selectedType) { alert('請先選擇想要的導遊類型'); return; }
+    var contact = document.getElementById('guide-contact').value.trim();
+    if (!contact) { alert('請填寫聯絡帳號或號碼，方便我們主動與您聯繫配對結果'); document.getElementById('guide-contact').focus(); return; }
     if (typeof FIREBASE_READY === 'undefined' || !FIREBASE_READY) { alert('系統尚未設定完成，請直接私訊右下角客服。'); return; }
 
+    var contactMethod = document.getElementById('guide-contact-method').value;
     var reqId = genRequestId('GD');
     var data = {
       requestId: reqId,
@@ -505,6 +525,8 @@
       language: document.getElementById('guide-lang').value,
       days: document.getElementById('guide-days').value.trim(),
       note: document.getElementById('guide-note').value.trim(),
+      contactMethod: contactMethod,
+      contact: contactMethod + '：' + contact,
       status: '待配對',
       lang: 'zh-Hant',
       createdAt: firebase.firestore.FieldValue.serverTimestamp()
@@ -515,7 +537,7 @@
       guideResult.innerHTML =
         '<div class="request-id-box">' +
         '<div class="id">' + reqId + '</div>' +
-        '<div class="hint">請截圖這個編號，私訊右下角諮詢按鈕給客服，我們會盡快為您配對合適的導遊。</div>' +
+        '<div class="hint">已收到您的需求，透過表單送出將於24小時內回覆為您配對；若想更快，歡迎直接私訊右下角客服，1–2小時內回覆。</div>' +
         '</div>';
     }).catch(function () {
       guideResult.innerHTML = '<p style="color:var(--accent);font-size:13px">送出失敗，請直接私訊右下角客服為您安排。</p>';

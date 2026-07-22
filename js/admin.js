@@ -18,6 +18,14 @@ document.addEventListener('DOMContentLoaded', function () {
   var userEmailEl = document.getElementById('user-email');
   var toast = document.getElementById('save-toast');
 
+  // ===== 全域錯誤攔截：任何Firestore操作失敗都會跳出明確錯誤訊息，不再靜默失敗 =====
+  window.addEventListener('unhandledrejection', function (event) {
+    console.error('Firestore 操作失敗：', event.reason);
+    var msg = (event.reason && event.reason.message) ? event.reason.message : String(event.reason);
+    alert('操作失敗，請截圖這個訊息給開發者：\n\n' + msg);
+    event.preventDefault();
+  });
+
   function showToast(msg) {
     toast.textContent = msg || '已儲存';
     toast.classList.add('show');
@@ -485,6 +493,7 @@ document.addEventListener('DOMContentLoaded', function () {
       '<div class="admin-card" data-id="' + id + '">' +
       '<div class="admin-row">' +
         '<div class="admin-field"><label>需求編號</label><input value="' + (d.requestId || '') + '" disabled></div>' +
+        '<div class="admin-field"><label style="color:var(--accent);font-weight:700">📞 聯絡方式</label><input value="' + (d.contact || '（未留下，舊資料）') + '" disabled style="font-weight:700;color:var(--accent)"></div>' +
         '<div class="admin-field"><label>想要的類型</label><input value="' + (d.guideTypeLabel || '') + '" disabled></div>' +
         '<div class="admin-field"><label>語言需求</label><input value="' + (d.language || '') + '" disabled></div>' +
       '</div>' +
@@ -856,12 +865,15 @@ document.addEventListener('DOMContentLoaded', function () {
     var created = d.createdAt && d.createdAt.toDate ? d.createdAt.toDate().toLocaleString('zh-TW') : '—';
     return (
       '<div class="admin-card" data-id="' + id + '">' +
+      (d.isRush ? '<p style="color:var(--accent);font-size:12.5px;font-weight:700;margin-bottom:10px">⚡ 急件（預約不足24小時，已加收加急費）</p>' : '') +
       '<div class="admin-row">' +
         '<div class="admin-field"><label>需求編號</label><input value="' + (d.requestId || '') + '" disabled></div>' +
+        '<div class="admin-field"><label style="color:var(--accent);font-weight:700">📞 聯絡方式</label><input value="' + (d.contact || '（未留下，舊資料）') + '" disabled style="font-weight:700;color:var(--accent)"></div>' +
         '<div class="admin-field"><label>機場</label><input value="' + (d.airportName || '') + '" disabled></div>' +
         '<div class="admin-field"><label>時段</label><input value="' + (d.time === 'night' ? '夜間' : '日間') + '" disabled></div>' +
       '</div>' +
       '<div class="admin-row">' +
+        '<div class="admin-field"><label>預計服務日期</label><input value="' + (d.serviceDate || '未填寫') + '" disabled></div>' +
         '<div class="admin-field"><label>加購舉牌</label><input value="' + (d.board ? '是' : '否') + '" disabled></div>' +
         '<div class="admin-field"><label>加購排隊協助</label><input value="' + (d.queueHelp ? '是' : '否') + '" disabled></div>' +
         '<div class="admin-field"><label>送出時間</label><input value="' + created + '" disabled></div>' +

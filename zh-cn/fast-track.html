@@ -142,6 +142,11 @@
           </button>
         </div>
       </div>
+      <div class="calc-step">
+        <label>3. 预计服务日期</label>
+        <input class="calc-select" id="ft-date" type="date">
+        <p style="font-size:12px;color:var(--muted);margin-top:6px">若未提前至少24小时预约，需加收加急处理费，详见下方说明。</p>
+      </div>
       <div class="driver-toggle">
         <div class="label">加购举牌接机<span class="note">出关口专人举牌等候</span></div>
         <label class="switch"><input type="checkbox" id="ft-board-toggle"><span class="slider"></span></label>
@@ -150,8 +155,28 @@
         <div class="label">加购签证加急排队协助<span class="note">电子签证换贴纸签、现场排队时协助加速办理</span></div>
         <label class="switch"><input type="checkbox" id="ft-queue-toggle"><span class="slider"></span></label>
       </div>
+      <div class="form-row" style="margin-top:18px">
+        <div class="field">
+          <label for="ft-contact-method">您惯用的联系平台</label>
+          <select id="ft-contact-method">
+            <option value="WhatsApp">WhatsApp</option>
+            <option value="Zalo">Zalo</option>
+            <option value="LINE">LINE</option>
+            <option value="微信">微信 WeChat</option>
+            <option value="电话">电话（直接拨打）</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="ft-contact">账号或号码</label>
+          <input id="ft-contact" type="text" placeholder="例：+86 13800138000 或 账号ID">
+        </div>
+      </div>
+      <p style="font-size:12px;color:var(--muted);margin:10px 0 0">请务必选对平台，这样客服才能一次就联系上您，不用逐一尝试。通过表单送出：24小时内回复；直接私信右下角客服：1–2小时内回复。</p>
+      <div class="admin-actions" style="margin-top:14px">
+        <button class="btn-save" id="ft-submit-btn" style="flex:1;padding:13px">送出预约需求</button>
+      </div>
       <div class="calc-result" id="ft-result">
-        <span style="color:var(--muted);font-size:14px">选择以上选项后，这里会显示报价</span>
+        <span style="color:var(--muted);font-size:14px">选择以上选项并填写联系方式后，点击送出即可看到报价</span>
       </div>
     </div>
   </div>
@@ -259,11 +284,19 @@
 
   var airportSel = document.getElementById('ft-airport');
   var timeBtns = document.querySelectorAll('#ft-calc .hour-btn');
+  var dateInput = document.getElementById('ft-date');
   var boardToggle = document.getElementById('ft-board-toggle');
   var queueToggle = document.getElementById('ft-queue-toggle');
+  var contactMethodSel = document.getElementById('ft-contact-method');
+  var contactInput = document.getElementById('ft-contact');
+  var submitBtn = document.getElementById('ft-submit-btn');
   var resultBox = document.getElementById('ft-result');
   var airports = [];
   var state = { airport: null, time: null };
+  var RUSH_SURCHARGE_CNY = 150;
+  var RUSH_HOURS = 24;
+
+  dateInput.min = new Date().toISOString().slice(0, 10);
 
   db.collection('fastTrackServices').get().then(function (snap) {
     snap.forEach(function (doc) { airports.push(Object.assign({ id: doc.id }, doc.data())); });
@@ -275,58 +308,107 @@
     airportSel.innerHTML = '<option value="">暂时无法载入，请私信客服</option>';
   });
 
-  airportSel.addEventListener('change', function () { state.airport = airportSel.value; update(); });
+  airportSel.addEventListener('change', function () { state.airport = airportSel.value; preview(); });
   timeBtns.forEach(function (btn) {
     btn.addEventListener('click', function () {
       timeBtns.forEach(function (b) { b.classList.remove('active'); });
       btn.classList.add('active');
       state.time = btn.dataset.value;
-      update();
+      preview();
     });
   });
-  boardToggle.addEventListener('change', update);
-  queueToggle.addEventListener('change', update);
+  dateInput.addEventListener('change', preview);
+  boardToggle.addEventListener('change', preview);
+  queueToggle.addEventListener('change', preview);
 
-  function update() {
-    if (!state.airport || !state.time) {
-      resultBox.innerHTML = '<span style="color:var(--muted);font-size:14px">选择以上选项后，这里会显示报价</span>';
+  function isRush() {
+    if (!dateInput.value) return false;
+    var target = new Date(dateInput.value + 'T00:00:00');
+    var diffHours = (target.getTime() - Date.now()) / 3600000;
+    return diffHours < RUSH_HOURS;
+  }
+
+  function currentQuote() {
+    if (!state.airport || !state.time) return null;
+    var a = airports.filter(function (x) { return x.id === state.airport; })[0];
+    if (!a) return null;
+    var base = state.time === 'day' ? a.dayPriceCNY : a.nightPriceCNY;
+    if (base == null) return { airport: a, base: null, rush: isRush() };
+    var total = base + (boardToggle.checked ? (a.boardSurchargeCNY || 100) : 0) + (isRush() ? RUSH_SURCHARGE_CNY : 0);
+    return { airport: a, base: base, total: total, rush: isRush() };
+  }
+
+  function rushLine(q) {
+    return q.rush
+      ? '<div class="price-vnd" style="color:var(--accent)">已包含加急处理费 US$' + (RUSH_SURCHARGE_CNY * CNY_TO_USD).toFixed(2) + '（预约时间不足24小时）</div>'
+      : '';
+  }
+
+  function preview() {
+    var q = currentQuote();
+    if (!q) {
+      resultBox.innerHTML = '<span style="color:var(--muted);font-size:14px">选择以上选项并填写联系方式后，点击送出即可看到报价</span>';
       return;
     }
-    var a = airports.filter(function (x) { return x.id === state.airport; })[0];
-    if (!a) return;
-
-    var base = state.time === 'day' ? a.dayPriceCNY : a.nightPriceCNY;
-    if (base == null) {
+    if (q.base == null) {
       resultBox.innerHTML = '<span class="price-ask">价格详询</span><div class="hint">请私信右下角客服为您报价。</div>';
       return;
     }
-    var total = base + (boardToggle.checked ? (a.boardSurchargeCNY || 100) : 0);
+    var usd = (q.total * CNY_TO_USD).toFixed(2);
+    var vnd = Math.round(q.total * CNY_TO_VND / 1000) * 1000;
+    resultBox.innerHTML =
+      '<div class="price-usd">US$' + usd + '（预览）</div>' +
+      '<div class="price-vnd">≈ ' + vnd.toLocaleString('en-US') + '₫</div>' +
+      rushLine(q) +
+      '<div class="hint">填写联系方式后，点击「送出预约需求」即可完成预约并取得需求编号。</div>';
+  }
 
-    var usd = (total * CNY_TO_USD).toFixed(2);
-    var vnd = Math.round(total * CNY_TO_VND / 1000) * 1000;
+  submitBtn.addEventListener('click', function () {
+    var q = currentQuote();
+    if (!q) { alert('请先选择机场与抵达时段'); return; }
+    var contact = contactInput.value.trim();
+    if (!contact) { alert('请填写联系账号或号码，方便我们主动与您联系安排'); contactInput.focus(); return; }
 
     var reqId = genRequestId('FT');
-    var queueLine = queueToggle.checked
-      ? '<div class="price-vnd" style="color:var(--accent)">另加购：签证加急排队协助（价格详询，请私信客服）</div>'
-      : '';
-
-    resultBox.innerHTML =
-      '<div class="price-usd">US$' + usd + '</div>' +
-      '<div class="price-vnd">≈ ' + vnd.toLocaleString('en-US') + '₫</div>' +
-      queueLine +
-      '<div class="hint">需求编号 <strong>' + reqId + '</strong>　屏幕截图这个结果，私信右下角咨询按钮给客服，并直接提供护照、签证、航班号码即可完成预约。</div>';
+    var contactFull = contactMethodSel.value + '：' + contact;
+    submitBtn.disabled = true;
 
     db.collection('fastTrackRequests').add({
       requestId: reqId,
       airportId: state.airport,
-      airportName: a.nameSimp || a.nameHant,
+      airportName: q.airport.nameSimp || q.airport.nameHant,
       time: state.time,
+      serviceDate: dateInput.value || null,
+      isRush: q.rush,
       board: boardToggle.checked,
       queueHelp: queueToggle.checked,
+      contactMethod: contactMethodSel.value,
+      contact: contactFull,
       lang: 'zh-Hans',
       createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    }).then(function () {
+      var queueLine = queueToggle.checked
+        ? '<div class="price-vnd" style="color:var(--accent)">另加购：签证加急排队协助（价格详询，我们会一并与您确认）</div>'
+        : '';
+      if (q.base == null) {
+        resultBox.innerHTML =
+          '<div class="price-ask">价格详询</div>' + queueLine +
+          '<div class="hint">需求编号 <strong>' + reqId + '</strong>　已收到您的需求，我们会尽快主动与您联系确认报价。</div>';
+      } else {
+        var usd = (q.total * CNY_TO_USD).toFixed(2);
+        var vnd = Math.round(q.total * CNY_TO_VND / 1000) * 1000;
+        resultBox.innerHTML =
+          '<div class="price-usd">US$' + usd + '</div>' +
+          '<div class="price-vnd">≈ ' + vnd.toLocaleString('en-US') + '₫</div>' +
+          rushLine(q) + queueLine +
+          '<div class="hint">需求编号 <strong>' + reqId + '</strong>　已收到您的需求，通过表单送出将于24小时内回复；若想更快，欢迎直接私信右下角客服，1–2小时内回复。届时请提供护照、签证、航班号码即可完成安排。</div>';
+      }
+      submitBtn.textContent = '✓ 已送出';
+    }).catch(function (err) {
+      alert('送出失败，请直接私信右下角客服为您安排。\n\n' + (err && err.message ? err.message : ''));
+      submitBtn.disabled = false;
     });
-  }
+  });
 })();
 </script>
 </body>
