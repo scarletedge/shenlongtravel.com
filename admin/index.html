@@ -51,6 +51,8 @@
     <button class="nav-tab active" data-panel="panel-rates">匯率設定</button>
     <button class="nav-tab" data-panel="panel-visa">簽證價目表</button>
     <button class="nav-tab" data-panel="panel-team">團隊成員</button>
+    <button class="nav-tab" data-panel="panel-guides">地陪導遊</button>
+    <button class="nav-tab" data-panel="panel-fleet">包車與派車</button>
   </div>
 
   <div class="admin-main">
@@ -96,6 +98,37 @@
       <div class="admin-actions">
         <button class="btn-add" id="add-team-row" style="flex:1">＋ 新增一位成員</button>
         <button class="btn-save" id="seed-team" style="white-space:nowrap">一鍵匯入現有4位成員</button>
+      </div>
+    </div>
+
+    <!-- 地陪導遊 -->
+    <div class="admin-panel" id="panel-guides">
+      <h2>地陪導遊管理</h2>
+      <p class="desc">導遊自己在網站上報名後，會先出現在「待審核申請」；審核通過會移到「已核准名單」。客戶配對需求會出現在「配對需求」，配對完成後手動記錄配對的導遊即可。</p>
+
+      <h3 style="font-size:16px;margin-bottom:14px">待審核申請</h3>
+      <div id="guides-pending-list" class="mt-lg" style="margin-top:0;margin-bottom:36px"></div>
+
+      <h3 style="font-size:16px;margin-bottom:14px">已核准名單</h3>
+      <div id="guides-approved-list" style="margin-bottom:36px"></div>
+
+      <h3 style="font-size:16px;margin-bottom:14px">客戶配對需求</h3>
+      <div id="guide-requests-list"></div>
+    </div>
+
+    <!-- 包車與派車 -->
+    <div class="admin-panel" id="panel-fleet">
+      <h2>包車與派車管理</h2>
+      <p class="desc">
+        每一筆資料同時包含「售價」（客戶端會顯示）與「成本」（只有這裡看得到，客戶端網頁完全不會讀取這個欄位）。<br>
+        <strong>模式</strong>：point＝點到點路線；hourly＝論時數包車（車型欄位請填「普通5-7座」／「商務7座」／「商務9-11座」，需與客戶端選項完全一致）。<br>
+        中文司機加價：留空＝該組合不提供指定中文司機；有填數字＝客戶勾選後改用這個總價顯示。<br>
+        勾選「＊價格待複核」的項目，客戶端會顯示提醒文字，请儘快確認正確數字後取消勾選。
+      </p>
+      <div id="fleet-list"></div>
+      <div class="admin-actions">
+        <button class="btn-add" id="add-fleet-row" style="flex:1">＋ 新增一筆路線／時數資料</button>
+        <button class="btn-save" id="seed-fleet" style="white-space:nowrap">一鍵匯入現有7條路線＋時數資料</button>
       </div>
     </div>
 

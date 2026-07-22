@@ -343,6 +343,9 @@
   </button>
 </div>
 
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
+<script src="../js/firebase-config.js"></script>
 <script src="../js/widget.js"></script>
 <script>
 (function () {
@@ -391,7 +394,7 @@
   var state = { category: null, duration: null, speed: null };
 
   function fmtPrice(cny) {
-    if (cny === null) {
+    if (cny === null || cny === undefined) {
       return '<span class="price-ask">价格详询</span><div class="hint">此选项需人工报价，请私信客服洽询。</div>';
     }
     var usd = (cny * CNY_TO_USD).toFixed(2);
@@ -427,27 +430,54 @@
     resultBox.innerHTML = '<span style="color:var(--muted);font-size:14px">选择以上选项后，这里会显示报价</span>';
   }
 
-  catBtns.forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      catBtns.forEach(function (b) { b.classList.remove('active'); });
-      btn.classList.add('active');
-      state.category = btn.dataset.value;
-      updateDurationOptions();
+  function initCalculator() {
+    catBtns.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        catBtns.forEach(function (b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        state.category = btn.dataset.value;
+        updateDurationOptions();
+      });
     });
-  });
 
-  durationSel.addEventListener('change', function () {
-    state.duration = durationSel.value;
-    if (!state.duration) return;
-    updateSpeedOptions();
-  });
+    durationSel.addEventListener('change', function () {
+      state.duration = durationSel.value;
+      if (!state.duration) return;
+      updateSpeedOptions();
+    });
 
-  speedSel.addEventListener('change', function () {
-    var rows = JSON.parse(speedSel.dataset.rows || '[]');
-    var row = rows[Number(speedSel.value)];
-    if (!row) return;
-    resultBox.innerHTML = fmtPrice(row[4]);
-  });
+    speedSel.addEventListener('change', function () {
+      var rows = JSON.parse(speedSel.dataset.rows || '[]');
+      var row = rows[Number(speedSel.value)];
+      if (!row) return;
+      resultBox.innerHTML = fmtPrice(row[4]);
+    });
+  }
+
+  if (typeof FIREBASE_READY !== 'undefined' && FIREBASE_READY) {
+    Promise.all([
+      db.collection('siteSettings').doc('exchangeRates').get(),
+      db.collection('visaPrices').orderBy('order').get()
+    ]).then(function (results) {
+      var ratesDoc = results[0], pricesSnap = results[1];
+      if (ratesDoc.exists) {
+        var r = ratesDoc.data();
+        if (r.cnyToUsd) CNY_TO_USD = r.cnyToUsd;
+        if (r.cnyToVnd) CNY_TO_VND = r.cnyToVnd;
+      }
+      if (!pricesSnap.empty) {
+        var fresh = [];
+        pricesSnap.forEach(function (doc) {
+          var d = doc.data();
+          fresh.push([d.category, d.stay, d.entrySimp, d.speedSimp, d.priceCNY]);
+        });
+        PRICES = fresh;
+      }
+      initCalculator();
+    }).catch(function () { initCalculator(); });
+  } else {
+    initCalculator();
+  }
 })();
 </script>
 </body>

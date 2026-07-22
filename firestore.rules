@@ -29,6 +29,32 @@ service cloud.firestore {
       allow write: if request.auth != null;
     }
 
+    match /guides/{docId} {
+      // 導遊自己填表單報名，任何人都可以「新增」一筆申請
+      allow create: if true;
+      // 但名單內容（含聯絡方式）只有登入的員工可以查看／審核／修改／刪除
+      allow read, update, delete: if request.auth != null;
+    }
+
+    match /guideRequests/{docId} {
+      // 客戶送出配對需求，任何人都可以「新增」一筆需求
+      allow create: if true;
+      // 需求內容（含客戶聯絡方式）只有登入的員工可以查看／處理／刪除
+      allow read, update, delete: if request.auth != null;
+    }
+
+    match /fleetRoutesPublic/{docId} {
+      // 售價資料：公開網站要顯示給客戶看
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+
+    match /fleetRoutesCost/{docId} {
+      // 成本資料：絕對不公開，只有登入員工能讀取（給後台派車工具用）
+      allow read: if request.auth != null;
+      allow write: if request.auth != null;
+    }
+
     // 之後新增其他資料表（例如包車、部落格文章），
     // 照上面的格式複製一段貼在這裡即可。
   }

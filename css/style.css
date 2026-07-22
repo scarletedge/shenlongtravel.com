@@ -272,6 +272,71 @@ footer{background:var(--ink);color:#B9AF9B;padding:64px 0 32px;font-size:13.5px}
   border:1px dashed var(--accent);padding:3px 10px;border-radius:20px;
 }
 
+/* ===== 包車計算機：模式切換 ===== */
+.mode-toggle{display:flex;gap:10px;margin-bottom:24px}
+.mode-toggle button{
+  flex:1;padding:14px;border:1px solid var(--line-strong);background:var(--paper);
+  border-radius:var(--radius);cursor:pointer;font-family:inherit;font-size:14.5px;transition:all .2s;
+}
+.mode-toggle button:hover{border-color:var(--accent)}
+.mode-toggle button.active{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.calc-mode-panel{display:none}
+.calc-mode-panel.active{display:block}
+
+.hour-btn-row{display:flex;gap:10px;flex-wrap:wrap}
+.hour-btn{
+  flex:1;min-width:130px;padding:16px;border:1px solid var(--line-strong);background:var(--paper);
+  border-radius:var(--radius);cursor:pointer;text-align:center;font-family:inherit;transition:all .2s;
+}
+.hour-btn:hover{border-color:var(--accent)}
+.hour-btn.active{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.hour-btn .h-title{font-size:15px;font-weight:700}
+.hour-btn .h-sub{font-size:11.5px;color:var(--muted);margin-top:2px}
+.hour-btn.active .h-sub{color:#B9AF9B}
+.hour-btn.contact-cta{background:var(--paper-alt);border-style:dashed}
+
+.driver-toggle{
+  display:flex;align-items:center;justify-content:space-between;gap:14px;
+  background:var(--paper);border:1px solid var(--line);padding:16px 18px;border-radius:var(--radius);margin-top:18px;
+}
+.driver-toggle .label{font-size:14px}
+.driver-toggle .label .note{display:block;font-size:12px;color:var(--muted);margin-top:2px}
+.switch{position:relative;width:46px;height:26px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.switch .slider{position:absolute;inset:0;background:var(--line-strong);border-radius:20px;cursor:pointer;transition:.2s}
+.switch .slider::before{content:"";position:absolute;width:20px;height:20px;left:3px;top:3px;background:var(--paper);border-radius:50%;transition:.2s}
+.switch input:checked + .slider{background:var(--accent)}
+.switch input:checked + .slider::before{transform:translateX(20px)}
+.switch input:disabled + .slider{opacity:.4;cursor:not-allowed}
+
+.route-ref-table{margin-top:20px}
+.route-ref-table summary{cursor:pointer;font-size:13.5px;color:var(--accent);padding:10px 0}
+
+/* ===== 導遊配對／報名表單 ===== */
+.guide-type-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:8px}
+.guide-type-card{
+  border:1px solid var(--line-strong);background:var(--paper);padding:16px;border-radius:var(--radius);
+  cursor:pointer;transition:all .2s;text-align:center;
+}
+.guide-type-card:hover{border-color:var(--accent)}
+.guide-type-card.active{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.guide-type-card .name{font-size:14px;font-weight:700}
+.guide-type-card .hint{font-size:11.5px;color:var(--muted);margin-top:4px}
+.guide-type-card.active .hint{color:#B9AF9B}
+
+.request-id-box{
+  background:var(--paper);border:1px solid var(--accent);padding:24px;text-align:center;border-radius:var(--radius);
+}
+.request-id-box .id{font-family:'Noto Serif TC';font-size:24px;color:var(--accent);letter-spacing:.05em}
+.request-id-box .hint{font-size:13px;color:var(--muted);margin-top:10px}
+
+.toggle-link{
+  display:inline-block;font-size:13.5px;color:var(--accent);border-bottom:1px solid var(--accent);
+  cursor:pointer;margin-top:8px;
+}
+.collapsible{display:none;margin-top:28px;padding-top:28px;border-top:1px dashed var(--line-strong)}
+.collapsible.open{display:block}
+
 /* ===== 簽證價格計算機 ===== */
 .calc-box{background:var(--paper-alt);border:1px solid var(--line);padding:36px;border-radius:var(--radius)}
 .calc-step{margin-bottom:26px}

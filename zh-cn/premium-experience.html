@@ -127,6 +127,79 @@
         <p>大型商务考察团的尊荣级选择。</p>
       </div>
     </div>
+
+    <!-- ===== 包车与派车计算机 ===== -->
+    <div class="calc-box mt-lg" id="fleet-calc">
+      <div class="mode-toggle">
+        <button type="button" class="mode-btn active" data-mode="point">点到点接送</button>
+        <button type="button" class="mode-btn" data-mode="hourly">包车（论时数）</button>
+      </div>
+
+      <!-- 模式A：点到点 -->
+      <div class="calc-mode-panel active" id="mode-point">
+        <div class="calc-step">
+          <label>1. 选择路线</label>
+          <select class="calc-select" id="point-route"><option value="">请选择</option></select>
+        </div>
+        <div class="calc-step">
+          <label>2. 选择车型</label>
+          <select class="calc-select" id="point-vehicle" disabled><option>请先选择路线</option></select>
+        </div>
+        <div class="driver-toggle">
+          <div class="label">指定中文司机<span class="note" id="point-driver-note">选好路线与车型后，这里会显示是否可指定</span></div>
+          <label class="switch"><input type="checkbox" id="point-driver-toggle" disabled><span class="slider"></span></label>
+        </div>
+        <div class="calc-result" id="point-result">
+          <span style="color:var(--muted);font-size:14px">选择以上选项后，这里会显示报价</span>
+        </div>
+      </div>
+
+      <!-- 模式B：论时数 -->
+      <div class="calc-mode-panel" id="mode-hourly">
+        <div class="calc-step">
+          <label>1. 选择车型</label>
+          <div class="calc-pills" id="hourly-vehicle-pills">
+            <button type="button" class="calc-pill" data-value="普通5-7座">普通5-7座</button>
+            <button type="button" class="calc-pill" data-value="商务7座">商务7座</button>
+            <button type="button" class="calc-pill" data-value="商务9-11座">商务9-11座</button>
+          </div>
+        </div>
+        <div class="calc-step">
+          <label>2. 选择时数</label>
+          <div class="hour-btn-row" id="hourly-hour-btns">
+            <button type="button" class="hour-btn" data-value="8">
+              <div class="h-title">8小时</div>
+              <div class="h-sub">100km以内，超公里另计</div>
+            </button>
+            <button type="button" class="hour-btn" data-value="10">
+              <div class="h-title">10小时</div>
+              <div class="h-sub">100km以内，超公里另计</div>
+            </button>
+            <button type="button" class="hour-btn contact-cta" id="hourly-longer-btn">
+              <div class="h-title">更长天数／跨省</div>
+              <div class="h-sub">请直接私信客服</div>
+            </button>
+          </div>
+        </div>
+        <div class="driver-toggle">
+          <div class="label">指定中文司机<span class="note" id="hourly-driver-note">选好车型与时数后，这里会显示是否可指定</span></div>
+          <label class="switch"><input type="checkbox" id="hourly-driver-toggle" disabled><span class="slider"></span></label>
+        </div>
+        <div class="calc-result" id="hourly-result">
+          <span style="color:var(--muted);font-size:14px">选择以上选项后，这里会显示报价</span>
+        </div>
+        <p style="font-size:12.5px;color:var(--muted);margin-top:14px">超过市区半径或跨省长途行程，请联系客服另行报价。</p>
+      </div>
+    </div>
+
+    <!-- ===== 常见路线参考表 ===== -->
+    <details class="route-ref-table">
+      <summary>展开查看常见点对点路线总览 →</summary>
+      <table class="compare" id="route-ref-table-body">
+        <thead><tr><th>路线</th><th>车型</th><th>参考售价</th></tr></thead>
+        <tbody><tr><td colspan="3" style="color:var(--muted)">载入中…</td></tr></tbody>
+      </table>
+    </details>
   </div>
 </section>
 
@@ -208,6 +281,113 @@
         <p>具备商务考察与产业对接经验，协助你问对问题。</p>
       </div>
     </div>
+
+    <!-- ===== 客户：选导游类型送出配对需求 ===== -->
+    <div class="calc-box mt-lg">
+      <div class="calc-step">
+        <label>1. 想要哪一种类型的导游？</label>
+        <div class="guide-type-grid" id="guide-type-grid">
+          <div class="guide-type-card" data-value="business">
+            <div class="name">商务陪同</div>
+            <div class="hint">含翻译、应酬礼仪</div>
+          </div>
+          <div class="guide-type-card" data-value="culture">
+            <div class="name">历史文化深度游</div>
+            <div class="hint">古迹、故事、脉络</div>
+          </div>
+          <div class="guide-type-card" data-value="food">
+            <div class="name">在地美食探店</div>
+            <div class="hint">吃货向导</div>
+          </div>
+          <div class="guide-type-card" data-value="family">
+            <div class="name">亲子家庭包团</div>
+            <div class="hint">照顾长辈小孩</div>
+          </div>
+          <div class="guide-type-card" data-value="photo">
+            <div class="name">摄影打卡跟拍</div>
+            <div class="hint">出片有保障</div>
+          </div>
+          <div class="guide-type-card" data-value="unsure">
+            <div class="name">不确定，让我们推荐</div>
+            <div class="hint">交给老司机安排</div>
+          </div>
+        </div>
+      </div>
+      <div class="admin-row" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:18px">
+        <div class="calc-step" style="margin-bottom:0">
+          <label>2. 语言需求</label>
+          <select class="calc-select" id="guide-lang">
+            <option value="中越">中文＋越南语</option>
+            <option value="英越">英文＋越南语</option>
+            <option value="中英越">中英越三语</option>
+          </select>
+        </div>
+        <div class="calc-step" style="margin-bottom:0">
+          <label>3. 需要天数</label>
+          <input class="calc-select" id="guide-days" type="text" placeholder="例：3天">
+        </div>
+      </div>
+      <div class="calc-step">
+        <label>4. 人数与其他需求</label>
+        <input class="calc-select" id="guide-note" type="text" placeholder="例：4人，其中有长辈，希望步调放慢">
+      </div>
+      <div class="admin-actions" style="margin-top:8px">
+        <button class="btn-save" id="guide-submit" style="flex:1;padding:13px">送出配对需求</button>
+      </div>
+      <div id="guide-result" style="margin-top:18px"></div>
+    </div>
+
+    <p class="center"><span class="toggle-link" id="toggle-guide-apply">想成为升龙地陪导游？点此报名 →</span></p>
+
+    <!-- ===== 导游：自己填表报名 ===== -->
+    <div class="collapsible" id="guide-apply-form-wrap">
+      <div class="form-box">
+        <h3 style="margin-bottom:20px">地陪导游报名表</h3>
+        <div class="form-row">
+          <div class="field">
+            <label for="ga-name">姓名</label>
+            <input id="ga-name" type="text">
+          </div>
+          <div class="field">
+            <label for="ga-lang">会的语言</label>
+            <input id="ga-lang" type="text" placeholder="例：中文、越南语、英文">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="field">
+            <label for="ga-specialty">擅长类型</label>
+            <select id="ga-specialty">
+              <option value="business">商务陪同</option>
+              <option value="culture">历史文化深度游</option>
+              <option value="food">在地美食探店</option>
+              <option value="family">亲子家庭包团</option>
+              <option value="photo">摄影打卡跟拍</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="ga-years">带团经验（年）</label>
+            <input id="ga-years" type="text" placeholder="例：3">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="field">
+            <label for="ga-contact-method">联系方式（哪个平台）</label>
+            <input id="ga-contact-method" type="text" placeholder="例：微信／LINE／电话">
+          </div>
+          <div class="field">
+            <label for="ga-contact-id">联系账号／号码</label>
+            <input id="ga-contact-id" type="text">
+          </div>
+        </div>
+        <div class="field" style="margin-bottom:22px">
+          <label for="ga-bio">自我介绍（一两句话就好）</label>
+          <textarea id="ga-bio" rows="3"></textarea>
+        </div>
+        <button class="submit-btn" id="guide-apply-submit">送出报名</button>
+        <div id="guide-apply-result" style="margin-top:16px"></div>
+      </div>
+    </div>
+
     <p class="center mt-lg"><a href="local-insider.html" class="btn-ghost">下一步：越玩越疯 →</a></p>
   </div>
 </section>
@@ -277,6 +457,286 @@
   </button>
 </div>
 
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
+<script src="../js/firebase-config.js"></script>
 <script src="../js/widget.js"></script>
+<script>
+(function () {
+  function genRequestId(prefix) {
+    var d = new Date();
+    var ymd = String(d.getFullYear()).slice(2) + String(d.getMonth() + 1).padStart(2, '0') + String(d.getDate()).padStart(2, '0');
+    var rand = Math.random().toString(36).slice(2, 6).toUpperCase();
+    return prefix + ymd + '-' + rand;
+  }
+
+  var TYPE_LABELS = {
+    business: '商务陪同', culture: '历史文化深度游', food: '在地美食探店',
+    family: '亲子家庭包团', photo: '摄影打卡跟拍', unsure: '不确定，让我们推荐'
+  };
+
+  var typeCards = document.querySelectorAll('#guide-type-grid .guide-type-card');
+  var selectedType = null;
+  typeCards.forEach(function (card) {
+    card.addEventListener('click', function () {
+      typeCards.forEach(function (c) { c.classList.remove('active'); });
+      card.classList.add('active');
+      selectedType = card.dataset.value;
+    });
+  });
+
+  var guideSubmitBtn = document.getElementById('guide-submit');
+  var guideResult = document.getElementById('guide-result');
+  guideSubmitBtn.addEventListener('click', function () {
+    if (!selectedType) { alert('请先选择想要的导游类型'); return; }
+    if (typeof FIREBASE_READY === 'undefined' || !FIREBASE_READY) { alert('系统尚未设定完成，请直接私信右下角客服。'); return; }
+
+    var reqId = genRequestId('GD');
+    var data = {
+      requestId: reqId,
+      guideType: selectedType,
+      guideTypeLabel: TYPE_LABELS[selectedType],
+      language: document.getElementById('guide-lang').value,
+      days: document.getElementById('guide-days').value.trim(),
+      note: document.getElementById('guide-note').value.trim(),
+      status: '待配对',
+      lang: 'zh-Hans',
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    };
+
+    guideSubmitBtn.disabled = true;
+    db.collection('guideRequests').add(data).then(function () {
+      guideResult.innerHTML =
+        '<div class="request-id-box">' +
+        '<div class="id">' + reqId + '</div>' +
+        '<div class="hint">请截图这个编号，私信右下角咨询按钮给客服，我们会尽快为您配对合适的导游。</div>' +
+        '</div>';
+    }).catch(function () {
+      guideResult.innerHTML = '<p style="color:var(--accent);font-size:13px">送出失败，请直接私信右下角客服为您安排。</p>';
+    }).finally(function () { guideSubmitBtn.disabled = false; });
+  });
+
+  var toggleLink = document.getElementById('toggle-guide-apply');
+  var applyFormWrap = document.getElementById('guide-apply-form-wrap');
+  toggleLink.addEventListener('click', function () {
+    applyFormWrap.classList.toggle('open');
+    toggleLink.textContent = applyFormWrap.classList.contains('open') ? '收合报名表 ↑' : '想成为升龙地陪导游？点此报名 →';
+  });
+
+  var applySubmitBtn = document.getElementById('guide-apply-submit');
+  var applyResult = document.getElementById('guide-apply-result');
+  applySubmitBtn.addEventListener('click', function () {
+    var name = document.getElementById('ga-name').value.trim();
+    var contactId = document.getElementById('ga-contact-id').value.trim();
+    if (!name || !contactId) { alert('请至少填写姓名与联系账号'); return; }
+    if (typeof FIREBASE_READY === 'undefined' || !FIREBASE_READY) { alert('系统尚未设定完成，请直接私信右下角客服报名。'); return; }
+
+    var data = {
+      name: name,
+      languages: document.getElementById('ga-lang').value.trim(),
+      specialty: document.getElementById('ga-specialty').value,
+      specialtyLabel: TYPE_LABELS[document.getElementById('ga-specialty').value],
+      years: document.getElementById('ga-years').value.trim(),
+      contactMethod: document.getElementById('ga-contact-method').value.trim(),
+      contactId: contactId,
+      bio: document.getElementById('ga-bio').value.trim(),
+      approved: false,
+      lang: 'zh-Hans',
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    };
+
+    applySubmitBtn.disabled = true;
+    db.collection('guides').add(data).then(function () {
+      applyResult.innerHTML = '<p style="color:var(--accent);font-size:14px">✓ 报名资料已收到，团队审核后会主动联系您。</p>';
+      document.getElementById('ga-name').value = '';
+      document.getElementById('ga-lang').value = '';
+      document.getElementById('ga-years').value = '';
+      document.getElementById('ga-contact-method').value = '';
+      document.getElementById('ga-contact-id').value = '';
+      document.getElementById('ga-bio').value = '';
+    }).catch(function () {
+      applyResult.innerHTML = '<p style="color:var(--accent);font-size:13px">送出失败，请直接私信右下角客服报名。</p>';
+    }).finally(function () { applySubmitBtn.disabled = false; });
+  });
+})();
+</script>
+
+<script>
+(function () {
+  if (typeof FIREBASE_READY === 'undefined' || !FIREBASE_READY) return;
+
+  var CNY_TO_USD = 1 / 6.7716;
+  var CNY_TO_VND = 3868;
+  var allRoutes = [];
+
+  function fmtMoney(min, max) {
+    if (min == null) return '<span class="price-ask">详询</span>';
+    var usdMin = (min * CNY_TO_USD).toFixed(2);
+    var usdMax = (max * CNY_TO_USD).toFixed(2);
+    var vndMin = Math.round(min * CNY_TO_VND / 1000) * 1000;
+    var vndMax = Math.round(max * CNY_TO_VND / 1000) * 1000;
+    var usdStr = (min === max) ? ('US$' + usdMin) : ('US$' + usdMin + '–' + usdMax);
+    var vndStr = (min === max) ? (vndMin.toLocaleString('en-US') + '₫') : (vndMin.toLocaleString('en-US') + '–' + vndMax.toLocaleString('en-US') + '₫');
+    return '<div class="price-usd">' + usdStr + '</div><div class="price-vnd">≈ ' + vndStr + '</div>';
+  }
+
+  db.collection('fleetRoutesPublic').get().then(function (snap) {
+    snap.forEach(function (doc) { allRoutes.push(Object.assign({ id: doc.id }, doc.data())); });
+    allRoutes.sort(function (a, b) { return (a.order || 0) - (b.order || 0); });
+    initPointMode();
+    initHourlyMode();
+    renderRefTable();
+  }).catch(function () {
+    document.getElementById('point-result').innerHTML = '<span style="color:var(--muted);font-size:14px">暂时无法载入报价，请直接私信右下角客服。</span>';
+  });
+
+  document.querySelectorAll('.mode-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      document.querySelectorAll('.mode-btn').forEach(function (b) { b.classList.remove('active'); });
+      document.querySelectorAll('.calc-mode-panel').forEach(function (p) { p.classList.remove('active'); });
+      btn.classList.add('active');
+      document.getElementById('mode-' + btn.dataset.mode).classList.add('active');
+    });
+  });
+
+  function initPointMode() {
+    var pointRoutes = allRoutes.filter(function (r) { return r.mode === 'point'; });
+    var routeSel = document.getElementById('point-route');
+    var vehicleSel = document.getElementById('point-vehicle');
+    var driverToggle = document.getElementById('point-driver-toggle');
+    var driverNote = document.getElementById('point-driver-note');
+    var resultBox = document.getElementById('point-result');
+
+    var routes = [];
+    pointRoutes.forEach(function (r) { if (routes.indexOf(r.route) === -1) routes.push(r.route); });
+    routeSel.innerHTML = '<option value="">请选择</option>' + routes.map(function (r) { return '<option value="' + r + '">' + r + '</option>'; }).join('');
+
+    routeSel.addEventListener('change', function () {
+      var rows = pointRoutes.filter(function (r) { return r.route === routeSel.value; });
+      vehicleSel.innerHTML = '<option value="">请选择</option>' + rows.map(function (r, i) { return '<option value="' + i + '">' + r.vehicleType + '</option>'; }).join('');
+      vehicleSel.disabled = !routeSel.value;
+      vehicleSel.dataset.rows = JSON.stringify(rows);
+      driverToggle.checked = false;
+      driverToggle.disabled = true;
+      driverNote.textContent = '选好路线与车型后，这里会显示是否可指定';
+      resultBox.innerHTML = '<span style="color:var(--muted);font-size:14px">选择以上选项后，这里会显示报价</span>';
+      updatePointResult();
+    });
+
+    function updatePointResult() {
+      var rows = JSON.parse(vehicleSel.dataset.rows || '[]');
+      var row = rows[Number(vehicleSel.value)];
+      if (!row) return;
+
+      if (row.driverZhSurchargeCNY != null) {
+        driverToggle.disabled = false;
+        driverNote.textContent = row.driverZhNoteSimp || row.driverZhNote || '可指定中文司机';
+      } else {
+        driverToggle.disabled = true;
+        driverToggle.checked = false;
+        driverNote.textContent = '此路线暂不提供中文司机指定，如有需要请私信客服';
+      }
+
+      var priceMin = row.priceCNYMin, priceMax = row.priceCNYMax;
+      if (driverToggle.checked && row.driverZhSurchargeCNY != null) {
+        priceMin = row.driverZhSurchargeCNY;
+        priceMax = row.driverZhSurchargeCNY;
+      }
+
+      var reviewFlag = row.needsReview ? '<p style="font-size:12px;color:var(--accent);margin-top:10px">＊此路线价格尚待最终确认，实际报价请以客服回复为准</p>' : '';
+      resultBox.innerHTML = fmtMoney(priceMin, priceMax) +
+        (row.noteSimp || row.note ? '<div class="price-vnd">' + (row.noteSimp || row.note) + '</div>' : '') +
+        '<div class="hint">屏幕截图这个结果，私信右下角咨询按钮给客服即可预约用车。</div>' + reviewFlag;
+    }
+
+    vehicleSel.addEventListener('change', updatePointResult);
+    driverToggle.addEventListener('change', updatePointResult);
+  }
+
+  function initHourlyMode() {
+    var hourlyRoutes = allRoutes.filter(function (r) { return r.mode === 'hourly'; });
+    var vehiclePills = document.querySelectorAll('#hourly-vehicle-pills .calc-pill');
+    var hourBtns = document.querySelectorAll('#hourly-hour-btns .hour-btn[data-value]');
+    var driverToggle = document.getElementById('hourly-driver-toggle');
+    var driverNote = document.getElementById('hourly-driver-note');
+    var resultBox = document.getElementById('hourly-result');
+    var state = { vehicle: null, hours: null };
+
+    vehiclePills.forEach(function (pill) {
+      pill.addEventListener('click', function () {
+        vehiclePills.forEach(function (p) { p.classList.remove('active'); });
+        pill.classList.add('active');
+        state.vehicle = pill.dataset.value;
+        update();
+      });
+    });
+
+    hourBtns.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        hourBtns.forEach(function (b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        state.hours = btn.dataset.value;
+        update();
+      });
+    });
+
+    function findRow() {
+      return hourlyRoutes.filter(function (r) { return r.vehicleType === state.vehicle && r.hours === state.hours; })[0];
+    }
+
+    function update() {
+      if (!state.vehicle || !state.hours) {
+        resultBox.innerHTML = '<span style="color:var(--muted);font-size:14px">选择以上选项后，这里会显示报价</span>';
+        return;
+      }
+      var row = findRow();
+      if (!row) {
+        driverToggle.disabled = true;
+        driverToggle.checked = false;
+        driverNote.textContent = '此组合暂无报价资料';
+        resultBox.innerHTML = '<span class="price-ask">价格详询</span><div class="hint">请私信右下角客服为您报价。</div>';
+        return;
+      }
+
+      if (row.driverZhSurchargeCNY != null) {
+        driverToggle.disabled = false;
+        driverNote.textContent = row.driverZhNoteSimp || row.driverZhNote || '可指定中文司机';
+      } else {
+        driverToggle.disabled = true;
+        driverToggle.checked = false;
+        driverNote.textContent = '此组合暂不提供中文司机指定，如有需要请私信客服';
+      }
+
+      var priceMin = row.priceCNYMin, priceMax = row.priceCNYMax;
+      if (driverToggle.checked && row.driverZhSurchargeCNY != null) {
+        priceMin = row.driverZhSurchargeCNY;
+        priceMax = row.driverZhSurchargeCNY;
+      }
+
+      resultBox.innerHTML = fmtMoney(priceMin, priceMax) +
+        (row.noteSimp || row.note ? '<div class="price-vnd">' + (row.noteSimp || row.note) + '</div>' : '') +
+        '<div class="hint">屏幕截图这个结果，私信右下角咨询按钮给客服即可预约用车。</div>';
+    }
+
+    driverToggle.addEventListener('change', update);
+
+    document.getElementById('hourly-longer-btn').addEventListener('click', function () {
+      document.querySelector('.widget-toggle').click();
+    });
+  }
+
+  function renderRefTable() {
+    var pointRoutes = allRoutes.filter(function (r) { return r.mode === 'point'; });
+    var tbody = document.querySelector('#route-ref-table-body tbody');
+    if (!pointRoutes.length) { tbody.innerHTML = '<tr><td colspan="3" style="color:var(--muted)">暂无资料</td></tr>'; return; }
+    tbody.innerHTML = pointRoutes.map(function (r) {
+      var usd = r.priceCNYMin == null ? '详询' : (r.priceCNYMin === r.priceCNYMax
+        ? 'US$' + (r.priceCNYMin * CNY_TO_USD).toFixed(2)
+        : 'US$' + (r.priceCNYMin * CNY_TO_USD).toFixed(2) + '–' + (r.priceCNYMax * CNY_TO_USD).toFixed(2));
+      return '<tr><td>' + r.route + (r.needsReview ? '＊' : '') + '</td><td>' + r.vehicleType + '</td><td>' + usd + '</td></tr>';
+    }).join('');
+  }
+})();
+</script>
 </body>
 </html>

@@ -69,6 +69,7 @@ body.admin-body{background:var(--paper);min-height:100vh}
   font-size:14px;border-radius:var(--radius);background:var(--paper);
 }
 .admin-field input:focus,.admin-field select:focus{outline:none;border-color:var(--accent)}
+.admin-field input:disabled{background:var(--paper-alt);color:var(--muted);cursor:not-allowed}
 
 .admin-actions{display:flex;gap:10px;margin-top:10px}
 .btn-save{background:var(--ink);color:var(--paper);border:none;padding:9px 18px;border-radius:var(--radius);font-size:13.5px;cursor:pointer}

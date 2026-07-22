@@ -33,6 +33,9 @@ document.addEventListener('DOMContentLoaded', function () {
       loadRates();
       loadVisaPrices();
       loadTeamMembers();
+      loadGuides();
+      loadGuideRequests();
+      loadFleetRoutes();
     } else {
       loginScreen.style.display = 'flex';
       adminShell.classList.remove('show');
@@ -360,6 +363,366 @@ document.addEventListener('DOMContentLoaded', function () {
         batch.set(ref, member);
       });
       batch.commit().then(function () { showToast('已匯入4位團隊成員'); loadTeamMembers(); });
+    });
+  });
+
+  /* =========================================================
+     地陪導遊管理
+     ========================================================= */
+  var SPECIALTY_LABELS = {
+    business: '商務陪同', culture: '歷史文化深度遊', food: '在地美食探店',
+    family: '親子家庭包團', photo: '攝影打卡跟拍', unsure: '不確定／推薦'
+  };
+
+  function guideCardHTML(id, d, mode) {
+    d = d || {};
+    var approveBtn = mode === 'pending'
+      ? '<button class="btn-save approve-guide">核准，加入名單</button>'
+      : '<button class="btn-save save-guide">儲存</button>';
+    return (
+      '<div class="admin-card" data-id="' + id + '">' +
+      '<div class="admin-row">' +
+        '<div class="admin-field"><label>姓名</label><input class="f-name" value="' + (d.name || '') + '"></div>' +
+        '<div class="admin-field"><label>語言</label><input class="f-languages" value="' + (d.languages || '') + '"></div>' +
+        '<div class="admin-field"><label>擅長類型</label><select class="f-specialty">' +
+          Object.keys(SPECIALTY_LABELS).map(function (k) {
+            return '<option value="' + k + '"' + (d.specialty === k ? ' selected' : '') + '>' + SPECIALTY_LABELS[k] + '</option>';
+          }).join('') +
+        '</select></div>' +
+      '</div>' +
+      '<div class="admin-row">' +
+        '<div class="admin-field"><label>帶團經驗（年）</label><input class="f-years" value="' + (d.years || '') + '"></div>' +
+        '<div class="admin-field"><label>聯絡方式（平台）</label><input class="f-contactMethod" value="' + (d.contactMethod || '') + '"></div>' +
+        '<div class="admin-field"><label>聯絡帳號／號碼</label><input class="f-contactId" value="' + (d.contactId || '') + '"></div>' +
+      '</div>' +
+      '<div class="admin-field" style="margin-bottom:14px"><label>自我介紹</label><input class="f-bio" value="' + (d.bio || '') + '"></div>' +
+      '<div class="admin-actions">' +
+        approveBtn +
+        '<button class="btn-delete delete-guide">刪除</button>' +
+      '</div>' +
+      '</div>'
+    );
+  }
+
+  function readGuideCard(card) {
+    return {
+      name: card.querySelector('.f-name').value.trim(),
+      languages: card.querySelector('.f-languages').value.trim(),
+      specialty: card.querySelector('.f-specialty').value,
+      specialtyLabel: SPECIALTY_LABELS[card.querySelector('.f-specialty').value],
+      years: card.querySelector('.f-years').value.trim(),
+      contactMethod: card.querySelector('.f-contactMethod').value.trim(),
+      contactId: card.querySelector('.f-contactId').value.trim(),
+      bio: card.querySelector('.f-bio').value.trim()
+    };
+  }
+
+  var pendingListEl = document.getElementById('guides-pending-list');
+  var approvedListEl = document.getElementById('guides-approved-list');
+
+  function loadGuides() {
+    pendingListEl.innerHTML = '<div class="admin-loading">載入中…</div>';
+    approvedListEl.innerHTML = '<div class="admin-loading">載入中…</div>';
+
+    db.collection('guides').where('approved', '==', false).get().then(function (snap) {
+      if (snap.empty) { pendingListEl.innerHTML = '<p class="desc">目前沒有待審核的申請。</p>'; return; }
+      var html = '';
+      snap.forEach(function (doc) { html += guideCardHTML(doc.id, doc.data(), 'pending'); });
+      pendingListEl.innerHTML = html;
+      pendingListEl.querySelectorAll('.approve-guide').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var card = btn.closest('.admin-card');
+          var data = readGuideCard(card);
+          data.approved = true;
+          db.collection('guides').doc(card.dataset.id).set(data, { merge: true }).then(function () {
+            showToast('已核准，加入導遊名單'); loadGuides();
+          });
+        });
+      });
+      pendingListEl.querySelectorAll('.delete-guide').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          if (!confirm('確定要刪除這筆申請嗎？')) return;
+          var card = btn.closest('.admin-card');
+          db.collection('guides').doc(card.dataset.id).delete().then(function () { showToast('已刪除'); loadGuides(); });
+        });
+      });
+    });
+
+    db.collection('guides').where('approved', '==', true).get().then(function (snap) {
+      if (snap.empty) { approvedListEl.innerHTML = '<p class="desc">目前沒有已核准的導遊。</p>'; return; }
+      var html = '';
+      snap.forEach(function (doc) { html += guideCardHTML(doc.id, doc.data(), 'approved'); });
+      approvedListEl.innerHTML = html;
+      approvedListEl.querySelectorAll('.save-guide').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var card = btn.closest('.admin-card');
+          var data = readGuideCard(card);
+          data.approved = true;
+          db.collection('guides').doc(card.dataset.id).set(data, { merge: true }).then(function () {
+            showToast('已儲存'); loadGuides();
+          });
+        });
+      });
+      approvedListEl.querySelectorAll('.delete-guide').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          if (!confirm('確定要把這位導遊從名單移除嗎？')) return;
+          var card = btn.closest('.admin-card');
+          db.collection('guides').doc(card.dataset.id).delete().then(function () { showToast('已刪除'); loadGuides(); });
+        });
+      });
+    });
+  }
+
+  var requestsListEl = document.getElementById('guide-requests-list');
+  var STATUS_OPTIONS = ['待配對', '已配對', '已完成'];
+
+  function requestCardHTML(id, d) {
+    d = d || {};
+    var created = d.createdAt && d.createdAt.toDate ? d.createdAt.toDate().toLocaleString('zh-TW') : '—';
+    return (
+      '<div class="admin-card" data-id="' + id + '">' +
+      '<div class="admin-row">' +
+        '<div class="admin-field"><label>需求編號</label><input value="' + (d.requestId || '') + '" disabled></div>' +
+        '<div class="admin-field"><label>想要的類型</label><input value="' + (d.guideTypeLabel || '') + '" disabled></div>' +
+        '<div class="admin-field"><label>語言需求</label><input value="' + (d.language || '') + '" disabled></div>' +
+      '</div>' +
+      '<div class="admin-row">' +
+        '<div class="admin-field"><label>天數</label><input value="' + (d.days || '') + '" disabled></div>' +
+        '<div class="admin-field"><label>備註</label><input value="' + (d.note || '') + '" disabled></div>' +
+        '<div class="admin-field"><label>送出時間</label><input value="' + created + '" disabled></div>' +
+      '</div>' +
+      '<div class="admin-row">' +
+        '<div class="admin-field"><label>處理狀態</label><select class="f-status">' +
+          STATUS_OPTIONS.map(function (s) { return '<option' + (d.status === s ? ' selected' : '') + '>' + s + '</option>'; }).join('') +
+        '</select></div>' +
+        '<div class="admin-field"><label>配對的導遊（手動填寫）</label><input class="f-matchedGuide" value="' + (d.matchedGuide || '') + '"></div>' +
+      '</div>' +
+      '<div class="admin-actions">' +
+        '<button class="btn-save save-request">儲存</button>' +
+        '<button class="btn-delete delete-request">刪除</button>' +
+      '</div>' +
+      '</div>'
+    );
+  }
+
+  function loadGuideRequests() {
+    requestsListEl.innerHTML = '<div class="admin-loading">載入中…</div>';
+    db.collection('guideRequests').orderBy('createdAt', 'desc').get().then(function (snap) {
+      if (snap.empty) { requestsListEl.innerHTML = '<p class="desc">目前沒有客戶配對需求。</p>'; return; }
+      var html = '';
+      snap.forEach(function (doc) { html += requestCardHTML(doc.id, doc.data()); });
+      requestsListEl.innerHTML = html;
+      requestsListEl.querySelectorAll('.save-request').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var card = btn.closest('.admin-card');
+          db.collection('guideRequests').doc(card.dataset.id).set({
+            status: card.querySelector('.f-status').value,
+            matchedGuide: card.querySelector('.f-matchedGuide').value.trim()
+          }, { merge: true }).then(function () { showToast('已更新'); loadGuideRequests(); });
+        });
+      });
+      requestsListEl.querySelectorAll('.delete-request').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          if (!confirm('確定要刪除這筆需求嗎？')) return;
+          var card = btn.closest('.admin-card');
+          db.collection('guideRequests').doc(card.dataset.id).delete().then(function () { showToast('已刪除'); loadGuideRequests(); });
+        });
+      });
+    });
+  }
+
+  /* =========================================================
+     包車與派車管理
+     ========================================================= */
+  var fleetListEl = document.getElementById('fleet-list');
+
+  function fleetCardHTML(id, p, c) {
+    p = p || {}; c = c || {};
+    var mode = p.mode || 'point';
+    return (
+      '<div class="admin-card" data-id="' + id + '">' +
+      '<div class="admin-row">' +
+        '<div class="admin-field"><label>模式</label><select class="f-mode">' +
+          '<option value="point"' + (mode === 'point' ? ' selected' : '') + '>point（點到點）</option>' +
+          '<option value="hourly"' + (mode === 'hourly' ? ' selected' : '') + '>hourly（論時數）</option>' +
+        '</select></div>' +
+        '<div class="admin-field"><label>路線（僅point模式用）</label><input class="f-route" value="' + (p.route || '') + '" placeholder="例：芒街-河內"></div>' +
+        '<div class="admin-field"><label>時數（僅hourly模式用）</label><input class="f-hours" value="' + (p.hours || '') + '" placeholder="例：8 或 10"></div>' +
+      '</div>' +
+      '<div class="admin-row">' +
+        '<div class="admin-field"><label>車型</label><input class="f-vehicleType" value="' + (p.vehicleType || '') + '" placeholder="例：普通5-7座"></div>' +
+        '<div class="admin-field"><label>備註（繁）</label><input class="f-note" value="' + (p.note || '') + '"></div>' +
+        '<div class="admin-field"><label>備註（簡）</label><input class="f-noteSimp" value="' + (p.noteSimp || '') + '"></div>' +
+      '</div>' +
+      '<div class="admin-row">' +
+        '<div class="admin-field"><label>售價下限（人民幣）</label><input class="f-priceMin calc-num" type="number" value="' + (p.priceCNYMin != null ? p.priceCNYMin : '') + '"></div>' +
+        '<div class="admin-field"><label>售價上限（人民幣，同下限則單一價）</label><input class="f-priceMax calc-num" type="number" value="' + (p.priceCNYMax != null ? p.priceCNYMax : '') + '"></div>' +
+        '<div class="admin-field"><label>成本下限（人民幣，客戶端看不到）</label><input class="f-costMin calc-num" type="number" value="' + (c.costCNYMin != null ? c.costCNYMin : '') + '"></div>' +
+        '<div class="admin-field"><label>成本上限（人民幣，客戶端看不到）</label><input class="f-costMax calc-num" type="number" value="' + (c.costCNYMax != null ? c.costCNYMax : '') + '"></div>' +
+      '</div>' +
+      '<div class="admin-row">' +
+        '<div class="admin-field"><label>中文司機加價後總價（人民幣，留空＝不提供）</label><input class="f-driverSurcharge" type="number" value="' + (p.driverZhSurchargeCNY != null ? p.driverZhSurchargeCNY : '') + '"></div>' +
+        '<div class="admin-field"><label>中文司機備註（繁）</label><input class="f-driverNote" value="' + (p.driverZhNote || '') + '"></div>' +
+        '<div class="admin-field"><label>中文司機備註（簡）</label><input class="f-driverNoteSimp" value="' + (p.driverZhNoteSimp || '') + '"></div>' +
+        '<div class="admin-field"><label>排序</label><input class="f-order" type="number" value="' + (p.order != null ? p.order : 0) + '"></div>' +
+      '</div>' +
+      '<div class="admin-row" style="grid-template-columns:auto 1fr">' +
+        '<div class="admin-field"><label>＊價格待複核</label><input class="f-needsReview" type="checkbox"' + (p.needsReview ? ' checked' : '') + ' style="width:20px;height:20px;margin-top:6px"></div>' +
+        '<div class="admin-field"><label>預估毛利（自動計算，僅供參考）</label><div class="fleet-profit-preview" style="padding:9px 2px;font-size:14px;color:var(--accent)">—</div></div>' +
+      '</div>' +
+      '<div class="admin-actions">' +
+        '<button class="btn-save save-fleet">儲存</button>' +
+        '<button class="btn-delete delete-fleet">刪除</button>' +
+      '</div>' +
+      '</div>'
+    );
+  }
+
+  function readFleetCard(card) {
+    var priceMin = parseFloat(card.querySelector('.f-priceMin').value);
+    var priceMax = parseFloat(card.querySelector('.f-priceMax').value);
+    var costMin = parseFloat(card.querySelector('.f-costMin').value);
+    var costMax = parseFloat(card.querySelector('.f-costMax').value);
+    var surcharge = card.querySelector('.f-driverSurcharge').value;
+    return {
+      pub: {
+        mode: card.querySelector('.f-mode').value,
+        route: card.querySelector('.f-route').value.trim(),
+        hours: card.querySelector('.f-hours').value.trim(),
+        vehicleType: card.querySelector('.f-vehicleType').value.trim(),
+        note: card.querySelector('.f-note').value.trim(),
+        noteSimp: card.querySelector('.f-noteSimp').value.trim(),
+        priceCNYMin: isNaN(priceMin) ? null : priceMin,
+        priceCNYMax: isNaN(priceMax) ? (isNaN(priceMin) ? null : priceMin) : priceMax,
+        driverZhSurchargeCNY: surcharge === '' ? null : parseFloat(surcharge),
+        driverZhNote: card.querySelector('.f-driverNote').value.trim(),
+        driverZhNoteSimp: card.querySelector('.f-driverNoteSimp').value.trim(),
+        needsReview: card.querySelector('.f-needsReview').checked,
+        order: parseInt(card.querySelector('.f-order').value, 10) || 0
+      },
+      cost: {
+        costCNYMin: isNaN(costMin) ? null : costMin,
+        costCNYMax: isNaN(costMax) ? (isNaN(costMin) ? null : costMin) : costMax
+      }
+    };
+  }
+
+  function updateProfitPreview(card) {
+    var d = readFleetCard(card);
+    var el = card.querySelector('.fleet-profit-preview');
+    if (d.pub.priceCNYMin == null || d.cost.costCNYMin == null) { el.textContent = '—（請填售價與成本）'; return; }
+    var profitMin = d.pub.priceCNYMin - d.cost.costCNYMin;
+    var profitMax = d.pub.priceCNYMax - d.cost.costCNYMax;
+    var marginMin = d.cost.costCNYMin ? (profitMin / d.pub.priceCNYMin * 100).toFixed(1) : '—';
+    var marginMax = d.cost.costCNYMax ? (profitMax / d.pub.priceCNYMax * 100).toFixed(1) : '—';
+    el.textContent = '¥' + profitMin.toFixed(0) + '–' + profitMax.toFixed(0) + '（毛利率約 ' + marginMin + '–' + marginMax + '%）';
+  }
+
+  function loadFleetRoutes() {
+    fleetListEl.innerHTML = '<div class="admin-loading">載入中…</div>';
+    Promise.all([
+      db.collection('fleetRoutesPublic').get(),
+      db.collection('fleetRoutesCost').get()
+    ]).then(function (results) {
+      var pubSnap = results[0], costSnap = results[1];
+      var costMap = {};
+      costSnap.forEach(function (doc) { costMap[doc.id] = doc.data(); });
+
+      var rows = [];
+      pubSnap.forEach(function (doc) { rows.push({ id: doc.id, pub: doc.data(), cost: costMap[doc.id] || {} }); });
+      rows.sort(function (a, b) { return (a.pub.order || 0) - (b.pub.order || 0); });
+
+      if (!rows.length) { fleetListEl.innerHTML = '<p class="desc">目前沒有資料，點下方按鈕新增或一鍵匯入。</p>'; return; }
+      fleetListEl.innerHTML = rows.map(function (r) { return fleetCardHTML(r.id, r.pub, r.cost); }).join('');
+      bindFleetRowEvents();
+    });
+  }
+
+  function bindFleetRowEvents() {
+    fleetListEl.querySelectorAll('.admin-card').forEach(function (card) {
+      updateProfitPreview(card);
+      card.querySelectorAll('.calc-num').forEach(function (input) {
+        input.addEventListener('input', function () { updateProfitPreview(card); });
+      });
+    });
+    fleetListEl.querySelectorAll('.save-fleet').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var card = btn.closest('.admin-card');
+        var id = card.dataset.id;
+        var data = readFleetCard(card);
+        var ref = id.indexOf('new-') === 0 ? db.collection('fleetRoutesPublic').doc() : db.collection('fleetRoutesPublic').doc(id);
+        var finalId = ref.id;
+        Promise.all([
+          ref.set(data.pub),
+          db.collection('fleetRoutesCost').doc(finalId).set(data.cost)
+        ]).then(function () { showToast('已儲存這筆資料'); loadFleetRoutes(); });
+      });
+    });
+    fleetListEl.querySelectorAll('.delete-fleet').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var card = btn.closest('.admin-card');
+        var id = card.dataset.id;
+        if (id.indexOf('new-') === 0) { card.remove(); return; }
+        if (!confirm('確定要刪除這筆資料嗎？（售價與成本會一起刪除）')) return;
+        Promise.all([
+          db.collection('fleetRoutesPublic').doc(id).delete(),
+          db.collection('fleetRoutesCost').doc(id).delete()
+        ]).then(function () { showToast('已刪除'); loadFleetRoutes(); });
+      });
+    });
+  }
+
+  document.getElementById('add-fleet-row').addEventListener('click', function () {
+    var tempId = 'new-' + Date.now();
+    fleetListEl.insertAdjacentHTML('beforeend', fleetCardHTML(tempId, { mode: 'point', order: 0 }, {}));
+    bindFleetRowEvents();
+  });
+
+  document.getElementById('seed-fleet').addEventListener('click', function () {
+    db.collection('fleetRoutesPublic').limit(1).get().then(function (snap) {
+      if (!snap.empty && !confirm('資料庫已經有包車資料了，確定要再匯入一次嗎？（會產生重複資料）')) return;
+
+      // [mode, route, hours, vehicleType, note, noteSimp, priceMin, priceMax, costMin, costMax, driverSurcharge, driverNote, driverNoteSimp, needsReview]
+      var SEED = [
+        ['point','芒街-河內','','普通5-7座','','',850,920,680,710,null,'',''  ,false],
+        ['point','芒街-河內','','商務7座','','',1200,1250,760,760,null,'','',false],
+        ['point','芒街-河內','','商務9-11座','','',1350,1350,1100,1100,null,'','',false],
+        ['point','芒街-下龍灣','','普通5-7座','','',460,520,350,370,null,'','',false],
+        ['point','芒街-下龍灣','','商務7座','','',750,750,575,575,null,'','',false],
+        ['point','芒街-下龍灣','','商務9-11座','','',900,950,800,850,null,'','',false],
+        ['point','下龍灣-河內','','普通5-7座','','',520,520,350,370,null,'','',false],
+        ['point','下龍灣-河內','','商務7座','','',750,750,575,575,null,'','',false],
+        ['point','下龍灣-河內','','商務9-11座','','',900,900,800,850,null,'','',false],
+        ['point','河內-寧平','當日往返','普通5-7座','當日往返','当日往返',1050,1050,680,680,null,'','',false],
+        ['point','河內-寧平','','商務7座','當日往返','当日往返',1350,1350,760,760,null,'','',false],
+        ['point','河內-寧平','','商務9-11座','當日往返','当日往返',1450,1450,1200,1200,null,'','',false],
+        ['point','機場-河內','','普通5-7座','接機/送機　＊金額待確認','接机/送机　＊金额待确认',120,120,100,100,null,'','',true],
+        ['point','機場-河內','','商務7座','接機/送機　＊金額待確認','接机/送机　＊金额待确认',450,450,250,250,null,'','',true],
+        ['point','機場-河內','','商務9-11座','接機/送機　＊金額待確認','接机/送机　＊金额待确认',500,500,320,320,null,'','',true],
+        ['point','河內-北寧','','普通5-7座','＊金額待確認','＊金额待确认',160,200,null,null,null,'','',true],
+        ['point','河內-北寧','','商務7座','＊金額待確認','＊金额待确认',450,450,250,250,null,'','',true],
+        ['point','河內-北寧','','商務9-11座','＊金額待確認','＊金额待确认',550,550,320,320,null,'','',true],
+        ['hourly','','8','普通5-7座','100km以內，超公里數135k越南盾/公里','100km以内，超公里数135k越南盾/公里',550,550,450,450,860,'指定中文司機／8小時100km／需提前預約，臨時恐難找','指定中文司机／8小时100km／需提前预约，临时恐难找',false],
+        ['hourly','','8','商務7座','100km以內，超公里數135k越南盾/公里','100km以内，超公里数135k越南盾/公里',1150,1150,750,750,null,'','',false],
+        ['hourly','','8','商務9-11座','100km以內，超公里數135k越南盾/公里','100km以内，超公里数135k越南盾/公里',1250,1250,850,850,null,'','',false],
+        ['hourly','','10','商務7座','100km以內，超公里數135k越南盾/公里','100km以内，超公里数135k越南盾/公里',null,null,null,null,1550,'指定中文司機／10小時100km／需提前預約，臨時恐難找','指定中文司机／10小时100km／需提前预约，临时恐难找',false],
+      ];
+
+      var batch = db.batch();
+      SEED.forEach(function (row, i) {
+        var ref = db.collection('fleetRoutesPublic').doc();
+        batch.set(ref, {
+          mode: row[0], route: row[1], hours: row[2], vehicleType: row[3],
+          note: row[4], noteSimp: row[5],
+          priceCNYMin: row[6], priceCNYMax: row[7],
+          driverZhSurchargeCNY: row[10], driverZhNote: row[11], driverZhNoteSimp: row[12],
+          needsReview: row[13], order: i
+        });
+        batch.set(db.collection('fleetRoutesCost').doc(ref.id), {
+          costCNYMin: row[8], costCNYMax: row[9]
+        });
+      });
+      batch.commit().then(function () { showToast('已匯入包車與時數資料'); loadFleetRoutes(); });
     });
   });
 

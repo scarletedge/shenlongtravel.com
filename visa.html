@@ -344,14 +344,17 @@
   </button>
 </div>
 
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
+<script src="js/firebase-config.js"></script>
 <script src="js/widget.js"></script>
 <script>
 (function () {
-  // 匯率設定：之後匯率變動，只要改這兩個數字即可全站自動更新換算
+  // 匯率設定：若Firebase未設定或連線失敗，使用下面這兩個預設值
   var CNY_TO_USD = 1 / 6.7716;
   var CNY_TO_VND = 3868;
 
-  // 資料來源：人民幣（CNY）批發價
+  // 簽證價目表：若Firebase未設定或連線失敗，使用下面這份內建資料
   var PRICES = [
     ['arrival','15','單次','3–4個工作日',25],
     ['arrival','15','單次','1個工作日',40],
@@ -394,7 +397,7 @@
   var state = { category: null, duration: null, speed: null };
 
   function fmtPrice(cny) {
-    if (cny === null) {
+    if (cny === null || cny === undefined) {
       return '<span class="price-ask">價格詳詢</span><div class="hint">此選項需人工報價，請私訊客服洽詢。</div>';
     }
     var usd = (cny * CNY_TO_USD).toFixed(2);
@@ -403,6 +406,8 @@
       '<div class="price-vnd">≈ ' + vnd.toLocaleString('en-US') + '₫</div>' +
       '<div class="hint">螢幕截圖這個結果，私訊右下角諮詢按鈕給客服即可開始辦理。</div>';
   }
+
+  var CATEGORY_LABELS = { arrival: '落地簽證', embassy: '使館貼紙簽', evisa: '電子簽證加急' };
 
   function updateDurationOptions() {
     var rows = PRICES.filter(function (r) { return r[0] === state.category; });
@@ -430,27 +435,55 @@
     resultBox.innerHTML = '<span style="color:var(--muted);font-size:14px">選擇以上選項後，這裡會顯示報價</span>';
   }
 
-  catBtns.forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      catBtns.forEach(function (b) { b.classList.remove('active'); });
-      btn.classList.add('active');
-      state.category = btn.dataset.value;
-      updateDurationOptions();
+  function initCalculator() {
+    catBtns.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        catBtns.forEach(function (b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        state.category = btn.dataset.value;
+        updateDurationOptions();
+      });
     });
-  });
 
-  durationSel.addEventListener('change', function () {
-    state.duration = durationSel.value;
-    if (!state.duration) return;
-    updateSpeedOptions();
-  });
+    durationSel.addEventListener('change', function () {
+      state.duration = durationSel.value;
+      if (!state.duration) return;
+      updateSpeedOptions();
+    });
 
-  speedSel.addEventListener('change', function () {
-    var rows = JSON.parse(speedSel.dataset.rows || '[]');
-    var row = rows[Number(speedSel.value)];
-    if (!row) return;
-    resultBox.innerHTML = fmtPrice(row[4]);
-  });
+    speedSel.addEventListener('change', function () {
+      var rows = JSON.parse(speedSel.dataset.rows || '[]');
+      var row = rows[Number(speedSel.value)];
+      if (!row) return;
+      resultBox.innerHTML = fmtPrice(row[4]);
+    });
+  }
+
+  // ===== 嘗試從 Firebase 讀取最新資料，讀不到就用上面內建的預設資料 =====
+  if (typeof FIREBASE_READY !== 'undefined' && FIREBASE_READY) {
+    Promise.all([
+      db.collection('siteSettings').doc('exchangeRates').get(),
+      db.collection('visaPrices').orderBy('order').get()
+    ]).then(function (results) {
+      var ratesDoc = results[0], pricesSnap = results[1];
+      if (ratesDoc.exists) {
+        var r = ratesDoc.data();
+        if (r.cnyToUsd) CNY_TO_USD = r.cnyToUsd;
+        if (r.cnyToVnd) CNY_TO_VND = r.cnyToVnd;
+      }
+      if (!pricesSnap.empty) {
+        var fresh = [];
+        pricesSnap.forEach(function (doc) {
+          var d = doc.data();
+          fresh.push([d.category, d.stay, d.entryHant, d.speedHant, d.priceCNY]);
+        });
+        PRICES = fresh;
+      }
+      initCalculator();
+    }).catch(function () { initCalculator(); });
+  } else {
+    initCalculator();
+  }
 })();
 </script>
 </body>

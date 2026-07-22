@@ -129,6 +129,79 @@
         <p>大型商務考察團的尊榮級選擇。</p>
       </div>
     </div>
+
+    <!-- ===== 包車與派車計算機 ===== -->
+    <div class="calc-box mt-lg" id="fleet-calc">
+      <div class="mode-toggle">
+        <button type="button" class="mode-btn active" data-mode="point">點到點接送</button>
+        <button type="button" class="mode-btn" data-mode="hourly">包車（論時數）</button>
+      </div>
+
+      <!-- 模式A：點到點 -->
+      <div class="calc-mode-panel active" id="mode-point">
+        <div class="calc-step">
+          <label>1. 選擇路線</label>
+          <select class="calc-select" id="point-route"><option value="">請選擇</option></select>
+        </div>
+        <div class="calc-step">
+          <label>2. 選擇車型</label>
+          <select class="calc-select" id="point-vehicle" disabled><option>請先選擇路線</option></select>
+        </div>
+        <div class="driver-toggle">
+          <div class="label">指定中文司機<span class="note" id="point-driver-note">選好路線與車型後，這裡會顯示是否可指定</span></div>
+          <label class="switch"><input type="checkbox" id="point-driver-toggle" disabled><span class="slider"></span></label>
+        </div>
+        <div class="calc-result" id="point-result">
+          <span style="color:var(--muted);font-size:14px">選擇以上選項後，這裡會顯示報價</span>
+        </div>
+      </div>
+
+      <!-- 模式B：論時數 -->
+      <div class="calc-mode-panel" id="mode-hourly">
+        <div class="calc-step">
+          <label>1. 選擇車型</label>
+          <div class="calc-pills" id="hourly-vehicle-pills">
+            <button type="button" class="calc-pill" data-value="普通5-7座">普通5-7座</button>
+            <button type="button" class="calc-pill" data-value="商務7座">商務7座</button>
+            <button type="button" class="calc-pill" data-value="商務9-11座">商務9-11座</button>
+          </div>
+        </div>
+        <div class="calc-step">
+          <label>2. 選擇時數</label>
+          <div class="hour-btn-row" id="hourly-hour-btns">
+            <button type="button" class="hour-btn" data-value="8">
+              <div class="h-title">8小時</div>
+              <div class="h-sub">100km以內，超公里另計</div>
+            </button>
+            <button type="button" class="hour-btn" data-value="10">
+              <div class="h-title">10小時</div>
+              <div class="h-sub">100km以內，超公里另計</div>
+            </button>
+            <button type="button" class="hour-btn contact-cta" id="hourly-longer-btn">
+              <div class="h-title">更長天數／跨省</div>
+              <div class="h-sub">請直接私訊客服</div>
+            </button>
+          </div>
+        </div>
+        <div class="driver-toggle">
+          <div class="label">指定中文司機<span class="note" id="hourly-driver-note">選好車型與時數後，這裡會顯示是否可指定</span></div>
+          <label class="switch"><input type="checkbox" id="hourly-driver-toggle" disabled><span class="slider"></span></label>
+        </div>
+        <div class="calc-result" id="hourly-result">
+          <span style="color:var(--muted);font-size:14px">選擇以上選項後，這裡會顯示報價</span>
+        </div>
+        <p style="font-size:12.5px;color:var(--muted);margin-top:14px">超過市區半徑或跨省長途行程，請聯繫客服另行報價。</p>
+      </div>
+    </div>
+
+    <!-- ===== 常見路線參考表 ===== -->
+    <details class="route-ref-table">
+      <summary>展開查看常見點對點路線總覽 →</summary>
+      <table class="compare" id="route-ref-table-body">
+        <thead><tr><th>路線</th><th>車型</th><th>參考售價</th></tr></thead>
+        <tbody><tr><td colspan="3" style="color:var(--muted)">載入中…</td></tr></tbody>
+      </table>
+    </details>
   </div>
 </section>
 
@@ -212,6 +285,113 @@
         <p>具備商務考察與產業對接經驗，協助您問對問題。</p>
       </div>
     </div>
+
+    <!-- ===== 客戶：選導遊類型送出配對需求 ===== -->
+    <div class="calc-box mt-lg">
+      <div class="calc-step">
+        <label>1. 想要哪一種類型的導遊？</label>
+        <div class="guide-type-grid" id="guide-type-grid">
+          <div class="guide-type-card" data-value="business">
+            <div class="name">商務陪同</div>
+            <div class="hint">含翻譯、應酬禮儀</div>
+          </div>
+          <div class="guide-type-card" data-value="culture">
+            <div class="name">歷史文化深度遊</div>
+            <div class="hint">古蹟、故事、脈絡</div>
+          </div>
+          <div class="guide-type-card" data-value="food">
+            <div class="name">在地美食探店</div>
+            <div class="hint">吃貨嚮導</div>
+          </div>
+          <div class="guide-type-card" data-value="family">
+            <div class="name">親子家庭包團</div>
+            <div class="hint">照顧長輩小孩</div>
+          </div>
+          <div class="guide-type-card" data-value="photo">
+            <div class="name">攝影打卡跟拍</div>
+            <div class="hint">出片有保障</div>
+          </div>
+          <div class="guide-type-card" data-value="unsure">
+            <div class="name">不確定，讓我們推薦</div>
+            <div class="hint">交給老司機安排</div>
+          </div>
+        </div>
+      </div>
+      <div class="admin-row" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:18px">
+        <div class="calc-step" style="margin-bottom:0">
+          <label>2. 語言需求</label>
+          <select class="calc-select" id="guide-lang">
+            <option value="中越">中文＋越南語</option>
+            <option value="英越">英文＋越南語</option>
+            <option value="中英越">中英越三語</option>
+          </select>
+        </div>
+        <div class="calc-step" style="margin-bottom:0">
+          <label>3. 需要天數</label>
+          <input class="calc-select" id="guide-days" type="text" placeholder="例：3天">
+        </div>
+      </div>
+      <div class="calc-step">
+        <label>4. 人數與其他需求</label>
+        <input class="calc-select" id="guide-note" type="text" placeholder="例：4人，其中有長輩，希望步調放慢">
+      </div>
+      <div class="admin-actions" style="margin-top:8px">
+        <button class="btn-save" id="guide-submit" style="flex:1;padding:13px">送出配對需求</button>
+      </div>
+      <div id="guide-result" style="margin-top:18px"></div>
+    </div>
+
+    <p class="center"><span class="toggle-link" id="toggle-guide-apply">想成為升龍地陪導遊？點此報名 →</span></p>
+
+    <!-- ===== 導遊：自己填表報名 ===== -->
+    <div class="collapsible" id="guide-apply-form-wrap">
+      <div class="form-box">
+        <h3 style="margin-bottom:20px">地陪導遊報名表</h3>
+        <div class="form-row">
+          <div class="field">
+            <label for="ga-name">姓名</label>
+            <input id="ga-name" type="text">
+          </div>
+          <div class="field">
+            <label for="ga-lang">會的語言</label>
+            <input id="ga-lang" type="text" placeholder="例：中文、越南語、英文">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="field">
+            <label for="ga-specialty">擅長類型</label>
+            <select id="ga-specialty">
+              <option value="business">商務陪同</option>
+              <option value="culture">歷史文化深度遊</option>
+              <option value="food">在地美食探店</option>
+              <option value="family">親子家庭包團</option>
+              <option value="photo">攝影打卡跟拍</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="ga-years">帶團經驗（年）</label>
+            <input id="ga-years" type="text" placeholder="例：3">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="field">
+            <label for="ga-contact-method">聯絡方式（哪個平台）</label>
+            <input id="ga-contact-method" type="text" placeholder="例：WeChat／LINE／電話">
+          </div>
+          <div class="field">
+            <label for="ga-contact-id">聯絡帳號／號碼</label>
+            <input id="ga-contact-id" type="text">
+          </div>
+        </div>
+        <div class="field" style="margin-bottom:22px">
+          <label for="ga-bio">自我介紹（一兩句話就好）</label>
+          <textarea id="ga-bio" rows="3"></textarea>
+        </div>
+        <button class="submit-btn" id="guide-apply-submit">送出報名</button>
+        <div id="guide-apply-result" style="margin-top:16px"></div>
+      </div>
+    </div>
+
     <p class="center mt-lg"><a href="local-insider.html" class="btn-ghost">下一步：越玩越瘋 →</a></p>
   </div>
 </section>
@@ -281,6 +461,294 @@
   </button>
 </div>
 
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
+<script src="js/firebase-config.js"></script>
 <script src="js/widget.js"></script>
+<script>
+(function () {
+  function genRequestId(prefix) {
+    var d = new Date();
+    var ymd = String(d.getFullYear()).slice(2) + String(d.getMonth() + 1).padStart(2, '0') + String(d.getDate()).padStart(2, '0');
+    var rand = Math.random().toString(36).slice(2, 6).toUpperCase();
+    return prefix + ymd + '-' + rand;
+  }
+
+  var TYPE_LABELS = {
+    business: '商務陪同', culture: '歷史文化深度遊', food: '在地美食探店',
+    family: '親子家庭包團', photo: '攝影打卡跟拍', unsure: '不確定，讓我們推薦'
+  };
+
+  // ===== 導遊類型選擇 =====
+  var typeCards = document.querySelectorAll('#guide-type-grid .guide-type-card');
+  var selectedType = null;
+  typeCards.forEach(function (card) {
+    card.addEventListener('click', function () {
+      typeCards.forEach(function (c) { c.classList.remove('active'); });
+      card.classList.add('active');
+      selectedType = card.dataset.value;
+    });
+  });
+
+  // ===== 客戶送出配對需求 =====
+  var guideSubmitBtn = document.getElementById('guide-submit');
+  var guideResult = document.getElementById('guide-result');
+  guideSubmitBtn.addEventListener('click', function () {
+    if (!selectedType) { alert('請先選擇想要的導遊類型'); return; }
+    if (typeof FIREBASE_READY === 'undefined' || !FIREBASE_READY) { alert('系統尚未設定完成，請直接私訊右下角客服。'); return; }
+
+    var reqId = genRequestId('GD');
+    var data = {
+      requestId: reqId,
+      guideType: selectedType,
+      guideTypeLabel: TYPE_LABELS[selectedType],
+      language: document.getElementById('guide-lang').value,
+      days: document.getElementById('guide-days').value.trim(),
+      note: document.getElementById('guide-note').value.trim(),
+      status: '待配對',
+      lang: 'zh-Hant',
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    };
+
+    guideSubmitBtn.disabled = true;
+    db.collection('guideRequests').add(data).then(function () {
+      guideResult.innerHTML =
+        '<div class="request-id-box">' +
+        '<div class="id">' + reqId + '</div>' +
+        '<div class="hint">請截圖這個編號，私訊右下角諮詢按鈕給客服，我們會盡快為您配對合適的導遊。</div>' +
+        '</div>';
+    }).catch(function () {
+      guideResult.innerHTML = '<p style="color:var(--accent);font-size:13px">送出失敗，請直接私訊右下角客服為您安排。</p>';
+    }).finally(function () { guideSubmitBtn.disabled = false; });
+  });
+
+  // ===== 展開／收合導遊報名表 =====
+  var toggleLink = document.getElementById('toggle-guide-apply');
+  var applyFormWrap = document.getElementById('guide-apply-form-wrap');
+  toggleLink.addEventListener('click', function () {
+    applyFormWrap.classList.toggle('open');
+    toggleLink.textContent = applyFormWrap.classList.contains('open') ? '收合報名表 ↑' : '想成為升龍地陪導遊？點此報名 →';
+  });
+
+  // ===== 導遊送出報名 =====
+  var applySubmitBtn = document.getElementById('guide-apply-submit');
+  var applyResult = document.getElementById('guide-apply-result');
+  applySubmitBtn.addEventListener('click', function () {
+    var name = document.getElementById('ga-name').value.trim();
+    var contactId = document.getElementById('ga-contact-id').value.trim();
+    if (!name || !contactId) { alert('請至少填寫姓名與聯絡帳號'); return; }
+    if (typeof FIREBASE_READY === 'undefined' || !FIREBASE_READY) { alert('系統尚未設定完成，請直接私訊右下角客服報名。'); return; }
+
+    var data = {
+      name: name,
+      languages: document.getElementById('ga-lang').value.trim(),
+      specialty: document.getElementById('ga-specialty').value,
+      specialtyLabel: TYPE_LABELS[document.getElementById('ga-specialty').value],
+      years: document.getElementById('ga-years').value.trim(),
+      contactMethod: document.getElementById('ga-contact-method').value.trim(),
+      contactId: contactId,
+      bio: document.getElementById('ga-bio').value.trim(),
+      approved: false,
+      lang: 'zh-Hant',
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    };
+
+    applySubmitBtn.disabled = true;
+    db.collection('guides').add(data).then(function () {
+      applyResult.innerHTML = '<p style="color:var(--accent);font-size:14px">✓ 報名資料已收到，團隊審核後會主動聯繫您。</p>';
+      document.getElementById('ga-name').value = '';
+      document.getElementById('ga-lang').value = '';
+      document.getElementById('ga-years').value = '';
+      document.getElementById('ga-contact-method').value = '';
+      document.getElementById('ga-contact-id').value = '';
+      document.getElementById('ga-bio').value = '';
+    }).catch(function () {
+      applyResult.innerHTML = '<p style="color:var(--accent);font-size:13px">送出失敗，請直接私訊右下角客服報名。</p>';
+    }).finally(function () { applySubmitBtn.disabled = false; });
+  });
+})();
+</script>
+
+<script>
+(function () {
+  if (typeof FIREBASE_READY === 'undefined' || !FIREBASE_READY) return;
+
+  var CNY_TO_USD = 1 / 6.7716;
+  var CNY_TO_VND = 3868;
+  var allRoutes = [];
+
+  function fmtMoney(min, max) {
+    if (min == null) return '<span class="price-ask">詳詢</span>';
+    var usdMin = (min * CNY_TO_USD).toFixed(2);
+    var usdMax = (max * CNY_TO_USD).toFixed(2);
+    var vndMin = Math.round(min * CNY_TO_VND / 1000) * 1000;
+    var vndMax = Math.round(max * CNY_TO_VND / 1000) * 1000;
+    var usdStr = (min === max) ? ('US$' + usdMin) : ('US$' + usdMin + '–' + usdMax);
+    var vndStr = (min === max) ? (vndMin.toLocaleString('en-US') + '₫') : (vndMin.toLocaleString('en-US') + '–' + vndMax.toLocaleString('en-US') + '₫');
+    return '<div class="price-usd">' + usdStr + '</div><div class="price-vnd">≈ ' + vndStr + '</div>';
+  }
+
+  db.collection('fleetRoutesPublic').get().then(function (snap) {
+    snap.forEach(function (doc) { allRoutes.push(Object.assign({ id: doc.id }, doc.data())); });
+    allRoutes.sort(function (a, b) { return (a.order || 0) - (b.order || 0); });
+    initPointMode();
+    initHourlyMode();
+    renderRefTable();
+  }).catch(function () {
+    document.getElementById('point-result').innerHTML = '<span style="color:var(--muted);font-size:14px">暫時無法載入報價，請直接私訊右下角客服。</span>';
+  });
+
+  // ===== 模式切換 =====
+  document.querySelectorAll('.mode-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      document.querySelectorAll('.mode-btn').forEach(function (b) { b.classList.remove('active'); });
+      document.querySelectorAll('.calc-mode-panel').forEach(function (p) { p.classList.remove('active'); });
+      btn.classList.add('active');
+      document.getElementById('mode-' + btn.dataset.mode).classList.add('active');
+    });
+  });
+
+  // ===== 模式A：點到點 =====
+  function initPointMode() {
+    var pointRoutes = allRoutes.filter(function (r) { return r.mode === 'point'; });
+    var routeSel = document.getElementById('point-route');
+    var vehicleSel = document.getElementById('point-vehicle');
+    var driverToggle = document.getElementById('point-driver-toggle');
+    var driverNote = document.getElementById('point-driver-note');
+    var resultBox = document.getElementById('point-result');
+
+    var routes = [];
+    pointRoutes.forEach(function (r) { if (routes.indexOf(r.route) === -1) routes.push(r.route); });
+    routeSel.innerHTML = '<option value="">請選擇</option>' + routes.map(function (r) { return '<option value="' + r + '">' + r + '</option>'; }).join('');
+
+    routeSel.addEventListener('change', function () {
+      var rows = pointRoutes.filter(function (r) { return r.route === routeSel.value; });
+      vehicleSel.innerHTML = '<option value="">請選擇</option>' + rows.map(function (r, i) { return '<option value="' + i + '">' + r.vehicleType + '</option>'; }).join('');
+      vehicleSel.disabled = !routeSel.value;
+      vehicleSel.dataset.rows = JSON.stringify(rows);
+      driverToggle.checked = false;
+      driverToggle.disabled = true;
+      driverNote.textContent = '選好路線與車型後，這裡會顯示是否可指定';
+      resultBox.innerHTML = '<span style="color:var(--muted);font-size:14px">選擇以上選項後，這裡會顯示報價</span>';
+      updatePointResult();
+    });
+
+    function updatePointResult() {
+      var rows = JSON.parse(vehicleSel.dataset.rows || '[]');
+      var row = rows[Number(vehicleSel.value)];
+      if (!row) return;
+
+      if (row.driverZhSurchargeCNY != null) {
+        driverToggle.disabled = false;
+        driverNote.textContent = row.driverZhNote || '可指定中文司機';
+      } else {
+        driverToggle.disabled = true;
+        driverToggle.checked = false;
+        driverNote.textContent = '此路線暫不提供中文司機指定，如有需要請私訊客服';
+      }
+
+      var priceMin = row.priceCNYMin, priceMax = row.priceCNYMax;
+      if (driverToggle.checked && row.driverZhSurchargeCNY != null) {
+        priceMin = row.driverZhSurchargeCNY;
+        priceMax = row.driverZhSurchargeCNY;
+      }
+
+      var reviewFlag = row.needsReview ? '<p style="font-size:12px;color:var(--accent);margin-top:10px">＊此路線價格尚待最終確認，實際報價請以客服回覆為準</p>' : '';
+      resultBox.innerHTML = fmtMoney(priceMin, priceMax) +
+        (row.note ? '<div class="price-vnd">' + row.note + '</div>' : '') +
+        '<div class="hint">螢幕截圖這個結果，私訊右下角諮詢按鈕給客服即可預約用車。</div>' + reviewFlag;
+    }
+
+    vehicleSel.addEventListener('change', updatePointResult);
+    driverToggle.addEventListener('change', updatePointResult);
+  }
+
+  // ===== 模式B：論時數 =====
+  function initHourlyMode() {
+    var hourlyRoutes = allRoutes.filter(function (r) { return r.mode === 'hourly'; });
+    var vehiclePills = document.querySelectorAll('#hourly-vehicle-pills .calc-pill');
+    var hourBtns = document.querySelectorAll('#hourly-hour-btns .hour-btn[data-value]');
+    var driverToggle = document.getElementById('hourly-driver-toggle');
+    var driverNote = document.getElementById('hourly-driver-note');
+    var resultBox = document.getElementById('hourly-result');
+    var state = { vehicle: null, hours: null };
+
+    vehiclePills.forEach(function (pill) {
+      pill.addEventListener('click', function () {
+        vehiclePills.forEach(function (p) { p.classList.remove('active'); });
+        pill.classList.add('active');
+        state.vehicle = pill.dataset.value;
+        update();
+      });
+    });
+
+    hourBtns.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        hourBtns.forEach(function (b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        state.hours = btn.dataset.value;
+        update();
+      });
+    });
+
+    function findRow() {
+      return hourlyRoutes.filter(function (r) { return r.vehicleType === state.vehicle && r.hours === state.hours; })[0];
+    }
+
+    function update() {
+      if (!state.vehicle || !state.hours) {
+        resultBox.innerHTML = '<span style="color:var(--muted);font-size:14px">選擇以上選項後，這裡會顯示報價</span>';
+        return;
+      }
+      var row = findRow();
+      if (!row) {
+        driverToggle.disabled = true;
+        driverToggle.checked = false;
+        driverNote.textContent = '此組合暫無報價資料';
+        resultBox.innerHTML = '<span class="price-ask">價格詳詢</span><div class="hint">請私訊右下角客服為您報價。</div>';
+        return;
+      }
+
+      if (row.driverZhSurchargeCNY != null) {
+        driverToggle.disabled = false;
+        driverNote.textContent = row.driverZhNote || '可指定中文司機';
+      } else {
+        driverToggle.disabled = true;
+        driverToggle.checked = false;
+        driverNote.textContent = '此組合暫不提供中文司機指定，如有需要請私訊客服';
+      }
+
+      var priceMin = row.priceCNYMin, priceMax = row.priceCNYMax;
+      if (driverToggle.checked && row.driverZhSurchargeCNY != null) {
+        priceMin = row.driverZhSurchargeCNY;
+        priceMax = row.driverZhSurchargeCNY;
+      }
+
+      resultBox.innerHTML = fmtMoney(priceMin, priceMax) +
+        (row.note ? '<div class="price-vnd">' + row.note + '</div>' : '') +
+        '<div class="hint">螢幕截圖這個結果，私訊右下角諮詢按鈕給客服即可預約用車。</div>';
+    }
+
+    driverToggle.addEventListener('change', update);
+
+    document.getElementById('hourly-longer-btn').addEventListener('click', function () {
+      document.querySelector('.widget-toggle').click();
+    });
+  }
+
+  // ===== 常見路線參考表 =====
+  function renderRefTable() {
+    var pointRoutes = allRoutes.filter(function (r) { return r.mode === 'point'; });
+    var tbody = document.querySelector('#route-ref-table-body tbody');
+    if (!pointRoutes.length) { tbody.innerHTML = '<tr><td colspan="3" style="color:var(--muted)">暫無資料</td></tr>'; return; }
+    tbody.innerHTML = pointRoutes.map(function (r) {
+      var usd = r.priceCNYMin == null ? '詳詢' : (r.priceCNYMin === r.priceCNYMax
+        ? 'US$' + (r.priceCNYMin * CNY_TO_USD).toFixed(2)
+        : 'US$' + (r.priceCNYMin * CNY_TO_USD).toFixed(2) + '–' + (r.priceCNYMax * CNY_TO_USD).toFixed(2));
+      return '<tr><td>' + r.route + (r.needsReview ? '＊' : '') + '</td><td>' + r.vehicleType + '</td><td>' + usd + '</td></tr>';
+    }).join('');
+  }
+})();
+</script>
 </body>
 </html>
