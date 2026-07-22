@@ -36,6 +36,8 @@ document.addEventListener('DOMContentLoaded', function () {
       loadGuides();
       loadGuideRequests();
       loadFleetRoutes();
+      loadFasttrackServices();
+      loadFasttrackRequests();
     } else {
       loginScreen.style.display = 'flex';
       adminShell.classList.remove('show');
@@ -725,5 +727,164 @@ document.addEventListener('DOMContentLoaded', function () {
       batch.commit().then(function () { showToast('已匯入包車與時數資料'); loadFleetRoutes(); });
     });
   });
+
+  /* =========================================================
+     快速通關管理
+     ========================================================= */
+  var fasttrackListEl = document.getElementById('fasttrack-list');
+
+  function fasttrackCardHTML(id, d) {
+    d = d || {};
+    return (
+      '<div class="admin-card" data-id="' + id + '">' +
+      '<div class="admin-row">' +
+        '<div class="admin-field"><label>機場名稱（繁）</label><input class="f-nameHant" value="' + (d.nameHant || '') + '"></div>' +
+        '<div class="admin-field"><label>機場名稱（簡）</label><input class="f-nameSimp" value="' + (d.nameSimp || '') + '"></div>' +
+        '<div class="admin-field"><label>機場代碼</label><input class="f-code" value="' + (d.code || '') + '" placeholder="例：HAN"></div>' +
+        '<div class="admin-field"><label>排序</label><input class="f-order" type="number" value="' + (d.order != null ? d.order : 0) + '"></div>' +
+      '</div>' +
+      '<div class="admin-row">' +
+        '<div class="admin-field"><label>日間價格（人民幣，留空＝詳詢）</label><input class="f-day" type="number" value="' + (d.dayPriceCNY != null ? d.dayPriceCNY : '') + '"></div>' +
+        '<div class="admin-field"><label>夜間價格（人民幣，留空＝詳詢）</label><input class="f-night" type="number" value="' + (d.nightPriceCNY != null ? d.nightPriceCNY : '') + '"></div>' +
+        '<div class="admin-field"><label>舉牌加價（人民幣）</label><input class="f-board" type="number" value="' + (d.boardSurchargeCNY != null ? d.boardSurchargeCNY : 100) + '"></div>' +
+      '</div>' +
+      '<div class="admin-actions">' +
+        '<button class="btn-save save-fasttrack">儲存</button>' +
+        '<button class="btn-delete delete-fasttrack">刪除</button>' +
+      '</div>' +
+      '</div>'
+    );
+  }
+
+  function readFasttrackCard(card) {
+    var day = card.querySelector('.f-day').value;
+    var night = card.querySelector('.f-night').value;
+    return {
+      nameHant: card.querySelector('.f-nameHant').value.trim(),
+      nameSimp: card.querySelector('.f-nameSimp').value.trim(),
+      code: card.querySelector('.f-code').value.trim().toUpperCase(),
+      dayPriceCNY: day === '' ? null : parseFloat(day),
+      nightPriceCNY: night === '' ? null : parseFloat(night),
+      boardSurchargeCNY: parseFloat(card.querySelector('.f-board').value) || 100,
+      order: parseInt(card.querySelector('.f-order').value, 10) || 0
+    };
+  }
+
+  function loadFasttrackServices() {
+    fasttrackListEl.innerHTML = '<div class="admin-loading">載入中…</div>';
+    db.collection('fastTrackServices').get().then(function (snap) {
+      if (snap.empty) { fasttrackListEl.innerHTML = '<p class="desc">目前沒有機場資料，點下方按鈕新增或一鍵匯入。</p>'; return; }
+      var rows = [];
+      snap.forEach(function (doc) { rows.push({ id: doc.id, data: doc.data() }); });
+      rows.sort(function (a, b) { return (a.data.order || 0) - (b.data.order || 0); });
+      fasttrackListEl.innerHTML = rows.map(function (r) { return fasttrackCardHTML(r.id, r.data); }).join('');
+      bindFasttrackRowEvents();
+    });
+  }
+
+  function bindFasttrackRowEvents() {
+    fasttrackListEl.querySelectorAll('.save-fasttrack').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var card = btn.closest('.admin-card');
+        var id = card.dataset.id;
+        var data = readFasttrackCard(card);
+        var ref = id.indexOf('new-') === 0 ? db.collection('fastTrackServices').doc() : db.collection('fastTrackServices').doc(id);
+        ref.set(data).then(function () { showToast('已儲存'); loadFasttrackServices(); });
+      });
+    });
+    fasttrackListEl.querySelectorAll('.delete-fasttrack').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var card = btn.closest('.admin-card');
+        var id = card.dataset.id;
+        if (id.indexOf('new-') === 0) { card.remove(); return; }
+        if (!confirm('確定要刪除這個機場嗎？')) return;
+        db.collection('fastTrackServices').doc(id).delete().then(function () { showToast('已刪除'); loadFasttrackServices(); });
+      });
+    });
+  }
+
+  document.getElementById('add-fasttrack-row').addEventListener('click', function () {
+    var tempId = 'new-' + Date.now();
+    fasttrackListEl.insertAdjacentHTML('beforeend', fasttrackCardHTML(tempId, { order: 0, boardSurchargeCNY: 100 }));
+    bindFasttrackRowEvents();
+  });
+
+  document.getElementById('seed-fasttrack').addEventListener('click', function () {
+    db.collection('fastTrackServices').limit(1).get().then(function (snap) {
+      if (!snap.empty && !confirm('資料庫已經有機場資料了，確定要再匯入一次嗎？（會產生重複資料）')) return;
+
+      // [繁, 簡, 代碼]，全部先套用統一價格：日間200／夜間250／舉牌+100（人民幣）
+      var AIRPORTS = [
+        ['河內內排機場','河内内排机场','HAN'],
+        ['胡志明新山一機場','胡志明新山一机场','SGN'],
+        ['峴港機場','岘港机场','DAD'],
+        ['金蘭機場（芽莊）','金兰机场（芽庄）','CXR'],
+        ['富國島機場','富国岛机场','PQC'],
+        ['海防吉埠機場','海防吉埠机场','HPH'],
+        ['順化富牌機場','顺化富牌机场','HUI'],
+        ['大叻蓮香機場','大叻莲香机场','DLI'],
+        ['芹苴機場','芹苴机场','VCA'],
+        ['雲屯機場（下龍）','云屯机场（下龙）','VDO'],
+        ['榮市機場','荣市机场','VII'],
+        ['朱萊機場（廣南）','朱莱机场（广南）','VCL'],
+        ['波萊古機場','波莱古机场','PXU'],
+        ['邦美蜀機場','邦美蜀机场','BMV'],
+        ['歸仁機場','归仁机场','UIH'],
+        ['綏和機場','绥和机场','TBB'],
+        ['崑島機場','昆岛机场','VCS'],
+        ['迪石機場','迪石机场','VKG'],
+        ['洞海機場','洞海机场','VDH'],
+        ['奠邊府機場','奠边府机场','DIN']
+      ];
+
+      var batch = db.batch();
+      AIRPORTS.forEach(function (a, i) {
+        var ref = db.collection('fastTrackServices').doc();
+        batch.set(ref, {
+          nameHant: a[0], nameSimp: a[1], code: a[2],
+          dayPriceCNY: 200, nightPriceCNY: 250, boardSurchargeCNY: 100,
+          order: i
+        });
+      });
+      batch.commit().then(function () { showToast('已匯入20個機場'); loadFasttrackServices(); });
+    });
+  });
+
+  var fasttrackRequestsListEl = document.getElementById('fasttrack-requests-list');
+  function ftRequestCardHTML(id, d) {
+    d = d || {};
+    var created = d.createdAt && d.createdAt.toDate ? d.createdAt.toDate().toLocaleString('zh-TW') : '—';
+    return (
+      '<div class="admin-card" data-id="' + id + '">' +
+      '<div class="admin-row">' +
+        '<div class="admin-field"><label>需求編號</label><input value="' + (d.requestId || '') + '" disabled></div>' +
+        '<div class="admin-field"><label>機場</label><input value="' + (d.airportName || '') + '" disabled></div>' +
+        '<div class="admin-field"><label>時段</label><input value="' + (d.time === 'night' ? '夜間' : '日間') + '" disabled></div>' +
+      '</div>' +
+      '<div class="admin-row">' +
+        '<div class="admin-field"><label>加購舉牌</label><input value="' + (d.board ? '是' : '否') + '" disabled></div>' +
+        '<div class="admin-field"><label>加購排隊協助</label><input value="' + (d.queueHelp ? '是' : '否') + '" disabled></div>' +
+        '<div class="admin-field"><label>送出時間</label><input value="' + created + '" disabled></div>' +
+      '</div>' +
+      '<div class="admin-actions"><button class="btn-delete delete-ftrequest">刪除</button></div>' +
+      '</div>'
+    );
+  }
+  function loadFasttrackRequests() {
+    fasttrackRequestsListEl.innerHTML = '<div class="admin-loading">載入中…</div>';
+    db.collection('fastTrackRequests').orderBy('createdAt', 'desc').get().then(function (snap) {
+      if (snap.empty) { fasttrackRequestsListEl.innerHTML = '<p class="desc">目前沒有客戶預約需求。</p>'; return; }
+      var html = '';
+      snap.forEach(function (doc) { html += ftRequestCardHTML(doc.id, doc.data()); });
+      fasttrackRequestsListEl.innerHTML = html;
+      fasttrackRequestsListEl.querySelectorAll('.delete-ftrequest').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          if (!confirm('確定要刪除這筆需求嗎？')) return;
+          var card = btn.closest('.admin-card');
+          db.collection('fastTrackRequests').doc(card.dataset.id).delete().then(function () { showToast('已刪除'); loadFasttrackRequests(); });
+        });
+      });
+    });
+  }
 
 });

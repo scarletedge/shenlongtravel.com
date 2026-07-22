@@ -53,6 +53,7 @@
     <button class="nav-tab" data-panel="panel-team">團隊成員</button>
     <button class="nav-tab" data-panel="panel-guides">地陪導遊</button>
     <button class="nav-tab" data-panel="panel-fleet">包車與派車</button>
+    <button class="nav-tab" data-panel="panel-fasttrack">快速通關</button>
   </div>
 
   <div class="admin-main">
@@ -130,6 +131,20 @@
         <button class="btn-add" id="add-fleet-row" style="flex:1">＋ 新增一筆路線／時數資料</button>
         <button class="btn-save" id="seed-fleet" style="white-space:nowrap">一鍵匯入現有7條路線＋時數資料</button>
       </div>
+    </div>
+
+    <!-- 快速通關 -->
+    <div class="admin-panel" id="panel-fasttrack">
+      <h2>快速通關管理</h2>
+      <p class="desc">每個機場可分別設定日間／夜間價格與舉牌加價金額。留空日間或夜間價格＝該時段顯示「詳詢」。客戶送出的預約需求（不含護照/簽證/航班資料）會列在下方，方便妳追蹤有多少人詢問。</p>
+      <h3 style="font-size:16px;margin-bottom:14px">機場價格設定</h3>
+      <div id="fasttrack-list" style="margin-bottom:36px"></div>
+      <div class="admin-actions" style="margin-bottom:36px">
+        <button class="btn-add" id="add-fasttrack-row" style="flex:1">＋ 新增一個機場</button>
+        <button class="btn-save" id="seed-fasttrack" style="white-space:nowrap">一鍵匯入越南20個主要機場</button>
+      </div>
+      <h3 style="font-size:16px;margin-bottom:14px">客戶預約需求</h3>
+      <div id="fasttrack-requests-list"></div>
     </div>
 
   </div>

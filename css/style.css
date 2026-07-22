@@ -272,6 +272,20 @@ footer{background:var(--ink);color:#B9AF9B;padding:64px 0 32px;font-size:13.5px}
   border:1px dashed var(--accent);padding:3px 10px;border-radius:20px;
 }
 
+/* ===== 熱門服務曝光區塊 ===== */
+.featured-banner{
+  background:var(--ink);color:var(--paper);padding:0;
+}
+.featured-banner .wrap{padding:56px 24px;display:flex;align-items:center;justify-content:space-between;gap:32px;flex-wrap:wrap}
+.featured-banner .badge-hot{
+  display:inline-block;background:var(--accent);color:var(--paper);font-size:11.5px;letter-spacing:.1em;
+  padding:4px 12px;border-radius:20px;margin-bottom:14px;
+}
+.featured-banner h2{color:var(--paper);font-size:clamp(22px,3vw,30px);margin-bottom:10px}
+.featured-banner p{color:#B9AF9B;font-size:14.5px;max-width:38em}
+.featured-banner .btn-solid{background:var(--accent)}
+.featured-banner .btn-solid:hover{background:var(--gold);color:var(--ink)}
+
 /* ===== 包車計算機：模式切換 ===== */
 .mode-toggle{display:flex;gap:10px;margin-bottom:24px}
 .mode-toggle button{
