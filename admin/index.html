@@ -55,6 +55,7 @@
     <button class="nav-tab" data-panel="panel-fleet">包車與派車</button>
     <button class="nav-tab" data-panel="panel-fasttrack">快速通關</button>
     <button class="nav-tab" data-panel="panel-itinerary">定制行程需求</button>
+    <button class="nav-tab" data-panel="panel-content">頁面文字內容</button>
   </div>
 
   <div class="admin-main">
@@ -153,6 +154,42 @@
       <h2>定制行程需求</h2>
       <p class="desc">客戶送出的完整定制行程需求（不含護照等敏感資料）。可標記處理狀態，方便追蹤報價進度。</p>
       <div id="itinerary-requests-list"></div>
+    </div>
+
+    <!-- 頁面文字內容 -->
+    <div class="admin-panel" id="panel-content">
+      <h2>頁面文字內容</h2>
+      <p class="desc">這裡的內容會直接顯示在對應的網站頁面上（例如留學諮詢頁的「短期班所需材料」「長期班報名與截止日期」按鈕連過去的頁面）。換行會照原樣顯示，不用打任何HTML語法。</p>
+
+      <div class="admin-card">
+        <h3 style="font-size:16px;margin-bottom:14px">短期班所需材料</h3>
+        <div class="admin-field" style="margin-bottom:14px">
+          <label>繁體中文內容</label>
+          <textarea id="content-materials-hant" rows="6" style="width:100%;font-family:inherit;font-size:14px;padding:10px;border:1px solid var(--line-strong);border-radius:var(--radius)"></textarea>
+        </div>
+        <div class="admin-field" style="margin-bottom:14px">
+          <label>簡體中文內容</label>
+          <textarea id="content-materials-simp" rows="6" style="width:100%;font-family:inherit;font-size:14px;padding:10px;border:1px solid var(--line-strong);border-radius:var(--radius)"></textarea>
+        </div>
+        <div class="admin-actions">
+          <button class="btn-save" id="save-materials">儲存</button>
+        </div>
+      </div>
+
+      <div class="admin-card">
+        <h3 style="font-size:16px;margin-bottom:14px">長期班報名與截止日期</h3>
+        <div class="admin-field" style="margin-bottom:14px">
+          <label>繁體中文內容</label>
+          <textarea id="content-deadlines-hant" rows="6" style="width:100%;font-family:inherit;font-size:14px;padding:10px;border:1px solid var(--line-strong);border-radius:var(--radius)"></textarea>
+        </div>
+        <div class="admin-field" style="margin-bottom:14px">
+          <label>簡體中文內容</label>
+          <textarea id="content-deadlines-simp" rows="6" style="width:100%;font-family:inherit;font-size:14px;padding:10px;border:1px solid var(--line-strong);border-radius:var(--radius)"></textarea>
+        </div>
+        <div class="admin-actions">
+          <button class="btn-save" id="save-deadlines">儲存</button>
+        </div>
+      </div>
     </div>
 
   </div>

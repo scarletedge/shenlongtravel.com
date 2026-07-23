@@ -505,7 +505,7 @@ table.price tr:hover td{background:rgba(162,59,46,.04)}
 .plan-card .plan-eyebrow{font-size:11.5px;letter-spacing:.12em;color:var(--gold);text-transform:uppercase;margin-bottom:10px}
 .plan-card h3{font-size:20px;margin-bottom:6px}
 .plan-card .plan-sub{font-size:13.5px;color:var(--muted);margin-bottom:20px}
-.plan-card ul{margin-bottom:24px;flex:1}
+.plan-card ul{margin-bottom:24px}
 .plan-card li{
   font-size:14px;color:var(--ink);padding:9px 0 9px 22px;border-top:1px solid var(--line);position:relative;
 }
@@ -549,6 +549,10 @@ table.price tr:hover td{background:rgba(162,59,46,.04)}
 .testimonial-block .tb-label{font-size:11.5px;letter-spacing:.1em;color:var(--gold);text-transform:uppercase;margin-bottom:10px;display:block}
 .testimonial-block h4{font-size:17px;margin-bottom:14px}
 .testimonial-block p{font-size:14px;color:var(--muted);line-height:1.9}
+
+/* ===== 簡易文字內容頁（材料清單／截止日期等） ===== */
+.content-block{background:var(--paper-alt);border:1px solid var(--line);padding:36px;border-radius:var(--radius);white-space:pre-line;font-size:15px;line-height:2;color:var(--ink)}
+.content-block.loading{color:var(--muted)}
 
 /* ===== 卡片簡約圖標 ===== */
 .card svg.icon{width:30px;height:30px;margin-bottom:16px;display:block}

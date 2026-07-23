@@ -47,6 +47,7 @@ document.addEventListener('DOMContentLoaded', function () {
       loadFasttrackServices();
       loadFasttrackRequests();
       loadItineraryRequests();
+      loadSiteContent();
     } else {
       loginScreen.style.display = 'flex';
       adminShell.classList.remove('show');
@@ -983,5 +984,37 @@ document.addEventListener('DOMContentLoaded', function () {
       });
     });
   }
+
+  /* =========================================================
+     頁面文字內容管理
+     ========================================================= */
+  function loadSiteContent() {
+    db.collection('siteContent').doc('studyMaterials').get().then(function (doc) {
+      var d = doc.exists ? doc.data() : {};
+      document.getElementById('content-materials-hant').value = d.textHant || '';
+      document.getElementById('content-materials-simp').value = d.textSimp || '';
+    });
+    db.collection('siteContent').doc('studyDeadlines').get().then(function (doc) {
+      var d = doc.exists ? doc.data() : {};
+      document.getElementById('content-deadlines-hant').value = d.textHant || '';
+      document.getElementById('content-deadlines-simp').value = d.textSimp || '';
+    });
+  }
+
+  document.getElementById('save-materials').addEventListener('click', function () {
+    db.collection('siteContent').doc('studyMaterials').set({
+      textHant: document.getElementById('content-materials-hant').value,
+      textSimp: document.getElementById('content-materials-simp').value,
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+    }, { merge: true }).then(function () { showToast('已儲存短期班材料內容'); });
+  });
+
+  document.getElementById('save-deadlines').addEventListener('click', function () {
+    db.collection('siteContent').doc('studyDeadlines').set({
+      textHant: document.getElementById('content-deadlines-hant').value,
+      textSimp: document.getElementById('content-deadlines-simp').value,
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+    }, { merge: true }).then(function () { showToast('已儲存長期班截止日期內容'); });
+  });
 
 });
