@@ -1,0 +1,89 @@
+/* ===== 後台管理介面樣式（沿用主站設計語彙，但更工具化） ===== */
+
+body.admin-body{background:var(--paper);min-height:100vh}
+
+/* 登入畫面 */
+.login-screen{
+  min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;
+}
+.login-box{
+  width:100%;max-width:380px;background:var(--paper);border:1px solid var(--line);
+  padding:44px 36px;border-radius:var(--radius);
+}
+.login-box .logo-row{display:flex;align-items:center;gap:10px;justify-content:center;margin-bottom:28px}
+.login-box .logo-row img{width:32px;height:32px}
+.login-box h1{font-size:19px;text-align:center;margin-bottom:6px}
+.login-box .sub{font-size:13px;color:var(--muted);text-align:center;margin-bottom:28px}
+.login-box .field{margin-bottom:18px}
+.login-box label{display:block;font-size:12.5px;color:var(--muted);margin-bottom:6px}
+.login-box input{
+  width:100%;border:1px solid var(--line-strong);background:var(--paper);
+  padding:11px 12px;font-family:inherit;font-size:15px;border-radius:var(--radius);
+}
+.login-box input:focus{outline:none;border-color:var(--accent)}
+.login-box button{
+  width:100%;background:var(--ink);color:var(--paper);border:none;padding:13px;
+  font-size:14.5px;letter-spacing:.05em;border-radius:var(--radius);cursor:pointer;margin-top:8px;
+}
+.login-box button:hover{background:var(--accent)}
+.login-error{color:var(--accent);font-size:13px;margin-top:14px;text-align:center;display:none}
+.login-error.show{display:block}
+
+/* 後台外殼 */
+.admin-shell{display:none}
+.admin-shell.show{display:block}
+.admin-header{
+  background:var(--ink);color:var(--paper);padding:16px 24px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.admin-header .brand{display:flex;align-items:center;gap:10px;font-family:'Noto Serif TC';font-size:15px}
+.admin-header .brand img{width:26px;height:26px}
+.admin-header .user-info{display:flex;align-items:center;gap:16px;font-size:13px;color:#B9AF9B}
+.admin-header button.logout-btn{
+  background:none;border:1px solid rgba(255,255,255,.3);color:var(--paper);
+  padding:6px 14px;border-radius:20px;font-size:12.5px;cursor:pointer;
+}
+.admin-header button.logout-btn:hover{border-color:var(--paper)}
+
+.admin-nav{
+  display:flex;gap:4px;padding:0 24px;background:var(--paper-alt);border-bottom:1px solid var(--line);
+  overflow-x:auto;
+}
+.admin-nav button{
+  background:none;border:none;padding:14px 18px;font-family:inherit;font-size:14px;color:var(--muted);
+  cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;
+}
+.admin-nav button.active{color:var(--accent);border-bottom-color:var(--accent)}
+
+.admin-main{padding:32px 24px;max-width:1100px;margin:0 auto}
+.admin-panel{display:none}
+.admin-panel.active{display:block}
+.admin-panel h2{font-size:20px;margin-bottom:6px}
+.admin-panel .desc{font-size:13.5px;color:var(--muted);margin-bottom:28px}
+
+.admin-card{background:var(--paper);border:1px solid var(--line);padding:24px;margin-bottom:16px;border-radius:var(--radius)}
+.admin-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:16px;margin-bottom:14px}
+.admin-field label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
+.admin-field input,.admin-field select{
+  width:100%;border:1px solid var(--line-strong);padding:9px 10px;font-family:inherit;
+  font-size:14px;border-radius:var(--radius);background:var(--paper);
+}
+.admin-field input:focus,.admin-field select:focus{outline:none;border-color:var(--accent)}
+.admin-field input:disabled{background:var(--paper-alt);color:var(--muted);cursor:not-allowed}
+
+.admin-actions{display:flex;gap:10px;margin-top:10px}
+.btn-save{background:var(--ink);color:var(--paper);border:none;padding:9px 18px;border-radius:var(--radius);font-size:13.5px;cursor:pointer}
+.btn-save:hover{background:var(--accent)}
+.btn-delete{background:none;border:1px solid var(--accent);color:var(--accent);padding:9px 18px;border-radius:var(--radius);font-size:13.5px;cursor:pointer}
+.btn-delete:hover{background:var(--accent);color:var(--paper)}
+.btn-add{background:var(--paper-alt);border:1px dashed var(--line-strong);color:var(--muted);padding:14px;width:100%;border-radius:var(--radius);cursor:pointer;font-size:14px}
+.btn-add:hover{border-color:var(--accent);color:var(--accent)}
+
+.save-toast{
+  position:fixed;bottom:24px;right:24px;background:var(--ink);color:var(--paper);
+  padding:12px 20px;border-radius:var(--radius);font-size:13.5px;
+  opacity:0;transform:translateY(10px);transition:all .3s;pointer-events:none;z-index:100;
+}
+.save-toast.show{opacity:1;transform:translateY(0)}
+
+.admin-loading{text-align:center;padding:40px;color:var(--muted);font-size:14px}

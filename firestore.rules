@@ -1,84 +1,492 @@
-/* =========================================================
-   Firestore 安全規則
-   把這整份內容貼到 Firebase Console →
-   Firestore Database → 規則（Rules）分頁，取代原本的內容，
-   然後按「發布」。
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-   邏輯：
-   - 所有人都可以「讀取」資料（公開網站要顯示價格、團隊介紹）
-   - 只有「已登入」的帳號（也就是妳幫員工建的後台帳號）
-     才可以「寫入／修改／刪除」資料
-   ========================================================= */
+<title>越南签证代办｜商务签・旅游签・长期签 2-3天出签・成功率99.9%｜升龙旅行社</title>
+<meta name="description" content="升龙旅行社越南签证代办：商务签、旅游签、长期签，一般件2-3个工作日出签，成功率99.9%，急件最快1天完成（另计费）。本地团队亲自送件与追踪，避免资料错误导致入境延误。">
+<meta name="keywords" content="越南签证代办, 越南商务签, 越南旅游签, 越南长期签, 越南加急签证, 越南签证天数">
+<link rel="canonical" href="https://www.shenlongtravel.com/zh-cn/visa.html">
+<link rel="alternate" hreflang="zh-Hant" href="https://www.shenlongtravel.com/visa.html">
+<link rel="alternate" hreflang="zh-Hans" href="https://www.shenlongtravel.com/zh-cn/visa.html">
+<link rel="alternate" hreflang="x-default" href="https://www.shenlongtravel.com/visa.html">
 
-rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
+<meta property="og:type" content="website">
+<meta property="og:title" content="越南签证代办｜2-3天出签・成功率99.9%｜升龙旅行社">
+<meta property="og:description" content="商务签、旅游签、长期签，本地团队亲自送件与追踪，急件最快1天完成。">
+<meta property="og:url" content="https://www.shenlongtravel.com/zh-cn/visa.html">
+<meta property="og:locale" content="zh_CN">
 
-    match /siteSettings/{docId} {
-      allow read: if true;
-      allow write: if request.auth != null;
-    }
+<meta property="og:image" content="https://www.shenlongtravel.com/images/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.shenlongtravel.com/images/og-image.jpg">
 
-    match /visaPrices/{docId} {
-      allow read: if true;
-      allow write: if request.auth != null;
-    }
+<link rel="icon" href="../favicon.ico" sizes="any">
+<link rel="icon" href="../images/favicon-32x32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="../images/apple-touch-icon.png">
 
-    match /teamMembers/{docId} {
-      allow read: if true;
-      allow write: if request.auth != null;
-    }
-
-    match /guides/{docId} {
-      // 導遊自己填表單報名，任何人都可以「新增」一筆申請
-      allow create: if true;
-      // 但名單內容（含聯絡方式）只有登入的員工可以查看／審核／修改／刪除
-      allow read, update, delete: if request.auth != null;
-    }
-
-    match /guideRequests/{docId} {
-      // 客戶送出配對需求，任何人都可以「新增」一筆需求
-      allow create: if true;
-      // 需求內容（含客戶聯絡方式）只有登入的員工可以查看／處理／刪除
-      allow read, update, delete: if request.auth != null;
-    }
-
-    match /fleetRoutesPublic/{docId} {
-      // 售價資料：公開網站要顯示給客戶看
-      allow read: if true;
-      allow write: if request.auth != null;
-    }
-
-    match /fleetRoutesCost/{docId} {
-      // 成本資料：絕對不公開，只有登入員工能讀取（給後台派車工具用）
-      allow read: if request.auth != null;
-      allow write: if request.auth != null;
-    }
-
-    match /fastTrackServices/{docId} {
-      allow read: if true;
-      allow write: if request.auth != null;
-    }
-
-    match /fastTrackRequests/{docId} {
-      // 客戶送出快速通關預約需求（不含護照/簽證/航班等敏感資料，那些改私訊客服提供）
-      allow create: if true;
-      allow read, update, delete: if request.auth != null;
-    }
-
-    match /itineraryRequests/{docId} {
-      // 客戶送出定制行程需求（不含護照等敏感資料）
-      allow create: if true;
-      allow read, update, delete: if request.auth != null;
-    }
-
-    match /siteContent/{docId} {
-      // 網站上的簡單文字內容區塊（例如留學材料清單、報名截止日期）
-      allow read: if true;
-      allow write: if request.auth != null;
-    }
-
-    // 之後新增其他資料表（例如包車、部落格文章），
-    // 照上面的格式複製一段貼在這裡即可。
-  }
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "serviceType": "越南签证代办",
+  "provider": { "@type": "TravelAgency", "name": "升龙旅行社 ShenLong Travel", "url": "https://www.shenlongtravel.com/" },
+  "areaServed": "VN",
+  "url": "https://www.shenlongtravel.com/zh-cn/visa.html"
 }
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "首页", "item": "https://www.shenlongtravel.com/zh-cn/index.html" },
+    { "@type": "ListItem", "position": 2, "name": "越难越行", "item": "https://www.shenlongtravel.com/zh-cn/essential-services.html" },
+    { "@type": "ListItem", "position": 3, "name": "越南签证代办", "item": "https://www.shenlongtravel.com/zh-cn/visa.html" }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "越南签证需要办理多久？",
+      "acceptedAnswer": { "@type": "Answer", "text": "一般件约2-3个工作日出签，成功率99.9%。若时间紧迫，可申请急件，最快1天完成，另需支付加急费用。" }
+    },
+    {
+      "@type": "Question",
+      "name": "升龙旅行社提供哪些签证类型？",
+      "acceptedAnswer": { "@type": "Answer", "text": "提供商务签、旅游签、长期签三种类型代办服务，并协助文件确认以降低入境延误风险。" }
+    },
+    {
+      "@type": "Question",
+      "name": "办理签证需要准备哪些材料？",
+      "acceptedAnswer": { "@type": "Answer", "text": "基本需要护照原件（有效期需符合规定）、大头照与行程或商务邀请资料，实际材料依签证类型略有不同，团队会在咨询阶段提供完整清单并协助检查。" }
+    },
+    {
+      "@type": "Question",
+      "name": "商务签跟旅游签区别是什么？",
+      "acceptedAnswer": { "@type": "Answer", "text": "商务签适用于考察、洽谈、拜访合作对象等商务目的，通常需要邀请函或商务证明；旅游签则适用于一般观光行程，申请条件相对简单。可依实际赴越目的向团队咨询适用类型。" }
+    }
+  ]
+}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;700;900&family=Noto+Sans+SC:wght@400;500;700&family=Cormorant+Garamond:ital,wght@0,500;1,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<style>body{font-family:'Noto Sans SC',sans-serif}h1,h2,h3,.serif{font-family:'Noto Serif SC',serif}</style>
+</head>
+<body>
+<div class="lang-banner" role="status"></div>
+
+<header>
+  <div class="wrap nav">
+    <a href="index.html" class="logo" aria-label="升龙旅行社首页">
+      <img class="logo-mark" src="../images/logo.png" alt="升龙旅行社 Logo" width="34" height="34">
+      <span class="logo-text">
+        <span class="logo-name">升龙旅行社</span>
+        <span class="logo-sub">ShenLong Travel</span>
+      </span>
+    </a>
+    <nav class="menu" aria-label="主菜单">
+      <a href="index.html">首页</a>
+      <a href="essential-services.html" aria-current="page">越难越行</a>
+      <a href="premium-experience.html">越混越好</a>
+      <a href="local-insider.html">越玩越疯</a>
+      <a href="about.html">谁在罩你</a>
+    </nav>
+    <div class="lang-switch"><a class="active">简</a><span>／</span><a href="../visa.html">繁</a></div>
+    <div style="display:flex;align-items:center;gap:14px">
+      <a href="visa.html" class="cta-btn">老司机带你飞</a>
+      <button class="menu-toggle" aria-label="打开菜单" aria-expanded="false">☰</button>
+    </div>
+  </div>
+</header>
+
+<div class="breadcrumb">
+  <div class="wrap"><a href="index.html">首页</a><span>／</span><a href="essential-services.html">越难越行</a><span>／</span>签证代办</div>
+</div>
+
+<main>
+
+<div class="hero" style="padding:72px 0 60px">
+  <div class="wrap hero-inner">
+    <span class="eyebrow">01 · Visa Services</span>
+    <h1>越南签证代办——十拿十稳</h1>
+    <p class="lead">商务签、旅游签、长期签，皆由本地团队亲自送件与追踪，避免资料错误导致入境延误。成功率99.9%，比「十拿九稳」还多那么一点。</p>
+  </div>
+</div>
+
+<section>
+  <div class="wrap">
+    <div class="stats">
+      <div class="stat"><div class="num">2–3天</div><div class="label">一般件平均出签时效</div></div>
+      <div class="stat"><div class="num">1天</div><div class="label">急件最快完成（需另计加急费用）</div></div>
+      <div class="stat"><div class="num">99.9%</div><div class="label">办理成功率</div></div>
+    </div>
+
+    <div class="process">
+      <div class="process-step"><span class="n">1</span><h4>上车</h4><p>告知目的、天数与行程，确认适用签证类型</p></div>
+      <div class="process-step"><span class="n">2</span><h4>加满油</h4><p>提供材料清单，协助检查避免缺漏或错误</p></div>
+      <div class="process-step"><span class="n">3</span><h4>开上路</h4><p>团队亲自送件并全程追踪进度</p></div>
+      <div class="process-step"><span class="n">4</span><h4>抵达终点</h4><p>签证完成后主动通知，说明入境注意事项</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="alt">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">签证类型对比</span>
+      <h2>该办哪一种？</h2>
+    </div>
+    <table class="compare">
+      <thead><tr><th>类型</th><th>适用情境</th></tr></thead>
+      <tbody>
+        <tr><td>商务签</td><td>考察、洽谈、拜访合作对象，通常需邀请函或商务证明</td></tr>
+        <tr><td>旅游签</td><td>一般观光、短期停留，申请条件相对简单</td></tr>
+        <tr><td>长期签</td><td>长期居留、工作或多次进出需求</td></tr>
+      </tbody>
+    </table>
+    <p style="color:var(--muted);font-size:14px;margin-top:20px">不确定自己适用哪一种？直接告诉我们你的目的与天数，团队会协助判断最适合的签证类型。</p>
+  </div>
+</section>
+
+<!-- ===== 详细价目表 ===== -->
+<section id="price-list">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Price List</span>
+      <h2>签证价格表</h2>
+      <p>选好类型、天数与时效，马上看到报价——截图传给客服即可开始办理。以下同时显示美金与越南盾参考金额。</p>
+    </div>
+
+    <!-- ===== 互动报价计算机 ===== -->
+    <div class="calc-box mt-lg" id="visa-calc">
+      <div class="calc-step">
+        <label>1. 签证类型</label>
+        <div class="calc-pills" id="calc-category">
+          <button type="button" class="calc-pill" data-value="arrival">落地签证</button>
+          <button type="button" class="calc-pill" data-value="embassy">使馆贴纸签</button>
+          <button type="button" class="calc-pill" data-value="evisa">电子签证加急</button>
+        </div>
+      </div>
+      <div class="calc-step">
+        <label>2. 停留天数与入境次数</label>
+        <select class="calc-select" id="calc-duration" disabled><option>请先选择签证类型</option></select>
+      </div>
+      <div class="calc-step">
+        <label>3. 办理时效</label>
+        <select class="calc-select" id="calc-speed" disabled><option>请先选择天数与次数</option></select>
+      </div>
+      <div class="calc-result" id="calc-result">
+        <span style="color:var(--muted);font-size:14px">选择以上选项后，这里会显示报价</span>
+      </div>
+    </div>
+
+    <div class="mt-lg"></div>
+
+    <div class="price-table-wrap">
+      <h3>落地签证（落地批文）</h3>
+      <p class="sub">入境时于机场现场换发签证，适合大多数短期赴越行程</p>
+      <table class="price">
+        <thead><tr><th>停留天数</th><th>入境次数</th><th>办理时效</th><th>价格</th></tr></thead>
+        <tbody>
+          <tr><td>15天</td><td>单次</td><td>3–4个工作日</td><td>US$3.69<span class="vnd-ref">≈ 97,000₫</span></td></tr>
+          <tr><td>15天</td><td>单次</td><td>1个工作日</td><td>US$5.91<span class="vnd-ref">≈ 155,000₫</span></td></tr>
+          <tr><td>15天</td><td>单次</td><td>当天出签（11:00前送件）</td><td>US$17.72<span class="vnd-ref">≈ 464,000₫</span></td></tr>
+          <tr><td>30天</td><td>单次</td><td>3–4个工作日</td><td>US$5.17<span class="vnd-ref">≈ 135,000₫</span></td></tr>
+          <tr><td>30天</td><td>单次</td><td>1个工作日</td><td>US$7.38<span class="vnd-ref">≈ 193,000₫</span></td></tr>
+          <tr><td>30天</td><td>单次</td><td>当天出签（11:00前送件）</td><td>US$20.67<span class="vnd-ref">≈ 542,000₫</span></td></tr>
+          <tr><td>30天</td><td>多次</td><td>5个工作日</td><td class="ask">价格详询</td></tr>
+          <tr><td>30天</td><td>多次</td><td>3–4个工作日</td><td class="ask">价格详询</td></tr>
+          <tr><td>30天</td><td>多次</td><td>1个工作日</td><td>US$17.72<span class="vnd-ref">≈ 464,000₫</span></td></tr>
+        </tbody>
+      </table>
+      <p class="price-note">11:00后送件仍可当天出签，15天／30天皆以US$17.72（约464,000₫）计算，截止15:00前送件；另有1小时／2小时特急件服务，价格请洽询客服。</p>
+    </div>
+
+    <div class="price-table-wrap">
+      <h3>使馆贴纸签（领馆另纸签）</h3>
+      <p class="sub">由越南驻外使馆核发，签证黏贴于护照内页，效力较高</p>
+      <table class="price">
+        <thead><tr><th>停留天数</th><th>入境次数</th><th>办理时效</th><th>价格</th></tr></thead>
+        <tbody>
+          <tr><td>15天</td><td>单次</td><td>3–4个工作日（4工后生效）</td><td>US$35.44<span class="vnd-ref">≈ 928,000₫</span></td></tr>
+          <tr><td>15天</td><td>单次</td><td>1个工作日（1工后生效）</td><td>US$41.35<span class="vnd-ref">≈ 1,083,000₫</span></td></tr>
+          <tr><td>15天</td><td>单次</td><td>当天出签</td><td class="ask">价格详询</td></tr>
+          <tr><td>15天</td><td>单次</td><td>4小时加急</td><td class="ask">价格详询</td></tr>
+          <tr><td>30天</td><td>单次</td><td>3–4个工作日（4工后生效）</td><td>US$38.40<span class="vnd-ref">≈ 1,006,000₫</span></td></tr>
+          <tr><td>30天</td><td>单次</td><td>1个工作日（1工后生效）</td><td>US$44.30<span class="vnd-ref">≈ 1,160,000₫</span></td></tr>
+          <tr><td>30天</td><td>单次</td><td>当天出签</td><td class="ask">价格详询</td></tr>
+          <tr><td>30天</td><td>单次</td><td>4小时加急</td><td class="ask">价格详询</td></tr>
+          <tr><td>30天</td><td>多次</td><td>1–2个工作日</td><td>US$81.22<span class="vnd-ref">≈ 2,127,000₫</span></td></tr>
+        </tbody>
+      </table>
+      <p class="price-note">出签后需间隔1个或4个工作日方可正式生效入境，实际生效时间依办理时效而定，送件前会事先告知。</p>
+    </div>
+
+    <div class="price-table-wrap">
+      <h3>电子签证加急（商务签／旅游签同价）</h3>
+      <p class="sub">线上申请的电子签证，加急服务适合行程确定、时间较赶的旅客</p>
+      <table class="price">
+        <thead><tr><th>停留天数</th><th>入境次数</th><th>办理时效</th><th>价格</th></tr></thead>
+        <tbody>
+          <tr><td>90天</td><td>单次</td><td>4个工作日</td><td>US$36.92<span class="vnd-ref">≈ 967,000₫</span></td></tr>
+          <tr><td>90天</td><td>多次</td><td>4个工作日</td><td>US$66.45<span class="vnd-ref">≈ 1,741,000₫</span></td></tr>
+          <tr><td>90天</td><td>单次</td><td>3个工作日</td><td>US$35.44<span class="vnd-ref">≈ 928,000₫</span></td></tr>
+          <tr><td>90天</td><td>多次</td><td>3个工作日</td><td>US$63.50<span class="vnd-ref">≈ 1,663,000₫</span></td></tr>
+          <tr><td>90天</td><td>单次</td><td>2个工作日（截止15:30）</td><td>US$44.30<span class="vnd-ref">≈ 1,160,000₫</span></td></tr>
+          <tr><td>90天</td><td>多次</td><td>2个工作日（截止15:30）</td><td>US$73.84<span class="vnd-ref">≈ 1,934,000₫</span></td></tr>
+          <tr><td>90天</td><td>单次</td><td>1个工作日（截止15:30）</td><td>US$51.69<span class="vnd-ref">≈ 1,354,000₫</span></td></tr>
+          <tr><td>90天</td><td>多次</td><td>1个工作日（截止15:30）</td><td>US$81.22<span class="vnd-ref">≈ 2,127,000₫</span></td></tr>
+          <tr><td>90天</td><td>单次</td><td>特急件・当天出签（截止9:30）</td><td>US$66.45<span class="vnd-ref">≈ 1,741,000₫</span></td></tr>
+          <tr><td>90天</td><td>多次</td><td>特急件・当天出签（截止9:30）</td><td>US$95.99<span class="vnd-ref">≈ 2,514,000₫</span></td></tr>
+          <tr><td>90天</td><td>单次</td><td>4小时加急（截止14:30）</td><td>US$81.22<span class="vnd-ref">≈ 2,127,000₫</span></td></tr>
+          <tr><td>90天</td><td>多次</td><td>4小时加急（截止14:30）</td><td>US$110.76<span class="vnd-ref">≈ 2,901,000₫</span></td></tr>
+        </tbody>
+      </table>
+      <p class="price-note">4小时加急套餐：当天9:30前备妥资料，约13:00出签；当天14:30前备妥资料，约19:00出签。</p>
+    </div>
+
+    <p class="center mt-lg"><a href="#" class="btn-solid" onclick="document.querySelector('.widget-toggle').click();return false;">私信我们开始办理 →</a></p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">FAQ</span>
+      <h2>常见问题</h2>
+    </div>
+    <table class="compare">
+      <tbody>
+        <tr><td>需要准备哪些材料？</td><td>护照原件（有效期需符合规定）、大头照与行程或商务邀请资料，实际依类型略有不同，咨询阶段会提供完整清单。</td></tr>
+        <tr><td>可以延期或转换签证类型吗？</td><td>视个别情况而定，建议在入境前先确认好目的与天数，选择最适合的类型，较能避免中途变更的麻烦。</td></tr>
+        <tr><td>加急办理大概多少费用？</td><td>依申请时效与签证类型而定，团队会在咨询时提供明确报价，不会临时加价。</td></tr>
+      </tbody>
+    </table>
+    <p class="center mt-lg"><a href="translation.html" class="btn-ghost">下一步：专业翻译 →</a></p>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <h4>升龙旅行社 ShenLong Travel</h4>
+        <p>您在越南的专属私人管家</p>
+        <p>Căn 50 San Hô 20, Khu đô thị Vinhomes Ocean Park 2,<br>Xã Nghĩa Trụ, Tỉnh Hưng Yên, Việt Nam</p>
+        <p>成立于2025年12月</p>
+      </div>
+      <div>
+        <h4>快速链接</h4>
+        <a href="essential-services.html">越难越行（签证／翻译／留学）</a>
+        <a href="premium-experience.html">越混越好（包车／定制／地陪）</a>
+        <a href="local-insider.html">越玩越疯（在地探店）</a>
+        <a href="about.html">谁在罩你（关于我们）</a>
+      </div>
+      <div>
+        <h4>联系与关注</h4>
+        <a href="mailto:vietnam@shenlongtravel.com">vietnam@shenlongtravel.com</a>
+        <a href="https://www.youtube.com/@ShenLongVietNam" target="_blank" rel="noopener">YouTube</a>
+        <a href="https://www.facebook.com/profile.php?id=61592091476467" target="_blank" rel="noopener">Facebook</a>
+        <p>微信／LINE／WhatsApp：见右下角咨询按钮</p>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 升龙旅行社 ShenLong Travel. All rights reserved.</span>
+      <span>越南签证｜商务考察｜包车服务｜定制行程｜地陪导游｜在地探店</span>
+    </div>
+  </div>
+</footer>
+
+<div class="contact-widget">
+  <div class="contact-panel" role="dialog" aria-label="联系我们">
+    <div class="ch">
+      <img class="qr qr-only" src="../images/qr-wechat.png" alt="微信 二维码" width="64" height="64" loading="lazy">
+      <div>
+        <span class="ch-name">微信 WeChat</span><br>
+        <span class="ch-hint qr-only">扫码加好友</span>
+        <a class="chat-link link-only" href="https://u.wechat.com/IFqnIQXgeYjfpA9Fxz9yUGs?s=2" target="_blank" rel="noopener">点击开始对话</a>
+      </div>
+    </div>
+    <div class="ch">
+      <img class="qr qr-only" src="../images/qr-line.png" alt="LINE 二维码" width="64" height="64" loading="lazy">
+      <div>
+        <span class="ch-name">LINE</span><br>
+        <span class="ch-hint qr-only">扫码加好友</span>
+        <a class="chat-link link-only" href="https://line.me/ti/p/tg6LUFsHGD" target="_blank" rel="noopener">点击开始对话</a>
+      </div>
+    </div>
+    <div class="ch">
+      <img class="qr qr-only" src="../images/qr-whatsapp.png" alt="WhatsApp 二维码" width="64" height="64" loading="lazy">
+      <div>
+        <span class="ch-name">WhatsApp</span><br>
+        <span class="ch-hint qr-only">扫码开始对话</span>
+        <a class="chat-link link-only" href="https://wa.me/qr/O264YVQPDFH4G1" target="_blank" rel="noopener">点击开始对话</a>
+      </div>
+    </div>
+    <div class="ch">
+      <div class="ch-icon-fallback">Z</div>
+      <div>
+        <span class="ch-name">Zalo</span><br>
+        <span class="ch-hint">越南在地联系首选</span>
+        <a class="chat-link" href="https://zalo.me/84975898625" target="_blank" rel="noopener">点击开始对话</a>
+      </div>
+    </div>
+  </div>
+  <button class="widget-toggle" aria-label="打开咨询窗口" aria-expanded="false">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+  </button>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
+<script src="../js/firebase-config.js"></script>
+<script src="../js/widget.js"></script>
+<script>
+(function () {
+  var CNY_TO_USD = 1 / 6.7716;
+  var CNY_TO_VND = 3868;
+
+  var PRICES = [
+    ['arrival','15','单次','3–4个工作日',25],
+    ['arrival','15','单次','1个工作日',40],
+    ['arrival','15','单次','当天出签（11:00前送件）',120],
+    ['arrival','30','单次','3–4个工作日',35],
+    ['arrival','30','单次','1个工作日',50],
+    ['arrival','30','单次','当天出签（11:00前送件）',140],
+    ['arrival','30','多次','5个工作日',null],
+    ['arrival','30','多次','3–4个工作日',null],
+    ['arrival','30','多次','1个工作日',120],
+    ['embassy','15','单次','3–4个工作日（4工后生效）',240],
+    ['embassy','15','单次','1个工作日（1工后生效）',280],
+    ['embassy','15','单次','当天出签',null],
+    ['embassy','15','单次','4小时加急',null],
+    ['embassy','30','单次','3–4个工作日（4工后生效）',260],
+    ['embassy','30','单次','1个工作日（1工后生效）',300],
+    ['embassy','30','单次','当天出签',null],
+    ['embassy','30','单次','4小时加急',null],
+    ['embassy','30','多次','1–2个工作日',550],
+    ['evisa','90','单次','4个工作日',250],
+    ['evisa','90','多次','4个工作日',450],
+    ['evisa','90','单次','3个工作日',240],
+    ['evisa','90','多次','3个工作日',430],
+    ['evisa','90','单次','2个工作日（截止15:30）',300],
+    ['evisa','90','多次','2个工作日（截止15:30）',500],
+    ['evisa','90','单次','1个工作日（截止15:30）',350],
+    ['evisa','90','多次','1个工作日（截止15:30）',550],
+    ['evisa','90','单次','特急件・当天出签（截止9:30）',450],
+    ['evisa','90','多次','特急件・当天出签（截止9:30）',650],
+    ['evisa','90','单次','4小时加急（截止14:30）',550],
+    ['evisa','90','多次','4小时加急（截止14:30）',750],
+  ];
+
+  var catBtns = document.querySelectorAll('#calc-category .calc-pill');
+  var durationSel = document.getElementById('calc-duration');
+  var speedSel = document.getElementById('calc-speed');
+  var resultBox = document.getElementById('calc-result');
+  if (!catBtns.length) return;
+
+  var state = { category: null, duration: null, speed: null };
+
+  function fmtPrice(cny) {
+    if (cny === null || cny === undefined) {
+      return '<span class="price-ask">价格详询</span><div class="hint">此选项需人工报价，请私信客服洽询。</div>';
+    }
+    var usd = (cny * CNY_TO_USD).toFixed(2);
+    var vnd = Math.round(cny * CNY_TO_VND / 1000) * 1000;
+    return '<div class="price-usd">US$' + usd + '</div>' +
+      '<div class="price-vnd">≈ ' + vnd.toLocaleString('en-US') + '₫</div>' +
+      '<div class="hint">屏幕截图这个结果，私信右下角咨询按钮给客服即可开始办理。</div>';
+  }
+
+  function updateDurationOptions() {
+    var rows = PRICES.filter(function (r) { return r[0] === state.category; });
+    var seen = {}, opts = [];
+    rows.forEach(function (r) {
+      var key = r[1] + '天・' + r[2];
+      if (!seen[key]) { seen[key] = true; opts.push({ key: key, stay: r[1], entry: r[2] }); }
+    });
+    durationSel.innerHTML = '<option value="">请选择</option>' +
+      opts.map(function (o) { return '<option value="' + o.stay + '|' + o.entry + '">' + o.key + '</option>'; }).join('');
+    durationSel.disabled = false;
+    speedSel.innerHTML = '<option>请先选择天数与次数</option>';
+    speedSel.disabled = true;
+    resultBox.innerHTML = '<span style="color:var(--muted);font-size:14px">选择以上选项后，这里会显示报价</span>';
+  }
+
+  function updateSpeedOptions() {
+    var rows = PRICES.filter(function (r) {
+      return r[0] === state.category && (r[1] + '|' + r[2]) === state.duration;
+    });
+    speedSel.innerHTML = '<option value="">请选择</option>' +
+      rows.map(function (r, i) { return '<option value="' + i + '">' + r[3] + '</option>'; }).join('');
+    speedSel.disabled = false;
+    speedSel.dataset.rows = JSON.stringify(rows);
+    resultBox.innerHTML = '<span style="color:var(--muted);font-size:14px">选择以上选项后，这里会显示报价</span>';
+  }
+
+  function initCalculator() {
+    catBtns.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        catBtns.forEach(function (b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        state.category = btn.dataset.value;
+        updateDurationOptions();
+      });
+    });
+
+    durationSel.addEventListener('change', function () {
+      state.duration = durationSel.value;
+      if (!state.duration) return;
+      updateSpeedOptions();
+    });
+
+    speedSel.addEventListener('change', function () {
+      var rows = JSON.parse(speedSel.dataset.rows || '[]');
+      var row = rows[Number(speedSel.value)];
+      if (!row) return;
+      resultBox.innerHTML = fmtPrice(row[4]);
+    });
+  }
+
+  if (typeof FIREBASE_READY !== 'undefined' && FIREBASE_READY) {
+    Promise.all([
+      db.collection('siteSettings').doc('exchangeRates').get(),
+      db.collection('visaPrices').orderBy('order').get()
+    ]).then(function (results) {
+      var ratesDoc = results[0], pricesSnap = results[1];
+      if (ratesDoc.exists) {
+        var r = ratesDoc.data();
+        if (r.cnyToUsd) CNY_TO_USD = r.cnyToUsd;
+        if (r.cnyToVnd) CNY_TO_VND = r.cnyToVnd;
+      }
+      if (!pricesSnap.empty) {
+        var fresh = [];
+        pricesSnap.forEach(function (doc) {
+          var d = doc.data();
+          fresh.push([d.category, d.stay, d.entrySimp, d.speedSimp, d.priceCNY]);
+        });
+        PRICES = fresh;
+      }
+      initCalculator();
+    }).catch(function () { initCalculator(); });
+  } else {
+    initCalculator();
+  }
+})();
+</script>
+</body>
+</html>

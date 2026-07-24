@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>後台管理｜升龍旅行社</title>
+<meta name="robots" content="noindex, nofollow">
+
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="stylesheet" href="../css/admin.css">
+<link rel="icon" href="../favicon.ico">
+</head>
+<body class="admin-body">
+
+<!-- ===== 登入畫面 ===== -->
+<div class="login-screen" id="login-screen">
+  <div class="login-box">
+    <div class="logo-row">
+      <img src="../images/logo.png" alt="升龍旅行社">
+      <span style="font-family:'Noto Serif TC';font-weight:700">升龍旅行社</span>
+    </div>
+    <h1>後台管理登入</h1>
+    <p class="sub">員工帳號登入後可編輯網站內容</p>
+    <form id="login-form">
+      <div class="field">
+        <label for="login-email">Email</label>
+        <input type="email" id="login-email" required autocomplete="username">
+      </div>
+      <div class="field">
+        <label for="login-pass">密碼</label>
+        <input type="password" id="login-pass" required autocomplete="current-password">
+      </div>
+      <button type="submit">登入</button>
+      <p class="login-error" id="login-error">帳號或密碼錯誤，請再試一次。</p>
+    </form>
+  </div>
+</div>
+
+<!-- ===== 後台主畫面 ===== -->
+<div class="admin-shell" id="admin-shell">
+  <div class="admin-header">
+    <div class="brand"><img src="../images/logo.png" alt="" style="width:22px;height:22px;vertical-align:middle;margin-right:8px">升龍旅行社．後台管理</div>
+    <div class="user-info">
+      <span id="user-email"></span>
+      <button class="logout-btn" id="logout-btn">登出</button>
+    </div>
+  </div>
+
+  <div class="admin-nav">
+    <button class="nav-tab active" data-panel="panel-rates">匯率設定</button>
+    <button class="nav-tab" data-panel="panel-visa">簽證價目表</button>
+    <button class="nav-tab" data-panel="panel-team">團隊成員</button>
+    <button class="nav-tab" data-panel="panel-guides">地陪導遊</button>
+    <button class="nav-tab" data-panel="panel-fleet">包車與派車</button>
+    <button class="nav-tab" data-panel="panel-fasttrack">快速通關</button>
+    <button class="nav-tab" data-panel="panel-itinerary">定制行程需求</button>
+    <button class="nav-tab" data-panel="panel-content">頁面文字內容</button>
+  </div>
+
+  <div class="admin-main">
+
+    <!-- 匯率設定 -->
+    <div class="admin-panel active" id="panel-rates">
+      <h2>匯率設定</h2>
+      <p class="desc">這裡改的數字，會即時反映在簽證頁的計算機與價目表上。來源幣別為人民幣（CNY）。</p>
+      <div class="admin-card">
+        <div class="admin-row">
+          <div class="admin-field">
+            <label>1 人民幣 = 多少美金（USD）</label>
+            <input type="number" step="0.0001" id="rate-usd" placeholder="例：0.1477">
+          </div>
+          <div class="admin-field">
+            <label>1 人民幣 = 多少越南盾（VND）</label>
+            <input type="number" step="1" id="rate-vnd" placeholder="例：3868">
+          </div>
+        </div>
+        <div class="admin-actions">
+          <button class="btn-save" id="save-rates">儲存匯率</button>
+          <button class="btn-delete" id="fill-default-rates" style="border-color:var(--line-strong);color:var(--muted)">帶入目前預設值</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 簽證價目表 -->
+    <div class="admin-panel" id="panel-visa">
+      <h2>簽證價目表</h2>
+      <p class="desc">價格請填人民幣（CNY）金額；不確定的項目價格欄位留空，網站會自動顯示「價格詳詢」。排序數字越小越前面。</p>
+      <div id="visa-list"></div>
+      <div class="admin-actions">
+        <button class="btn-add" id="add-visa-row" style="flex:1">＋ 新增一筆價目</button>
+        <button class="btn-save" id="seed-visa" style="white-space:nowrap">一鍵匯入現有30筆資料</button>
+      </div>
+    </div>
+
+    <!-- 團隊成員 -->
+    <div class="admin-panel" id="panel-team">
+      <h2>團隊成員</h2>
+      <p class="desc">「關於我們」頁面的團隊介紹卡片，繁中／簡中內容分開填寫。排序數字越小越前面。</p>
+      <div id="team-list"></div>
+      <div class="admin-actions">
+        <button class="btn-add" id="add-team-row" style="flex:1">＋ 新增一位成員</button>
+        <button class="btn-save" id="seed-team" style="white-space:nowrap">一鍵匯入現有4位成員</button>
+      </div>
+    </div>
+
+    <!-- 地陪導遊 -->
+    <div class="admin-panel" id="panel-guides">
+      <h2>地陪導遊管理</h2>
+      <p class="desc">導遊自己在網站上報名後，會先出現在「待審核申請」；審核通過會移到「已核准名單」。客戶配對需求會出現在「配對需求」，配對完成後手動記錄配對的導遊即可。</p>
+
+      <h3 style="font-size:16px;margin-bottom:14px">待審核申請</h3>
+      <div id="guides-pending-list" class="mt-lg" style="margin-top:0;margin-bottom:36px"></div>
+
+      <h3 style="font-size:16px;margin-bottom:14px">已核准名單</h3>
+      <div id="guides-approved-list" style="margin-bottom:36px"></div>
+
+      <h3 style="font-size:16px;margin-bottom:14px">客戶配對需求</h3>
+      <div id="guide-requests-list"></div>
+    </div>
+
+    <!-- 包車與派車 -->
+    <div class="admin-panel" id="panel-fleet">
+      <h2>包車與派車管理</h2>
+      <p class="desc">
+        每一筆資料同時包含「售價」（客戶端會顯示）與「成本」（只有這裡看得到，客戶端網頁完全不會讀取這個欄位）。<br>
+        <strong>模式</strong>：point＝點到點路線；hourly＝論時數包車（車型欄位請填「普通5-7座」／「商務7座」／「商務9-11座」，需與客戶端選項完全一致）。<br>
+        中文司機加價：留空＝該組合不提供指定中文司機；有填數字＝客戶勾選後改用這個總價顯示。<br>
+        勾選「＊價格待複核」的項目，客戶端會顯示提醒文字，请儘快確認正確數字後取消勾選。
+      </p>
+      <div id="fleet-list"></div>
+      <div class="admin-actions">
+        <button class="btn-add" id="add-fleet-row" style="flex:1">＋ 新增一筆路線／時數資料</button>
+        <button class="btn-save" id="seed-fleet" style="white-space:nowrap">一鍵匯入現有7條路線＋時數資料</button>
+      </div>
+    </div>
+
+    <!-- 快速通關 -->
+    <div class="admin-panel" id="panel-fasttrack">
+      <h2>快速通關管理</h2>
+      <p class="desc">每個機場可分別設定日間／夜間價格與舉牌加價金額。留空日間或夜間價格＝該時段顯示「詳詢」。客戶送出的預約需求（不含護照/簽證/航班資料）會列在下方，方便妳追蹤有多少人詢問。</p>
+      <h3 style="font-size:16px;margin-bottom:14px">機場價格設定</h3>
+      <div id="fasttrack-list" style="margin-bottom:36px"></div>
+      <div class="admin-actions" style="margin-bottom:36px">
+        <button class="btn-add" id="add-fasttrack-row" style="flex:1">＋ 新增一個機場</button>
+        <button class="btn-save" id="seed-fasttrack" style="white-space:nowrap">一鍵匯入越南20個主要機場</button>
+      </div>
+      <h3 style="font-size:16px;margin-bottom:14px">客戶預約需求</h3>
+      <div id="fasttrack-requests-list"></div>
+    </div>
+
+    <!-- 定制行程需求 -->
+    <div class="admin-panel" id="panel-itinerary">
+      <h2>定制行程需求</h2>
+      <p class="desc">客戶送出的完整定制行程需求（不含護照等敏感資料）。可標記處理狀態，方便追蹤報價進度。</p>
+      <div id="itinerary-requests-list"></div>
+    </div>
+
+    <!-- 頁面文字內容 -->
+    <div class="admin-panel" id="panel-content">
+      <h2>頁面文字內容</h2>
+      <p class="desc">這裡的內容會直接顯示在對應的網站頁面上（例如留學諮詢頁的「短期班所需材料」「長期班報名與截止日期」按鈕連過去的頁面）。換行會照原樣顯示，不用打任何HTML語法。</p>
+
+      <div class="admin-card">
+        <h3 style="font-size:16px;margin-bottom:14px">短期班所需材料</h3>
+        <div class="admin-field" style="margin-bottom:14px">
+          <label>繁體中文內容</label>
+          <textarea id="content-materials-hant" rows="6" style="width:100%;font-family:inherit;font-size:14px;padding:10px;border:1px solid var(--line-strong);border-radius:var(--radius)"></textarea>
+        </div>
+        <div class="admin-field" style="margin-bottom:14px">
+          <label>簡體中文內容</label>
+          <textarea id="content-materials-simp" rows="6" style="width:100%;font-family:inherit;font-size:14px;padding:10px;border:1px solid var(--line-strong);border-radius:var(--radius)"></textarea>
+        </div>
+        <div class="admin-actions">
+          <button class="btn-save" id="save-materials">儲存</button>
+        </div>
+      </div>
+
+      <div class="admin-card">
+        <h3 style="font-size:16px;margin-bottom:14px">長期班報名與截止日期</h3>
+        <div class="admin-field" style="margin-bottom:14px">
+          <label>繁體中文內容</label>
+          <textarea id="content-deadlines-hant" rows="6" style="width:100%;font-family:inherit;font-size:14px;padding:10px;border:1px solid var(--line-strong);border-radius:var(--radius)"></textarea>
+        </div>
+        <div class="admin-field" style="margin-bottom:14px">
+          <label>簡體中文內容</label>
+          <textarea id="content-deadlines-simp" rows="6" style="width:100%;font-family:inherit;font-size:14px;padding:10px;border:1px solid var(--line-strong);border-radius:var(--radius)"></textarea>
+        </div>
+        <div class="admin-actions">
+          <button class="btn-save" id="save-deadlines">儲存</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="save-toast" id="save-toast">已儲存</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
+<script src="../js/firebase-config.js"></script>
+<script src="../js/admin.js"></script>
+</body>
+</html>
