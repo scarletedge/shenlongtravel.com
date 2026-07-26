@@ -223,6 +223,21 @@ footer{background:var(--ink);color:#B9AF9B;padding:64px 0 32px;font-size:13.5px}
 .contact-panel .ch .ch-name{font-size:13.5px;font-weight:700}
 .contact-panel .ch .ch-hint{font-size:11.5px;color:var(--muted)}
 .contact-panel .ch a.chat-link{font-size:12px;color:var(--accent);border-bottom:1px solid var(--accent)}
+.ch-icon-fallback{
+  width:64px;height:64px;border:1px solid var(--line);background:var(--paper-alt);flex-shrink:0;
+  display:grid;place-items:center;font-family:'Noto Serif TC';font-size:22px;color:var(--gold);
+}
+
+/* ===== 快速聯絡列（不想填單版） ===== */
+.quick-contact-bar{
+  display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;
+  background:var(--ink);color:var(--paper);padding:24px 28px;border-radius:var(--radius);
+}
+.qcb-text strong{display:block;font-size:15px;margin-bottom:4px;font-family:'Noto Serif TC'}
+.qcb-text span{font-size:12.5px;color:#B9AF9B}
+.qcb-buttons{display:flex;gap:10px;flex-wrap:wrap}
+.qcb-btn{background:var(--accent);color:var(--paper);padding:10px 20px;border-radius:20px;font-size:13.5px;white-space:nowrap;transition:background .2s}
+.qcb-btn:hover{background:var(--gold);color:var(--ink)}
 /* 桌面顯示 QR code、隱藏點擊連結；手機顯示點擊連結、隱藏 QR code */
 .qr-only{display:block}
 .link-only{display:none}
@@ -356,9 +371,15 @@ footer{background:var(--ink);color:#B9AF9B;padding:64px 0 32px;font-size:13.5px}
 
 /* ===== 熱門服務曝光區塊 ===== */
 .featured-banner{
-  background:var(--ink);color:var(--paper);padding:0;
+  background:var(--ink);color:var(--paper);padding:0;position:relative;overflow:hidden;
+  border-top:2px solid transparent;
+  border-image:linear-gradient(90deg, var(--gold), var(--accent), var(--gold)) 1;
 }
-.featured-banner .wrap{padding:56px 24px;display:flex;align-items:center;justify-content:space-between;gap:32px;flex-wrap:wrap}
+.featured-banner::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(circle at 88% 50%, rgba(185,143,69,.18), transparent 60%);
+}
+.featured-banner .wrap{padding:56px 24px;display:flex;align-items:center;justify-content:space-between;gap:32px;flex-wrap:wrap;position:relative;z-index:1}
 .featured-banner .badge-hot{
   display:inline-block;background:var(--accent);color:var(--paper);font-size:11.5px;letter-spacing:.1em;
   padding:4px 12px;border-radius:20px;margin-bottom:14px;
@@ -478,7 +499,7 @@ table.price tr:hover td{background:rgba(162,59,46,.04)}
 .mt-lg{margin-top:64px}
 .center{text-align:center}
 
-/* ===== Logo 浮水印 ===== */
+/* ===== Logo 浮水印（通用版，任何區塊都能套用） ===== */
 .bg-watermark{
   position:absolute;pointer-events:none;user-select:none;
   opacity:.07;z-index:0;
@@ -496,6 +517,24 @@ table.price tr:hover td{background:rgba(162,59,46,.04)}
 @media(max-width:700px){
   .hero .bg-watermark{width:260px;height:260px;top:-30px;right:-60px}
 }
+
+/* 通用浮水印容器：任何 section 加上 class="watermark-section" 即可套用 */
+.watermark-section{position:relative;overflow:hidden}
+.watermark-section > .wrap{position:relative;z-index:1}
+.watermark-section .bg-watermark{
+  width:380px;height:380px;opacity:.06;object-fit:contain;
+}
+.watermark-section.wm-right .bg-watermark{top:50%;right:-60px;transform:translateY(-50%)}
+.watermark-section.wm-left .bg-watermark{top:50%;left:-60px;transform:translateY(-50%)}
+.watermark-section.wm-center .bg-watermark{top:50%;left:50%;transform:translate(-50%,-50%)}
+@media(max-width:700px){.watermark-section .bg-watermark{width:220px;height:220px}}
+
+/* ===== 金色紋理分隔帶（取代大面積橙金黃底色，改成精緻織紋感） ===== */
+.gold-band{
+  height:3px;background:linear-gradient(90deg, transparent, var(--gold) 20%, var(--accent) 50%, var(--gold) 80%, transparent);
+  opacity:.7;
+}
+.gold-frame{border-top:1px solid var(--gold);border-bottom:1px solid var(--gold)}
 
 /* ===== 留學諮詢：方案分流卡片 ===== */
 .plan-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line)}
