@@ -190,6 +190,29 @@
         </div>
         <p style="font-size:12.5px;color:var(--muted);margin-top:14px">超过市区半径或跨省长途行程，请联系客服另行报价。</p>
       </div>
+
+      <div class="form-row" style="margin-top:22px">
+        <div class="field">
+          <label for="fleet-contact-method">您惯用的联系平台</label>
+          <select id="fleet-contact-method">
+            <option value="WhatsApp">WhatsApp</option>
+            <option value="Zalo">Zalo</option>
+            <option value="LINE">LINE</option>
+            <option value="微信">微信 WeChat</option>
+            <option value="Facebook Messenger">Facebook Messenger</option>
+            <option value="电话">电话（直接拨打）</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="fleet-contact">账号或号码</label>
+          <input id="fleet-contact" type="text" placeholder="例：+86 13800138000 或 账号ID">
+        </div>
+      </div>
+      <p style="font-size:12px;color:var(--muted);margin:10px 0 0">请务必选对联系平台，方便客服一次联系上您。通过表单送出：24小时内回复；直接私信右下角客服：1–2小时内回复。</p>
+      <div class="admin-actions" style="margin-top:14px">
+        <button class="btn-save" id="fleet-submit-btn" style="flex:1;padding:13px">送出预约需求</button>
+      </div>
+      <div id="fleet-submit-result" style="margin-top:16px"></div>
     </div>
 
     <!-- ===== 常见路线参考表 ===== -->
@@ -682,11 +705,11 @@
 <div class="contact-widget">
   <div class="contact-panel" role="dialog" aria-label="联系我们">
     <div class="ch">
-      <img class="qr qr-only" src="../images/qr-wechat.png" alt="微信 二维码" width="64" height="64" loading="lazy">
+      <div class="ch-icon-fallback">微</div>
       <div>
         <span class="ch-name">微信 WeChat</span><br>
-        <span class="ch-hint qr-only">扫码加好友</span>
-        <a class="chat-link link-only" href="https://u.wechat.com/IFqnIQXgeYjfpA9Fxz9yUGs?s=2" target="_blank" rel="noopener">点击开始对话</a>
+        <span class="ch-hint">企业微信客服，免加好友</span>
+        <a class="chat-link" href="https://work.weixin.qq.com/kfid/kfc223a3b9c102b6a18" target="_blank" rel="noopener">点击开始对话</a>
       </div>
     </div>
     <div class="ch">
@@ -725,8 +748,6 @@
 <script src="../js/widget.js"></script>
 <script>
 (function () {
-  if (typeof FIREBASE_READY === 'undefined' || !FIREBASE_READY) return;
-
   function genRequestId(prefix) {
     var d = new Date();
     var ymd = String(d.getFullYear()).slice(2) + String(d.getMonth() + 1).padStart(2, '0') + String(d.getDate()).padStart(2, '0');
@@ -877,16 +898,76 @@
     document.getElementById(id).addEventListener('input', updateBudgetEstimate);
     document.getElementById(id).addEventListener('change', updateBudgetEstimate);
   });
-  db.collection('fastTrackServices').get().then(function (snap) {
-    var opts = [];
-    snap.forEach(function (doc) { var d = doc.data(); opts.push({ id: doc.id, name: d.nameSimp || d.nameHant, order: d.order || 0 }); });
-    opts.sort(function (a, b) { return a.order - b.order; });
-    var html = '<option value="">请选择或稍后于备注说明</option>' + opts.map(function (o) {
-      return '<option value="' + o.name + '">' + o.name + '</option>';
+
+  var FALLBACK_AIRPORT_NAMES = [
+    '河内内排机场', '胡志明新山一机场', '岘港机场', '金兰机场（芽庄）', '富国岛机场',
+    '海防吉埠机场', '顺化富牌机场', '大叻莲香机场', '芹苴机场', '云屯机场（下龙）',
+    '荣市机场', '朱莱机场（广南）', '波莱古机场', '邦美蜀机场', '归仁机场',
+    '绥和机场', '昆岛机场', '迪石机场', '洞海机场', '奠边府机场'
+  ];
+  function fillAirportOptions(names) {
+    var html = '<option value="">请选择或稍后于备注说明</option>' + names.map(function (n) {
+      return '<option value="' + n + '">' + n + '</option>';
     }).join('');
     arriveAirportSel.innerHTML = html;
     departAirportSel.innerHTML = html;
-  }).catch(function () { /* 沿用预设空白选单即可，不影响表单其他部分 */ });
+  }
+  if (typeof FIREBASE_READY === 'undefined' || !FIREBASE_READY) {
+    fillAirportOptions(FALLBACK_AIRPORT_NAMES);
+  } else {
+    db.collection('fastTrackServices').get().then(function (snap) {
+      var opts = [];
+      snap.forEach(function (doc) { var d = doc.data(); opts.push({ name: d.nameSimp || d.nameHant, order: d.order || 0 }); });
+      if (opts.length) {
+        opts.sort(function (a, b) { return a.order - b.order; });
+        fillAirportOptions(opts.map(function (o) { return o.name; }));
+      } else {
+        fillAirportOptions(FALLBACK_AIRPORT_NAMES);
+      }
+    }).catch(function () { fillAirportOptions(FALLBACK_AIRPORT_NAMES); });
+  }
+
+  var WHATSAPP_NUMBER = '85268746147';
+  function whatsappLink(text) {
+    if (!WHATSAPP_NUMBER || WHATSAPP_NUMBER.indexOf('PASTE_') === 0) { return 'https://wa.me/qr/O264YVQPDFH4G1'; }
+    return 'https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(text);
+  }
+  function renderContactPanel(summary) {
+    var esc = summary.replace(/'/g, "\\'").replace(/\n/g, '\\n');
+    return (
+      '<div class="contact-panel-inline">' +
+        '<p class="cpi-title">选一个平台，把这笔需求直接送给我们：</p>' +
+        '<div class="cpi-buttons">' +
+          '<a class="qcb-btn" target="_blank" rel="noopener" href="' + whatsappLink(summary) + '">WhatsApp（已自动带入内容）</a>' +
+          '<a class="qcb-btn" target="_blank" rel="noopener" href="https://zalo.me/84975898625">Zalo</a>' +
+          '<a class="qcb-btn" target="_blank" rel="noopener" href="https://line.me/ti/p/tg6LUFsHGD">LINE</a>' +
+          '<a class="qcb-btn" target="_blank" rel="noopener" href="https://work.weixin.qq.com/kfid/kfc223a3b9c102b6a18">微信</a>' +
+          '<a class="qcb-btn" target="_blank" rel="noopener" href="https://m.me/61592091476467">Messenger</a>' +
+        '</div>' +
+        '<button type="button" class="btn-ghost" id="it-copy-btn" style="margin-top:12px" data-text="' + esc + '">📋 复制需求内容（LINE／Zalo／微信／Messenger请贴上后发送）</button>' +
+      '</div>'
+    );
+  }
+  function bindItCopyButton() {
+    var btn = document.getElementById('it-copy-btn');
+    if (!btn) return;
+    btn.addEventListener('click', function () {
+      var text = btn.dataset.text.replace(/\\n/g, '\n').replace(/\\'/g, "'");
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(text).then(function () { btn.textContent = '✓ 已复制，打开对话框贴上发送即可'; });
+      } else { alert(text); }
+    });
+  }
+  function buildItinerarySummary(data, reqId) {
+    return [
+      '您好，我想预约定制行程咨询。',
+      '需求编号：' + reqId,
+      '天数：' + (data.days || '未填'),
+      '出行目的：' + (data.purposes.length ? data.purposes.join('、') : '未填'),
+      '人数：成人' + (data.adults || '未填') + '／儿童' + (data.children || '0') + '／长辈' + (data.seniors || '0'),
+      '意向区域：' + (data.regions.length ? data.regions.join('、') : '未填')
+    ].join('\n');
+  }
 
   var submitBtn = document.getElementById('it-submit-btn');
   var resultBox = document.getElementById('it-result');
@@ -940,19 +1021,25 @@
       createdAt: firebase.firestore.FieldValue.serverTimestamp()
     };
 
+    var summary = buildItinerarySummary(data, reqId);
     submitBtn.disabled = true;
-    db.collection('itineraryRequests').add(data).then(function () {
+
+    function showResult() {
       resultBox.innerHTML =
         '<div class="request-id-box">' +
         '<div class="id">' + reqId + '</div>' +
         '<div class="hint">已收到您的定制需求，通过表单送出将于24小时内回复；若想更快，欢迎直接私信右下角客服，1–2小时内回复。</div>' +
-        '</div>';
+        '</div>' + renderContactPanel(summary);
+      bindItCopyButton();
       submitBtn.textContent = '✓ 已送出';
-    }).catch(function (err) {
-      resultBox.innerHTML = '<p style="color:var(--accent);font-size:13px">送出失败，请直接私信右下角客服为您安排。</p>';
+    }
+
+    if (typeof FIREBASE_READY === 'undefined' || !FIREBASE_READY) { showResult(); submitBtn.disabled = false; return; }
+
+    db.collection('itineraryRequests').add(data).then(showResult).catch(function (err) {
       console.error(err);
-      submitBtn.disabled = false;
-    });
+      showResult();
+    }).finally(function () { submitBtn.disabled = false; });
   });
 })();
 </script>
@@ -1063,11 +1150,20 @@
 
 <script>
 (function () {
-  if (typeof FIREBASE_READY === 'undefined' || !FIREBASE_READY) return;
-
   var CNY_TO_USD = 1 / 6.7716;
   var CNY_TO_VND = 3868;
   var allRoutes = [];
+  var usingFallback = false;
+  var currentMode = 'point';
+
+  var WHATSAPP_NUMBER = '85268746147';
+
+  function genRequestId(prefix) {
+    var d = new Date();
+    var ymd = String(d.getFullYear()).slice(2) + String(d.getMonth() + 1).padStart(2, '0') + String(d.getDate()).padStart(2, '0');
+    var rand = Math.random().toString(36).slice(2, 6).toUpperCase();
+    return prefix + ymd + '-' + rand;
+  }
 
   function fmtMoney(min, max) {
     if (min == null) return '<span class="price-ask">详询</span>';
@@ -1080,15 +1176,60 @@
     return '<div class="price-usd">' + usdStr + '</div><div class="price-vnd">≈ ' + vndStr + '</div>';
   }
 
-  db.collection('fleetRoutesPublic').get().then(function (snap) {
-    snap.forEach(function (doc) { allRoutes.push(Object.assign({ id: doc.id }, doc.data())); });
-    allRoutes.sort(function (a, b) { return (a.order || 0) - (b.order || 0); });
-    initPointMode();
-    initHourlyMode();
-    renderRefTable();
-  }).catch(function () {
-    document.getElementById('point-result').innerHTML = '<span style="color:var(--muted);font-size:14px">暂时无法载入报价，请直接私信右下角客服。</span>';
+  var FALLBACK_ROUTES_RAW = [
+    ['point','芒街-河内','','普通5-7座','','',850,920,null,'',''  ,false],
+    ['point','芒街-河内','','商务7座','','',1200,1250,null,'','',false],
+    ['point','芒街-河内','','商务9-11座','','',1350,1350,null,'','',false],
+    ['point','芒街-下龙湾','','普通5-7座','','',460,520,null,'','',false],
+    ['point','芒街-下龙湾','','商务7座','','',750,750,null,'','',false],
+    ['point','芒街-下龙湾','','商务9-11座','','',900,950,null,'','',false],
+    ['point','下龙湾-河内','','普通5-7座','','',520,520,null,'','',false],
+    ['point','下龙湾-河内','','商务7座','','',750,750,null,'','',false],
+    ['point','下龙湾-河内','','商务9-11座','','',900,900,null,'','',false],
+    ['point','河内-宁平','当日往返','普通5-7座','当日往返','当日往返',1050,1050,null,'','',false],
+    ['point','河内-宁平','','商务7座','当日往返','当日往返',1350,1350,null,'','',false],
+    ['point','河内-宁平','','商务9-11座','当日往返','当日往返',1450,1450,null,'','',false],
+    ['point','机场-河内','','普通5-7座','接机/送机　＊金额待确认','接机/送机　＊金额待确认',120,120,null,'','',true],
+    ['point','机场-河内','','商务7座','接机/送机　＊金额待确认','接机/送机　＊金额待确认',450,450,null,'','',true],
+    ['point','机场-河内','','商务9-11座','接机/送机　＊金额待确认','接机/送机　＊金额待确认',500,500,null,'','',true],
+    ['point','河内-北宁','','普通5-7座','＊金额待确认','＊金额待确认',160,200,null,'','',true],
+    ['point','河内-北宁','','商务7座','＊金额待确认','＊金额待确认',450,450,null,'','',true],
+    ['point','河内-北宁','','商务9-11座','＊金额待确认','＊金额待确认',550,550,null,'','',true],
+    ['hourly','','8','普通5-7座','100km以内，超公里数135k越南盾/公里','100km以内，超公里数135k越南盾/公里',550,550,860,'指定中文司机／8小时100km／需提前预约，临时恐难找','指定中文司机／8小时100km／需提前预约，临时恐难找',false],
+    ['hourly','','8','商务7座','100km以内，超公里数135k越南盾/公里','100km以内，超公里数135k越南盾/公里',1150,1150,null,'','',false],
+    ['hourly','','8','商务9-11座','100km以内，超公里数135k越南盾/公里','100km以内，超公里数135k越南盾/公里',1250,1250,null,'','',false],
+    ['hourly','','10','商务7座','100km以内，超公里数135k越南盾/公里','100km以内，超公里数135k越南盾/公里',null,null,1550,'指定中文司机／10小时100km／需提前预约，临时恐难找','指定中文司机／10小时100km／需提前预约，临时恐难找',false]
+  ];
+  var FALLBACK_ROUTES = FALLBACK_ROUTES_RAW.map(function (r, i) {
+    return {
+      id: 'fallback-' + i, mode: r[0], route: r[1], hours: r[2], vehicleType: r[3], note: r[4], noteSimp: r[5],
+      priceCNYMin: r[6], priceCNYMax: r[7], driverZhSurchargeCNY: r[8], driverZhNote: r[9], driverZhNoteSimp: r[10],
+      needsReview: r[11], order: i
+    };
   });
+
+  function loadRoutes() {
+    if (typeof FIREBASE_READY === 'undefined' || !FIREBASE_READY) {
+      allRoutes = FALLBACK_ROUTES; usingFallback = true;
+      initPointMode(); initHourlyMode(); renderRefTable();
+      return;
+    }
+    db.collection('fleetRoutesPublic').get().then(function (snap) {
+      var fetched = [];
+      snap.forEach(function (doc) { fetched.push(Object.assign({ id: doc.id }, doc.data())); });
+      if (fetched.length) {
+        fetched.sort(function (a, b) { return (a.order || 0) - (b.order || 0); });
+        allRoutes = fetched; usingFallback = false;
+      } else {
+        allRoutes = FALLBACK_ROUTES; usingFallback = true;
+      }
+      initPointMode(); initHourlyMode(); renderRefTable();
+    }).catch(function () {
+      allRoutes = FALLBACK_ROUTES; usingFallback = true;
+      initPointMode(); initHourlyMode(); renderRefTable();
+    });
+  }
+  loadRoutes();
 
   document.querySelectorAll('.mode-btn').forEach(function (btn) {
     btn.addEventListener('click', function () {
@@ -1096,8 +1237,11 @@
       document.querySelectorAll('.calc-mode-panel').forEach(function (p) { p.classList.remove('active'); });
       btn.classList.add('active');
       document.getElementById('mode-' + btn.dataset.mode).classList.add('active');
+      currentMode = btn.dataset.mode;
     });
   });
+
+  var lastQuote = null;
 
   function initPointMode() {
     var pointRoutes = allRoutes.filter(function (r) { return r.mode === 'point'; });
@@ -1120,13 +1264,14 @@
       driverToggle.disabled = true;
       driverNote.textContent = '选好路线与车型后，这里会显示是否可指定';
       resultBox.innerHTML = '<span style="color:var(--muted);font-size:14px">选择以上选项后，这里会显示报价</span>';
+      lastQuote = null;
       updatePointResult();
     });
 
     function updatePointResult() {
       var rows = JSON.parse(vehicleSel.dataset.rows || '[]');
       var row = rows[Number(vehicleSel.value)];
-      if (!row) return;
+      if (!row) { lastQuote = null; return; }
 
       if (row.driverZhSurchargeCNY != null) {
         driverToggle.disabled = false;
@@ -1144,9 +1289,16 @@
       }
 
       var reviewFlag = row.needsReview ? '<p style="font-size:12px;color:var(--accent);margin-top:10px">＊此路线价格尚待最终确认，实际报价请以客服回复为准</p>' : '';
+      var fallbackNote = usingFallback ? '<p style="font-size:12px;color:var(--accent);margin-top:6px">目前为系统预设报价，正式金额将由客服确认</p>' : '';
       resultBox.innerHTML = fmtMoney(priceMin, priceMax) +
         (row.noteSimp || row.note ? '<div class="price-vnd">' + (row.noteSimp || row.note) + '</div>' : '') +
-        '<div class="hint">屏幕截图这个结果，私信右下角咨询按钮给客服即可预约用车。</div>' + reviewFlag;
+        '<div class="hint">填写下方联系方式后，点击送出即可完成预约。</div>' + reviewFlag + fallbackNote;
+
+      lastQuote = {
+        mode: 'point', route: row.route, vehicleType: row.vehicleType,
+        driver: driverToggle.checked, priceMin: priceMin, priceMax: priceMax,
+        note: row.noteSimp || row.note, needsReview: !!row.needsReview
+      };
     }
 
     vehicleSel.addEventListener('change', updatePointResult);
@@ -1187,6 +1339,7 @@
     function update() {
       if (!state.vehicle || !state.hours) {
         resultBox.innerHTML = '<span style="color:var(--muted);font-size:14px">选择以上选项后，这里会显示报价</span>';
+        lastQuote = null;
         return;
       }
       var row = findRow();
@@ -1195,6 +1348,7 @@
         driverToggle.checked = false;
         driverNote.textContent = '此组合暂无报价资料';
         resultBox.innerHTML = '<span class="price-ask">价格详询</span><div class="hint">请私信右下角客服为您报价。</div>';
+        lastQuote = { mode: 'hourly', vehicleType: state.vehicle, hours: state.hours, driver: false, priceMin: null, priceMax: null, note: '', needsReview: false };
         return;
       }
 
@@ -1213,9 +1367,15 @@
         priceMax = row.driverZhSurchargeCNY;
       }
 
+      var fallbackNote = usingFallback ? '<p style="font-size:12px;color:var(--accent);margin-top:6px">目前为系统预设报价，正式金额将由客服确认</p>' : '';
       resultBox.innerHTML = fmtMoney(priceMin, priceMax) +
         (row.noteSimp || row.note ? '<div class="price-vnd">' + (row.noteSimp || row.note) + '</div>' : '') +
-        '<div class="hint">屏幕截图这个结果，私信右下角咨询按钮给客服即可预约用车。</div>';
+        '<div class="hint">填写下方联系方式后，点击送出即可完成预约。</div>' + fallbackNote;
+
+      lastQuote = {
+        mode: 'hourly', vehicleType: state.vehicle, hours: state.hours,
+        driver: driverToggle.checked, priceMin: priceMin, priceMax: priceMax, note: row.noteSimp || row.note, needsReview: false
+      };
     }
 
     driverToggle.addEventListener('change', update);
@@ -1236,6 +1396,100 @@
       return '<tr><td>' + r.route + (r.needsReview ? '＊' : '') + '</td><td>' + r.vehicleType + '</td><td>' + usd + '</td></tr>';
     }).join('');
   }
+
+  var fleetContactMethodSel = document.getElementById('fleet-contact-method');
+  var fleetContactInput = document.getElementById('fleet-contact');
+  var fleetSubmitBtn = document.getElementById('fleet-submit-btn');
+  var fleetSubmitResult = document.getElementById('fleet-submit-result');
+
+  function buildFleetSummary(q, reqId) {
+    var lines = ['您好，我想预约包车服务。', '需求编号：' + reqId];
+    if (q.mode === 'point') {
+      lines.push('路线：' + q.route);
+    } else {
+      lines.push('模式：包车（论时数）', '时数：' + q.hours + '小时');
+    }
+    lines.push('车型：' + q.vehicleType);
+    lines.push('指定中文司机：' + (q.driver ? '是' : '否'));
+    return lines.join('\n');
+  }
+
+  function whatsappLink(text) {
+    if (!WHATSAPP_NUMBER || WHATSAPP_NUMBER.indexOf('PASTE_') === 0) {
+      return 'https://wa.me/qr/O264YVQPDFH4G1';
+    }
+    return 'https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(text);
+  }
+
+  function renderContactPanel(summary) {
+    var esc = summary.replace(/'/g, "\\'").replace(/\n/g, '\\n');
+    return (
+      '<div class="contact-panel-inline">' +
+        '<p class="cpi-title">选一个平台，把这笔需求直接送给我们：</p>' +
+        '<div class="cpi-buttons">' +
+          '<a class="qcb-btn" target="_blank" rel="noopener" href="' + whatsappLink(summary) + '">WhatsApp（已自动带入内容）</a>' +
+          '<a class="qcb-btn" target="_blank" rel="noopener" href="https://zalo.me/84975898625">Zalo</a>' +
+          '<a class="qcb-btn" target="_blank" rel="noopener" href="https://line.me/ti/p/tg6LUFsHGD">LINE</a>' +
+          '<a class="qcb-btn" target="_blank" rel="noopener" href="https://work.weixin.qq.com/kfid/kfc223a3b9c102b6a18">微信</a>' +
+          '<a class="qcb-btn" target="_blank" rel="noopener" href="https://m.me/61592091476467">Messenger</a>' +
+        '</div>' +
+        '<button type="button" class="btn-ghost" id="fleet-copy-btn" style="margin-top:12px" data-text="' + esc + '">📋 复制需求内容（LINE／Zalo／微信／Messenger请贴上后发送）</button>' +
+      '</div>'
+    );
+  }
+
+  function bindFleetCopyButton() {
+    var btn = document.getElementById('fleet-copy-btn');
+    if (!btn) return;
+    btn.addEventListener('click', function () {
+      var text = btn.dataset.text.replace(/\\n/g, '\n').replace(/\\'/g, "'");
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(text).then(function () { btn.textContent = '✓ 已复制，打开对话框贴上发送即可'; });
+      } else {
+        alert(text);
+      }
+    });
+  }
+
+  fleetSubmitBtn.addEventListener('click', function () {
+    if (!lastQuote) { alert('请先完成上方选项，看到报价后再送出'); return; }
+    var contact = fleetContactInput.value.trim();
+    if (!contact) { alert('请填写联系账号或号码，方便我们主动与您联系安排'); fleetContactInput.focus(); return; }
+
+    var reqId = genRequestId('FL');
+    var contactFull = fleetContactMethodSel.value + '：' + contact;
+    var summary = buildFleetSummary(lastQuote, reqId);
+    fleetSubmitBtn.disabled = true;
+
+    function showResult() {
+      fleetSubmitResult.innerHTML =
+        '<div class="hint">需求编号 <strong>' + reqId + '</strong>　已收到您的需求，通过表单送出将于24小时内回复；若想更快，欢迎直接私信右下角客服，1–2小时内回复。</div>' +
+        renderContactPanel(summary);
+      bindFleetCopyButton();
+      fleetSubmitBtn.textContent = '✓ 已送出';
+    }
+
+    if (typeof FIREBASE_READY === 'undefined' || !FIREBASE_READY) { showResult(); return; }
+
+    db.collection('fleetRequests').add({
+      requestId: reqId,
+      mode: lastQuote.mode,
+      route: lastQuote.route || null,
+      hours: lastQuote.hours || null,
+      vehicleType: lastQuote.vehicleType,
+      driver: lastQuote.driver,
+      priceCNYMin: lastQuote.priceMin,
+      priceCNYMax: lastQuote.priceMax,
+      needsReview: !!lastQuote.needsReview,
+      contactMethod: fleetContactMethodSel.value,
+      contact: contactFull,
+      status: '待处理',
+      lang: 'zh-Hans',
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    }).then(showResult).catch(function () {
+      showResult();
+    }).finally(function () { fleetSubmitBtn.disabled = false; });
+  });
 })();
 </script>
 </body>

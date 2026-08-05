@@ -130,7 +130,7 @@
       <div class="qcb-buttons">
         <a class="qcb-btn" href="https://wa.me/qr/O264YVQPDFH4G1?text=我在快速通关页面，想咨询服务" target="_blank" rel="noopener">WhatsApp</a>
         <a class="qcb-btn" href="https://zalo.me/84975898625" target="_blank" rel="noopener">Zalo</a>
-        <a class="qcb-btn" href="https://u.wechat.com/IFqnIQXgeYjfpA9Fxz9yUGs?s=2" target="_blank" rel="noopener">微信</a>
+        <a class="qcb-btn" href="https://work.weixin.qq.com/kfid/kfc223a3b9c102b6a18" target="_blank" rel="noopener">微信</a>
         <a class="qcb-btn" href="https://line.me/ti/p/tg6LUFsHGD" target="_blank" rel="noopener">LINE</a>
       </div>
     </div>
@@ -183,7 +183,11 @@
         </div>
       </div>
       <div class="calc-step">
-        <label>3. 预计服务日期</label>
+        <label>3. 出行人数</label>
+        <input class="calc-select" id="ft-people" type="number" min="1" placeholder="例：2">
+      </div>
+      <div class="calc-step">
+        <label>4. 预计服务日期</label>
         <input class="calc-select" id="ft-date" type="date">
         <p style="font-size:12px;color:var(--muted);margin-top:6px">若未提前至少24小时预约，需加收加急处理费，详见下方说明。</p>
       </div>
@@ -192,7 +196,7 @@
         <label class="switch"><input type="checkbox" id="ft-board-toggle"><span class="slider"></span></label>
       </div>
       <div class="driver-toggle">
-        <div class="label">加购签证加急排队协助<span class="note">电子签证换贴纸签、现场排队时协助加速办理</span></div>
+        <div class="label">电子签/落地批文快速换证服务<span class="note">电子签证换另纸签、落地批文现场换证，协助加快办理时间</span></div>
         <label class="switch"><input type="checkbox" id="ft-queue-toggle"><span class="slider"></span></label>
       </div>
       <div class="form-row" style="margin-top:18px">
@@ -203,6 +207,7 @@
             <option value="Zalo">Zalo</option>
             <option value="LINE">LINE</option>
             <option value="微信">微信 WeChat</option>
+            <option value="Facebook Messenger">Facebook Messenger</option>
             <option value="电话">电话（直接拨打）</option>
           </select>
         </div>
@@ -275,11 +280,11 @@
 <div class="contact-widget">
   <div class="contact-panel" role="dialog" aria-label="联系我们">
     <div class="ch">
-      <img class="qr qr-only" src="../images/qr-wechat.png" alt="微信 二维码" width="64" height="64" loading="lazy">
+      <div class="ch-icon-fallback">微</div>
       <div>
         <span class="ch-name">微信 WeChat</span><br>
-        <span class="ch-hint qr-only">扫码加好友</span>
-        <a class="chat-link link-only" href="https://u.wechat.com/IFqnIQXgeYjfpA9Fxz9yUGs?s=2" target="_blank" rel="noopener">点击开始对话</a>
+        <span class="ch-hint">企业微信客服，免加好友</span>
+        <a class="chat-link" href="https://work.weixin.qq.com/kfid/kfc223a3b9c102b6a18" target="_blank" rel="noopener">点击开始对话</a>
       </div>
     </div>
     <div class="ch">
@@ -318,7 +323,8 @@
 <script src="../js/widget.js"></script>
 <script>
 (function () {
-  if (typeof FIREBASE_READY === 'undefined' || !FIREBASE_READY) return;
+  // 之后升龙给了WhatsApp真实号码，把下面这个值换成国际格式数字（不要加+号、不要空格，例如 84987654321）
+  var WHATSAPP_NUMBER = '85268746147';
 
   var CNY_TO_USD = 1 / 6.7716;
   var CNY_TO_VND = 3868;
@@ -330,8 +336,20 @@
     return prefix + ymd + '-' + rand;
   }
 
+  var FALLBACK_AIRPORTS_RAW = [
+    ['河内内排机场', 'HAN'], ['胡志明新山一机场', 'SGN'], ['岘港机场', 'DAD'], ['金兰机场（芽庄）', 'CXR'],
+    ['富国岛机场', 'PQC'], ['海防吉埠机场', 'HPH'], ['顺化富牌机场', 'HUI'], ['大叻莲香机场', 'DLI'],
+    ['芹苴机场', 'VCA'], ['云屯机场（下龙）', 'VDO'], ['荣市机场', 'VII'], ['朱莱机场（广南）', 'VCL'],
+    ['波莱古机场', 'PXU'], ['邦美蜀机场', 'BMV'], ['归仁机场', 'UIH'], ['绥和机场', 'TBB'],
+    ['昆岛机场', 'VCS'], ['迪石机场', 'VKG'], ['洞海机场', 'VDH'], ['奠边府机场', 'DIN']
+  ];
+  var FALLBACK_AIRPORTS = FALLBACK_AIRPORTS_RAW.map(function (a, i) {
+    return { id: 'fallback-' + a[1], nameSimp: a[0], code: a[1], dayPriceCNY: 200, nightPriceCNY: 250, boardSurchargeCNY: 100, order: i };
+  });
+
   var airportSel = document.getElementById('ft-airport');
   var timeBtns = document.querySelectorAll('#ft-calc .hour-btn');
+  var peopleInput = document.getElementById('ft-people');
   var dateInput = document.getElementById('ft-date');
   var boardToggle = document.getElementById('ft-board-toggle');
   var queueToggle = document.getElementById('ft-queue-toggle');
@@ -343,18 +361,36 @@
   var state = { airport: null, time: null };
   var RUSH_SURCHARGE_CNY = 150;
   var RUSH_HOURS = 24;
+  var usingFallback = false;
 
   dateInput.min = new Date().toISOString().slice(0, 10);
 
-  db.collection('fastTrackServices').get().then(function (snap) {
-    snap.forEach(function (doc) { airports.push(Object.assign({ id: doc.id }, doc.data())); });
-    airports.sort(function (a, b) { return (a.order || 0) - (b.order || 0); });
+  function renderAirportOptions() {
     airportSel.innerHTML = '<option value="">请选择</option>' + airports.map(function (a) {
       return '<option value="' + a.id + '">' + (a.nameSimp || a.nameHant) + '（' + a.code + '）</option>';
     }).join('');
-  }).catch(function () {
-    airportSel.innerHTML = '<option value="">暂时无法载入，请私信客服</option>';
-  });
+  }
+
+  function loadAirports() {
+    if (typeof FIREBASE_READY === 'undefined' || !FIREBASE_READY) {
+      airports = FALLBACK_AIRPORTS; usingFallback = true; renderAirportOptions(); return;
+    }
+    db.collection('fastTrackServices').get().then(function (snap) {
+      var fetched = [];
+      snap.forEach(function (doc) { fetched.push(Object.assign({ id: doc.id }, doc.data())); });
+      if (fetched.length) {
+        fetched.sort(function (a, b) { return (a.order || 0) - (b.order || 0); });
+        airports = fetched; usingFallback = false;
+      } else {
+        airports = FALLBACK_AIRPORTS; usingFallback = true;
+      }
+      renderAirportOptions();
+    }).catch(function () {
+      airports = FALLBACK_AIRPORTS; usingFallback = true;
+      renderAirportOptions();
+    });
+  }
+  loadAirports();
 
   airportSel.addEventListener('change', function () { state.airport = airportSel.value; preview(); });
   timeBtns.forEach(function (btn) {
@@ -398,8 +434,9 @@
       resultBox.innerHTML = '<span style="color:var(--muted);font-size:14px">选择以上选项并填写联系方式后，点击送出即可看到报价</span>';
       return;
     }
+    var fallbackNote = usingFallback ? '<div class="hint" style="color:var(--accent)">目前为系统预设报价，正式金额将由客服确认</div>' : '';
     if (q.base == null) {
-      resultBox.innerHTML = '<span class="price-ask">价格详询</span><div class="hint">请私信右下角客服为您报价。</div>';
+      resultBox.innerHTML = '<span class="price-ask">价格详询</span><div class="hint">请私信右下角客服为您报价。</div>' + fallbackNote;
       return;
     }
     var usd = (q.total * CNY_TO_USD).toFixed(2);
@@ -407,25 +444,98 @@
     resultBox.innerHTML =
       '<div class="price-usd">US$' + usd + '（预览）</div>' +
       '<div class="price-vnd">≈ ' + vnd.toLocaleString('en-US') + '₫</div>' +
-      rushLine(q) +
+      rushLine(q) + fallbackNote +
       '<div class="hint">填写联系方式后，点击「送出预约需求」即可完成预约并取得需求编号。</div>';
+  }
+
+  function buildSummaryText(q, reqId, people) {
+    return [
+      '您好，我想预约快速通关服务。',
+      '需求编号：' + reqId,
+      '机场：' + (q.airport.nameSimp || q.airport.nameHant),
+      '时段：' + (state.time === 'night' ? '夜间' : '日间'),
+      '人数：' + (people || '未填'),
+      '服务日期：' + (dateInput.value || '未填'),
+      '加购举牌接机：' + (boardToggle.checked ? '是' : '否'),
+      '加购电子签/落地批文快速换证服务：' + (queueToggle.checked ? '是' : '否')
+    ].join('\n');
+  }
+
+  function whatsappLink(text) {
+    if (WHATSAPP_NUMBER.indexOf('PASTE_') === 0) {
+      return 'https://wa.me/qr/O264YVQPDFH4G1';
+    }
+    return 'https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(text);
+  }
+
+  function renderContactPanel(summary) {
+    var esc = summary.replace(/'/g, "\\'").replace(/\n/g, '\\n');
+    return (
+      '<div class="contact-panel-inline">' +
+        '<p class="cpi-title">选一个平台，把这笔需求直接送给我们：</p>' +
+        '<div class="cpi-buttons">' +
+          '<a class="qcb-btn" target="_blank" rel="noopener" href="' + whatsappLink(summary) + '">WhatsApp' + (WHATSAPP_NUMBER.indexOf('PASTE_') === 0 ? '' : '（已自动带入内容）') + '</a>' +
+          '<a class="qcb-btn" target="_blank" rel="noopener" href="https://zalo.me/84975898625">Zalo</a>' +
+          '<a class="qcb-btn" target="_blank" rel="noopener" href="https://line.me/ti/p/tg6LUFsHGD">LINE</a>' +
+          '<a class="qcb-btn" target="_blank" rel="noopener" href="https://work.weixin.qq.com/kfid/kfc223a3b9c102b6a18">微信</a>' +
+          '<a class="qcb-btn" target="_blank" rel="noopener" href="https://m.me/61592091476467">Messenger</a>' +
+        '</div>' +
+        '<button type="button" class="btn-ghost" id="ft-copy-btn" style="margin-top:12px" data-text="' + esc + '">📋 复制需求内容（LINE／Zalo／微信／Messenger请贴上后发送）</button>' +
+      '</div>'
+    );
+  }
+
+  function bindCopyButton() {
+    var btn = document.getElementById('ft-copy-btn');
+    if (!btn) return;
+    btn.addEventListener('click', function () {
+      var text = btn.dataset.text.replace(/\\n/g, '\n').replace(/\\'/g, "'");
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(text).then(function () { btn.textContent = '✓ 已复制，打开对话框贴上发送即可'; });
+      } else {
+        alert(text);
+      }
+    });
   }
 
   submitBtn.addEventListener('click', function () {
     var q = currentQuote();
     if (!q) { alert('请先选择机场与抵达时段'); return; }
+    var people = peopleInput.value.trim();
     var contact = contactInput.value.trim();
     if (!contact) { alert('请填写联系账号或号码，方便我们主动与您联系安排'); contactInput.focus(); return; }
 
     var reqId = genRequestId('FT');
     var contactFull = contactMethodSel.value + '：' + contact;
+    var summary = buildSummaryText(q, reqId, people);
     submitBtn.disabled = true;
+
+    function showResult() {
+      var queueLine = queueToggle.checked
+        ? '<div class="price-vnd" style="color:var(--accent)">另加购：电子签/落地批文快速换证服务（价格详询，我们会一并与您确认）</div>'
+        : '';
+      var priceBlock = q.base == null
+        ? '<div class="price-ask">价格详询</div>'
+        : '<div class="price-usd">US$' + (q.total * CNY_TO_USD).toFixed(2) + '</div><div class="price-vnd">≈ ' + (Math.round(q.total * CNY_TO_VND / 1000) * 1000).toLocaleString('en-US') + '₫</div>' + rushLine(q);
+      resultBox.innerHTML =
+        priceBlock + queueLine +
+        '<div class="hint">需求编号 <strong>' + reqId + '</strong>　已收到您的需求，通过表单送出将于24小时内回复。届时请提供护照、签证、航班号码即可完成安排。</div>' +
+        renderContactPanel(summary);
+      bindCopyButton();
+      submitBtn.textContent = '✓ 已送出';
+    }
+
+    if (typeof FIREBASE_READY === 'undefined' || !FIREBASE_READY) {
+      showResult();
+      return;
+    }
 
     db.collection('fastTrackRequests').add({
       requestId: reqId,
       airportId: state.airport,
       airportName: q.airport.nameSimp || q.airport.nameHant,
       time: state.time,
+      people: people || null,
       serviceDate: dateInput.value || null,
       isRush: q.rush,
       board: boardToggle.checked,
@@ -434,28 +544,9 @@
       contact: contactFull,
       lang: 'zh-Hans',
       createdAt: firebase.firestore.FieldValue.serverTimestamp()
-    }).then(function () {
-      var queueLine = queueToggle.checked
-        ? '<div class="price-vnd" style="color:var(--accent)">另加购：签证加急排队协助（价格详询，我们会一并与您确认）</div>'
-        : '';
-      if (q.base == null) {
-        resultBox.innerHTML =
-          '<div class="price-ask">价格详询</div>' + queueLine +
-          '<div class="hint">需求编号 <strong>' + reqId + '</strong>　已收到您的需求，我们会尽快主动与您联系确认报价。</div>';
-      } else {
-        var usd = (q.total * CNY_TO_USD).toFixed(2);
-        var vnd = Math.round(q.total * CNY_TO_VND / 1000) * 1000;
-        resultBox.innerHTML =
-          '<div class="price-usd">US$' + usd + '</div>' +
-          '<div class="price-vnd">≈ ' + vnd.toLocaleString('en-US') + '₫</div>' +
-          rushLine(q) + queueLine +
-          '<div class="hint">需求编号 <strong>' + reqId + '</strong>　已收到您的需求，通过表单送出将于24小时内回复；若想更快，欢迎直接私信右下角客服，1–2小时内回复。届时请提供护照、签证、航班号码即可完成安排。</div>';
-      }
-      submitBtn.textContent = '✓ 已送出';
-    }).catch(function (err) {
-      alert('送出失败，请直接私信右下角客服为您安排。\n\n' + (err && err.message ? err.message : ''));
-      submitBtn.disabled = false;
-    });
+    }).then(showResult).catch(function () {
+      showResult();
+    }).finally(function () { submitBtn.disabled = false; });
   });
 })();
 </script>

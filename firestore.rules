@@ -78,6 +78,12 @@ service cloud.firestore {
       allow write: if request.auth != null;
     }
 
+    match /fleetRequests/{docId} {
+      // 客戶送出包車預約需求
+      allow create: if true;
+      allow read, update, delete: if request.auth != null;
+    }
+
     // 之後新增其他資料表（例如包車、部落格文章），
     // 照上面的格式複製一段貼在這裡即可。
   }

@@ -48,6 +48,7 @@ document.addEventListener('DOMContentLoaded', function () {
       loadFasttrackRequests();
       loadItineraryRequests();
       loadSiteContent();
+      loadFleetRequests();
     } else {
       loginScreen.style.display = 'flex';
       adminShell.classList.remove('show');
@@ -876,8 +877,11 @@ document.addEventListener('DOMContentLoaded', function () {
       '</div>' +
       '<div class="admin-row">' +
         '<div class="admin-field"><label>預計服務日期</label><input value="' + (d.serviceDate || '未填寫') + '" disabled></div>' +
+        '<div class="admin-field"><label>出行人數</label><input value="' + (d.people || '未填寫') + '" disabled></div>' +
         '<div class="admin-field"><label>加購舉牌</label><input value="' + (d.board ? '是' : '否') + '" disabled></div>' +
-        '<div class="admin-field"><label>加購排隊協助</label><input value="' + (d.queueHelp ? '是' : '否') + '" disabled></div>' +
+        '<div class="admin-field"><label>電子簽/落地批文快速換證</label><input value="' + (d.queueHelp ? '是' : '否') + '" disabled></div>' +
+      '</div>' +
+      '<div class="admin-row">' +
         '<div class="admin-field"><label>送出時間</label><input value="' + created + '" disabled></div>' +
       '</div>' +
       '<div class="admin-actions"><button class="btn-delete delete-ftrequest">刪除</button></div>' +
@@ -1016,5 +1020,68 @@ document.addEventListener('DOMContentLoaded', function () {
       updatedAt: firebase.firestore.FieldValue.serverTimestamp()
     }, { merge: true }).then(function () { showToast('已儲存長期班截止日期內容'); });
   });
+
+  /* =========================================================
+     包車需求管理
+     ========================================================= */
+  var fleetReqListEl = document.getElementById('fleet-requests-list');
+  var FLEET_STATUS_OPTIONS = ['待處理', '已報價', '已成交', '已結束'];
+
+  function fleetReqCardHTML(id, d) {
+    d = d || {};
+    var created = d.createdAt && d.createdAt.toDate ? d.createdAt.toDate().toLocaleString('zh-TW') : '—';
+    var priceStr = d.priceCNYMin == null ? '詳詢' : ('¥' + d.priceCNYMin + (d.priceCNYMax !== d.priceCNYMin ? '–' + d.priceCNYMax : ''));
+    return (
+      '<div class="admin-card" data-id="' + id + '">' +
+      (d.needsReview ? '<p style="color:var(--accent);font-size:12.5px;font-weight:700;margin-bottom:10px">＊此路線價格尚待確認</p>' : '') +
+      '<div class="admin-row">' +
+        '<div class="admin-field"><label>需求編號</label><input value="' + (d.requestId || '') + '" disabled></div>' +
+        '<div class="admin-field"><label style="color:var(--accent);font-weight:700">📞 聯絡方式</label><input value="' + (d.contact || '') + '" disabled style="font-weight:700;color:var(--accent)"></div>' +
+        '<div class="admin-field"><label>送出時間</label><input value="' + created + '" disabled></div>' +
+      '</div>' +
+      '<div class="admin-row">' +
+        '<div class="admin-field"><label>模式</label><input value="' + (d.mode === 'point' ? '點到點' : '論時數') + '" disabled></div>' +
+        '<div class="admin-field"><label>路線／時數</label><input value="' + (d.route || (d.hours ? d.hours + '小時' : '—')) + '" disabled></div>' +
+        '<div class="admin-field"><label>車型</label><input value="' + (d.vehicleType || '') + '" disabled></div>' +
+      '</div>' +
+      '<div class="admin-row">' +
+        '<div class="admin-field"><label>指定中文司機</label><input value="' + (d.driver ? '是' : '否') + '" disabled></div>' +
+        '<div class="admin-field"><label>人民幣報價</label><input value="' + priceStr + '" disabled></div>' +
+        '<div class="admin-field"><label>處理狀態</label><select class="f-status">' +
+          FLEET_STATUS_OPTIONS.map(function (s) { return '<option' + (d.status === s ? ' selected' : '') + '>' + s + '</option>'; }).join('') +
+        '</select></div>' +
+      '</div>' +
+      '<div class="admin-actions">' +
+        '<button class="btn-save save-fleetreq">儲存狀態</button>' +
+        '<button class="btn-delete delete-fleetreq">刪除</button>' +
+      '</div>' +
+      '</div>'
+    );
+  }
+
+  function loadFleetRequests() {
+    fleetReqListEl.innerHTML = '<div class="admin-loading">載入中…</div>';
+    db.collection('fleetRequests').orderBy('createdAt', 'desc').get().then(function (snap) {
+      if (snap.empty) { fleetReqListEl.innerHTML = '<p class="desc">目前沒有客戶包車需求。</p>'; return; }
+      var html = '';
+      snap.forEach(function (doc) { html += fleetReqCardHTML(doc.id, doc.data()); });
+      fleetReqListEl.innerHTML = html;
+      fleetReqListEl.querySelectorAll('.save-fleetreq').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var card = btn.closest('.admin-card');
+          db.collection('fleetRequests').doc(card.dataset.id).set({
+            status: card.querySelector('.f-status').value
+          }, { merge: true }).then(function () { showToast('已更新'); loadFleetRequests(); });
+        });
+      });
+      fleetReqListEl.querySelectorAll('.delete-fleetreq').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          if (!confirm('確定要刪除這筆需求嗎？')) return;
+          var card = btn.closest('.admin-card');
+          db.collection('fleetRequests').doc(card.dataset.id).delete().then(function () { showToast('已刪除'); loadFleetRequests(); });
+        });
+      });
+    });
+  }
 
 });

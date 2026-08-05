@@ -238,6 +238,11 @@ footer{background:var(--ink);color:#B9AF9B;padding:64px 0 32px;font-size:13.5px}
 .qcb-buttons{display:flex;gap:10px;flex-wrap:wrap}
 .qcb-btn{background:var(--accent);color:var(--paper);padding:10px 20px;border-radius:20px;font-size:13.5px;white-space:nowrap;transition:background .2s}
 .qcb-btn:hover{background:var(--gold);color:var(--ink)}
+
+.contact-panel-inline{margin-top:18px;padding-top:18px;border-top:1px solid var(--line)}
+.contact-panel-inline .cpi-title{font-size:13px;color:var(--muted);margin-bottom:10px}
+.contact-panel-inline .cpi-buttons{display:flex;gap:8px;flex-wrap:wrap}
+.contact-panel-inline .qcb-btn{padding:8px 16px;font-size:12.5px}
 /* 桌面顯示 QR code、隱藏點擊連結；手機顯示點擊連結、隱藏 QR code */
 .qr-only{display:block}
 .link-only{display:none}

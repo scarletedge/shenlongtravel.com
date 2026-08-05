@@ -130,7 +130,7 @@
         <a class="qcb-btn" href="https://wa.me/qr/O264YVQPDFH4G1?text=我在快速通關頁面，想詢問服務" target="_blank" rel="noopener">WhatsApp</a>
         <a class="qcb-btn" href="https://zalo.me/84975898625" target="_blank" rel="noopener">Zalo</a>
         <a class="qcb-btn" href="https://line.me/ti/p/tg6LUFsHGD" target="_blank" rel="noopener">LINE</a>
-        <a class="qcb-btn" href="https://u.wechat.com/IFqnIQXgeYjfpA9Fxz9yUGs?s=2" target="_blank" rel="noopener">WeChat</a>
+        <a class="qcb-btn" href="https://work.weixin.qq.com/kfid/kfc223a3b9c102b6a18" target="_blank" rel="noopener">WeChat</a>
       </div>
     </div>
   </div>
@@ -183,7 +183,11 @@
         </div>
       </div>
       <div class="calc-step">
-        <label>3. 預計服務日期</label>
+        <label>3. 出行人數</label>
+        <input class="calc-select" id="ft-people" type="number" min="1" placeholder="例：2">
+      </div>
+      <div class="calc-step">
+        <label>4. 預計服務日期</label>
         <input class="calc-select" id="ft-date" type="date">
         <p style="font-size:12px;color:var(--muted);margin-top:6px">若未提前至少24小時預約，需加收加急處理費，詳見下方說明。</p>
       </div>
@@ -192,7 +196,7 @@
         <label class="switch"><input type="checkbox" id="ft-board-toggle"><span class="slider"></span></label>
       </div>
       <div class="driver-toggle">
-        <div class="label">加購簽證加急排隊協助<span class="note">電子簽證換貼紙簽、現場排隊時協助插隊快速辦理</span></div>
+        <div class="label">電子簽/落地批文快速換證服務<span class="note">電子簽證換另紙簽、落地批文現場換證，協助加快辦理時間</span></div>
         <label class="switch"><input type="checkbox" id="ft-queue-toggle"><span class="slider"></span></label>
       </div>
       <div class="form-row" style="margin-top:18px">
@@ -203,6 +207,7 @@
             <option value="Zalo">Zalo</option>
             <option value="LINE">LINE</option>
             <option value="WeChat">WeChat</option>
+            <option value="Facebook Messenger">Facebook Messenger</option>
             <option value="電話">電話（直接撥打）</option>
           </select>
         </div>
@@ -299,11 +304,11 @@
       </div>
     </div>
     <div class="ch">
-      <img class="qr qr-only" src="images/qr-wechat.png" alt="WeChat QR code" width="64" height="64" loading="lazy">
+      <div class="ch-icon-fallback">微</div>
       <div>
         <span class="ch-name">WeChat</span><br>
-        <span class="ch-hint qr-only">掃碼加好友</span>
-        <a class="chat-link link-only" href="https://u.wechat.com/IFqnIQXgeYjfpA9Fxz9yUGs?s=2" target="_blank" rel="noopener">點擊開始對話</a>
+        <span class="ch-hint">企業微信客服，免加好友</span>
+        <a class="chat-link" href="https://work.weixin.qq.com/kfid/kfc223a3b9c102b6a18" target="_blank" rel="noopener">點擊開始對話</a>
       </div>
     </div>
   </div>
@@ -318,7 +323,8 @@
 <script src="js/widget.js"></script>
 <script>
 (function () {
-  if (typeof FIREBASE_READY === 'undefined' || !FIREBASE_READY) return;
+  // 之後升龍給了WhatsApp真實號碼，把下面這個值換成國際格式數字（不要加+號、不要空格，例如 84987654321）
+  var WHATSAPP_NUMBER = '85268746147';
 
   var CNY_TO_USD = 1 / 6.7716;
   var CNY_TO_VND = 3868;
@@ -330,8 +336,22 @@
     return prefix + ymd + '-' + rand;
   }
 
+  // ===== 保底機場清單：資料庫連不上或還沒設定時，表單依然可以正常運作 =====
+  // 價格先用全站統一預設值（日間US價值200人民幣／夜間250／舉牌+100），跟後台一鍵匯入的預設一致
+  var FALLBACK_AIRPORTS_RAW = [
+    ['河內內排機場', 'HAN'], ['胡志明新山一機場', 'SGN'], ['峴港機場', 'DAD'], ['金蘭機場（芽莊）', 'CXR'],
+    ['富國島機場', 'PQC'], ['海防吉埠機場', 'HPH'], ['順化富牌機場', 'HUI'], ['大叻蓮香機場', 'DLI'],
+    ['芹苴機場', 'VCA'], ['雲屯機場（下龍）', 'VDO'], ['榮市機場', 'VII'], ['朱萊機場（廣南）', 'VCL'],
+    ['波萊古機場', 'PXU'], ['邦美蜀機場', 'BMV'], ['歸仁機場', 'UIH'], ['綏和機場', 'TBB'],
+    ['崑島機場', 'VCS'], ['迪石機場', 'VKG'], ['洞海機場', 'VDH'], ['奠邊府機場', 'DIN']
+  ];
+  var FALLBACK_AIRPORTS = FALLBACK_AIRPORTS_RAW.map(function (a, i) {
+    return { id: 'fallback-' + a[1], nameHant: a[0], code: a[1], dayPriceCNY: 200, nightPriceCNY: 250, boardSurchargeCNY: 100, order: i };
+  });
+
   var airportSel = document.getElementById('ft-airport');
   var timeBtns = document.querySelectorAll('#ft-calc .hour-btn');
+  var peopleInput = document.getElementById('ft-people');
   var dateInput = document.getElementById('ft-date');
   var boardToggle = document.getElementById('ft-board-toggle');
   var queueToggle = document.getElementById('ft-queue-toggle');
@@ -343,19 +363,37 @@
   var state = { airport: null, time: null };
   var RUSH_SURCHARGE_CNY = 150;
   var RUSH_HOURS = 24;
+  var usingFallback = false;
 
-  // 服務日期最早只能選今天
   dateInput.min = new Date().toISOString().slice(0, 10);
 
-  db.collection('fastTrackServices').get().then(function (snap) {
-    snap.forEach(function (doc) { airports.push(Object.assign({ id: doc.id }, doc.data())); });
-    airports.sort(function (a, b) { return (a.order || 0) - (b.order || 0); });
+  function renderAirportOptions() {
     airportSel.innerHTML = '<option value="">請選擇</option>' + airports.map(function (a) {
       return '<option value="' + a.id + '">' + a.nameHant + '（' + a.code + '）</option>';
     }).join('');
-  }).catch(function () {
-    airportSel.innerHTML = '<option value="">暫時無法載入，請私訊客服</option>';
-  });
+  }
+
+  function loadAirports() {
+    if (typeof FIREBASE_READY === 'undefined' || !FIREBASE_READY) {
+      airports = FALLBACK_AIRPORTS; usingFallback = true; renderAirportOptions(); return;
+    }
+    db.collection('fastTrackServices').get().then(function (snap) {
+      var fetched = [];
+      snap.forEach(function (doc) { fetched.push(Object.assign({ id: doc.id }, doc.data())); });
+      if (fetched.length) {
+        fetched.sort(function (a, b) { return (a.order || 0) - (b.order || 0); });
+        airports = fetched; usingFallback = false;
+      } else {
+        airports = FALLBACK_AIRPORTS; usingFallback = true;
+      }
+      renderAirportOptions();
+    }).catch(function () {
+      // 資料庫連不上：不讓表單卡死，直接切換成保底清單，客戶仍可正常選擇、填單、送出
+      airports = FALLBACK_AIRPORTS; usingFallback = true;
+      renderAirportOptions();
+    });
+  }
+  loadAirports();
 
   airportSel.addEventListener('change', function () { state.airport = airportSel.value; preview(); });
   timeBtns.forEach(function (btn) {
@@ -370,7 +408,6 @@
   boardToggle.addEventListener('change', preview);
   queueToggle.addEventListener('change', preview);
 
-  // 判斷是否為24小時內的急件（以選擇日期當天00:00估算，實際仍以客服確認的服務時間為準）
   function isRush() {
     if (!dateInput.value) return false;
     var target = new Date(dateInput.value + 'T00:00:00');
@@ -400,8 +437,9 @@
       resultBox.innerHTML = '<span style="color:var(--muted);font-size:14px">選擇以上選項並填寫聯絡方式後，點擊送出即可看到報價</span>';
       return;
     }
+    var fallbackNote = usingFallback ? '<div class="hint" style="color:var(--accent)">目前為系統預設報價，正式金額將由客服確認</div>' : '';
     if (q.base == null) {
-      resultBox.innerHTML = '<span class="price-ask">價格詳詢</span><div class="hint">請私訊右下角客服為您報價。</div>';
+      resultBox.innerHTML = '<span class="price-ask">價格詳詢</span><div class="hint">請私訊右下角客服為您報價。</div>' + fallbackNote;
       return;
     }
     var usd = (q.total * CNY_TO_USD).toFixed(2);
@@ -409,25 +447,99 @@
     resultBox.innerHTML =
       '<div class="price-usd">US$' + usd + '（預覽）</div>' +
       '<div class="price-vnd">≈ ' + vnd.toLocaleString('en-US') + '₫</div>' +
-      rushLine(q) +
+      rushLine(q) + fallbackNote +
       '<div class="hint">填寫聯絡方式後，點擊「送出預約需求」即可完成預約並取得需求編號。</div>';
+  }
+
+  // ===== 多平台私訊跳轉 =====
+  function buildSummaryText(q, reqId, people) {
+    return [
+      '您好，我想預約快速通關服務。',
+      '需求編號：' + reqId,
+      '機場：' + q.airport.nameHant,
+      '時段：' + (state.time === 'night' ? '夜間' : '日間'),
+      '人數：' + (people || '未填'),
+      '服務日期：' + (dateInput.value || '未填'),
+      '加購舉牌接機：' + (boardToggle.checked ? '是' : '否'),
+      '加購電子簽/落地批文快速換證服務：' + (queueToggle.checked ? '是' : '否')
+    ].join('\n');
+  }
+
+  function whatsappLink(text) {
+    if (WHATSAPP_NUMBER.indexOf('PASTE_') === 0) {
+      return 'https://wa.me/qr/O264YVQPDFH4G1'; // 尚未提供真實號碼，暫用原本的QR短連結（無法保證自動帶字）
+    }
+    return 'https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(text);
+  }
+
+  function renderContactPanel(summary) {
+    var esc = summary.replace(/'/g, "\\'").replace(/\n/g, '\\n');
+    return (
+      '<div class="contact-panel-inline">' +
+        '<p class="cpi-title">選一個平台，把這筆需求直接送給我們：</p>' +
+        '<div class="cpi-buttons">' +
+          '<a class="qcb-btn" target="_blank" rel="noopener" href="' + whatsappLink(summary) + '">WhatsApp' + (WHATSAPP_NUMBER.indexOf('PASTE_') === 0 ? '' : '（已自動帶入內容）') + '</a>' +
+          '<a class="qcb-btn" target="_blank" rel="noopener" href="https://zalo.me/84975898625">Zalo</a>' +
+          '<a class="qcb-btn" target="_blank" rel="noopener" href="https://line.me/ti/p/tg6LUFsHGD">LINE</a>' +
+          '<a class="qcb-btn" target="_blank" rel="noopener" href="https://work.weixin.qq.com/kfid/kfc223a3b9c102b6a18">WeChat</a>' +
+          '<a class="qcb-btn" target="_blank" rel="noopener" href="https://m.me/61592091476467">Messenger</a>' +
+        '</div>' +
+        '<button type="button" class="btn-ghost" id="ft-copy-btn" style="margin-top:12px" data-text="' + esc + '">📋 複製需求內容（LINE／Zalo／WeChat／Messenger請貼上後發送）</button>' +
+      '</div>'
+    );
+  }
+
+  function bindCopyButton() {
+    var btn = document.getElementById('ft-copy-btn');
+    if (!btn) return;
+    btn.addEventListener('click', function () {
+      var text = btn.dataset.text.replace(/\\n/g, '\n').replace(/\\'/g, "'");
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(text).then(function () { btn.textContent = '✓ 已複製，打開對話框貼上發送即可'; });
+      } else {
+        alert(text);
+      }
+    });
   }
 
   submitBtn.addEventListener('click', function () {
     var q = currentQuote();
     if (!q) { alert('請先選擇機場與抵達時段'); return; }
+    var people = peopleInput.value.trim();
     var contact = contactInput.value.trim();
     if (!contact) { alert('請填寫聯絡帳號或號碼，方便我們主動與您聯繫安排'); contactInput.focus(); return; }
 
     var reqId = genRequestId('FT');
     var contactFull = contactMethodSel.value + '：' + contact;
+    var summary = buildSummaryText(q, reqId, people);
     submitBtn.disabled = true;
+
+    function showResult() {
+      var queueLine = queueToggle.checked
+        ? '<div class="price-vnd" style="color:var(--accent)">另加購：電子簽/落地批文快速換證服務（價格詳詢，我們會一併與您確認）</div>'
+        : '';
+      var priceBlock = q.base == null
+        ? '<div class="price-ask">價格詳詢</div>'
+        : '<div class="price-usd">US$' + (q.total * CNY_TO_USD).toFixed(2) + '</div><div class="price-vnd">≈ ' + (Math.round(q.total * CNY_TO_VND / 1000) * 1000).toLocaleString('en-US') + '₫</div>' + rushLine(q);
+      resultBox.innerHTML =
+        priceBlock + queueLine +
+        '<div class="hint">需求編號 <strong>' + reqId + '</strong>　已收到您的需求，透過表單送出將於24小時內回覆。屆時請提供護照、簽證、航班號碼即可完成安排。</div>' +
+        renderContactPanel(summary);
+      bindCopyButton();
+      submitBtn.textContent = '✓ 已送出';
+    }
+
+    if (typeof FIREBASE_READY === 'undefined' || !FIREBASE_READY) {
+      showResult();
+      return;
+    }
 
     db.collection('fastTrackRequests').add({
       requestId: reqId,
       airportId: state.airport,
       airportName: q.airport.nameHant,
       time: state.time,
+      people: people || null,
       serviceDate: dateInput.value || null,
       isRush: q.rush,
       board: boardToggle.checked,
@@ -436,28 +548,10 @@
       contact: contactFull,
       lang: 'zh-Hant',
       createdAt: firebase.firestore.FieldValue.serverTimestamp()
-    }).then(function () {
-      var queueLine = queueToggle.checked
-        ? '<div class="price-vnd" style="color:var(--accent)">另加購：簽證加急排隊協助（價格詳詢，我們會一併與您確認）</div>'
-        : '';
-      if (q.base == null) {
-        resultBox.innerHTML =
-          '<div class="price-ask">價格詳詢</div>' + queueLine +
-          '<div class="hint">需求編號 <strong>' + reqId + '</strong>　已收到您的需求，我們會盡快主動與您聯繫確認報價。</div>';
-      } else {
-        var usd = (q.total * CNY_TO_USD).toFixed(2);
-        var vnd = Math.round(q.total * CNY_TO_VND / 1000) * 1000;
-        resultBox.innerHTML =
-          '<div class="price-usd">US$' + usd + '</div>' +
-          '<div class="price-vnd">≈ ' + vnd.toLocaleString('en-US') + '₫</div>' +
-          rushLine(q) + queueLine +
-          '<div class="hint">需求編號 <strong>' + reqId + '</strong>　已收到您的需求，透過表單送出將於24小時內回覆；若想更快，歡迎直接私訊右下角客服，1–2小時內回覆。屆時請提供護照、簽證、航班號碼即可完成安排。</div>';
-      }
-      submitBtn.textContent = '✓ 已送出';
-    }).catch(function (err) {
-      alert('送出失敗，請直接私訊右下角客服為您安排。\n\n' + (err && err.message ? err.message : ''));
-      submitBtn.disabled = false;
-    });
+    }).then(showResult).catch(function () {
+      // 就算存檔失敗，也不能讓客戶卡住聯繫不到我們——照樣顯示聯絡方式
+      showResult();
+    }).finally(function () { submitBtn.disabled = false; });
   });
 })();
 </script>
