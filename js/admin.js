@@ -1369,7 +1369,7 @@ document.addEventListener('DOMContentLoaded', function () {
         },
         {
           order: 1, theme: 'dark', active: true,
-          eyebrowHant: '🔥 最多人問的服務', eyebrowSimp: '🔥 最多人问的服务',
+          eyebrowHant: '越難越行　快速通關', eyebrowSimp: '越难越行　快速通关',
           titleHant: '下機就有人等你——<em>機場快速通關</em>', titleSimp: '下机就有人等你——<em>机场快速通关</em>',
           descHant: 'VIP禮遇通道，免排隊，全越南主要機場皆可預約，商務客、初次赴越、行程緊湊的旅客都適合。',
           descSimp: 'VIP礼遇通道，免排队，全越南主要机场皆可预约，商务客、初次赴越、行程紧凑的旅客都适合。',
@@ -1378,7 +1378,7 @@ document.addEventListener('DOMContentLoaded', function () {
         },
         {
           order: 2, theme: 'light', active: true,
-          eyebrowHant: 'Popular Routes', eyebrowSimp: 'Popular Routes',
+          eyebrowHant: '熱門路線', eyebrowSimp: '热门路线',
           titleHant: '路線都幫你排好了，<em>直接上車就好</em>', titleSimp: '路线都帮你排好了，<em>直接上车就好</em>',
           descHant: '富國島、芽莊美奈胡志明、吉婆島團建⋯⋯精選熱門路線，10人成團即可報價，行程細節一次講清楚。',
           descSimp: '富国岛、芽庄美奈胡志明、吉婆岛团建⋯⋯精选热门路线，10人成团即可报价，行程细节一次讲清楚。',
@@ -1387,7 +1387,7 @@ document.addEventListener('DOMContentLoaded', function () {
         },
         {
           order: 3, theme: 'dark', active: true,
-          eyebrowHant: 'Essential Services', eyebrowSimp: 'Essential Services',
+          eyebrowHant: '越難越行　簽證代辦', eyebrowSimp: '越难越行　签证代办',
           titleHant: '有『簽』有保庇，<em>越南簽證代辦</em>', titleSimp: '有『签』有保庇，<em>越南签证代办</em>',
           descHant: '商務簽、旅遊簽、長期簽，2–3個工作天出簽，成功率99.9%，急件最快1天完成。',
           descSimp: '商务签、旅游签、长期签，2–3个工作日出签，成功率99.9%，急件最快1天完成。',
