@@ -11,6 +11,7 @@
   --accent:#A23B2E;     /* 漆器紅，僅重點使用 */
   --accent-deep:#7E2A20;
   --gold:#B98F45;       /* 金線，用於數字／分隔 */
+  --jade:#5C7A6B;       /* 玉石綠，搭配紅金作第三分類色，呼應漆器工藝配色 */
   --line:rgba(33,28,21,.12);
   --line-strong:rgba(33,28,21,.24);
   --radius:2px;
@@ -660,6 +661,35 @@ table.price tr:hover td{background:rgba(162,59,46,.04)}
 .hc-slide.theme-light .hc-arrow{background:rgba(0,0,0,.08);color:var(--ink)}
 .hc-arrow.prev{left:16px}.hc-arrow.next{right:16px}
 .hc-arrow:hover{background:var(--accent);color:var(--paper)}
+
+/* ===== 越南簽證指南（分類卡片） ===== */
+.visa-guide-intro h3{font-size:20px;margin-bottom:6px}
+.visa-guide-intro p{color:var(--muted);font-size:13.5px;margin-bottom:28px}
+.visa-guide-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;margin-bottom:36px}
+.vg-card{background:var(--paper);border:1px solid var(--line);border-top:4px solid var(--gold);padding:26px 24px;border-radius:var(--radius)}
+.vg-card.vg-accent{border-top-color:var(--accent)}
+.vg-card.vg-jade{border-top-color:var(--jade)}
+.vg-card h4{font-size:16.5px;margin-bottom:16px;font-family:'Noto Serif TC'}
+.vg-card.vg-gold h4{color:var(--gold)}
+.vg-card.vg-accent h4{color:var(--accent)}
+.vg-card.vg-jade h4{color:var(--jade)}
+.vg-block{margin-bottom:14px}
+.vg-block:last-child{margin-bottom:0}
+.vg-block strong{display:block;font-size:11.5px;letter-spacing:.08em;color:var(--muted);margin-bottom:4px;text-transform:uppercase}
+.vg-block p{font-size:13.5px;line-height:1.75;color:var(--ink)}
+
+.visa-guide-steps{background:var(--paper-alt);border-radius:var(--radius);padding:26px 28px;margin-bottom:24px}
+.visa-guide-steps h4{font-size:15px;margin-bottom:14px}
+.visa-guide-steps ol{padding-left:20px}
+.visa-guide-steps li{font-size:13.5px;line-height:2;color:var(--ink)}
+
+.visa-guide-tips{
+  border-left:3px solid var(--jade);background:rgba(92,122,107,.06);padding:16px 20px;border-radius:0 var(--radius) var(--radius) 0;margin-bottom:28px;
+}
+.visa-guide-tips strong{display:block;font-size:13.5px;margin-bottom:6px;color:var(--jade)}
+.visa-guide-tips p{font-size:13px;color:var(--muted);line-height:1.8}
+
+.visa-guide-closing{text-align:center;font-family:'Noto Serif TC';font-size:15px;color:var(--ink);max-width:44em;margin:0 auto 8px}
 
 /* ===== 卡片簡約圖標 ===== */
 .card svg.icon{width:30px;height:30px;margin-bottom:16px;display:block}
