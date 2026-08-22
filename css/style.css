@@ -642,8 +642,8 @@ table.price tr:hover td{background:rgba(162,59,46,.04)}
 .hc-slide.theme-navy{background:#0F1E3D}
 .hc-slide .wrap{position:relative;z-index:1}
 .hc-slide .eyebrow{color:var(--gold)}
-.hc-slide h2{font-size:clamp(26px,4vw,42px);margin-bottom:16px;font-family:'Noto Serif TC';font-style:italic}
-.hc-slide h2 em{font-style:italic;color:var(--gold)}
+.hc-slide h2{font-size:clamp(26px,4vw,42px);margin-bottom:16px;font-family:'Noto Serif TC';font-style:normal}
+.hc-slide h2 em{font-style:normal;color:var(--gold)}
 .hc-slide.theme-light h2 em{color:var(--accent)}
 .hc-slide.theme-light h2{color:var(--ink)}
 .hc-slide:not(.theme-light) h2{color:var(--paper)}
