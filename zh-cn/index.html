@@ -85,38 +85,22 @@
 
 <main>
 
-<div class="hero">
-  <img class="bg-watermark" src="../images/logo-watermark.png" alt="" aria-hidden="true">
-  <div class="wrap hero-inner">
-    <span class="eyebrow">ShenLong Travel · Vietnam</span>
-    <h1>人生很难，<em>就来越南</em>。</h1>
-    <p class="serif" style="font-size:clamp(18px,2.2vw,24px);color:var(--muted);margin:-6px 0 26px">越南升龙，开启越行之旅。</p>
-    <p class="lead">升龙，源自河内古名「飞升之龙」，也是你在越南的专属靠山。我们以越南全境为地盘，打破传统旅行社的死板套路——难办的事，就该在越南办。升龙罩你的每一趟越南行，体验什么叫「升龙活虎」。</p>
-    <div class="hero-actions">
-      <a href="essential-services.html" class="btn-solid">专治各种难</a>
-      <a href="premium-experience.html" class="btn-ghost">再来玩大的</a>
-    </div>
-  </div>
+<div class="hero-carousel" id="hero-carousel">
+  <div class="hc-loading" style="padding:120px 0;text-align:center;color:var(--muted)">载入中…</div>
+  <button class="hc-arrow prev" id="hc-prev" aria-label="上一张">‹</button>
+  <button class="hc-arrow next" id="hc-next" aria-label="下一张">›</button>
 </div>
+<div class="hc-dots" id="hc-dots"></div>
 
-<!-- ===== 热门服务：快速通关 ===== -->
-<section class="featured-banner">
-  <div class="wrap">
-    <div>
-      <span class="badge-hot">🔥 最多人问的服务</span>
-      <h2>下机就有人等你——机场快速通关</h2>
-      <p>VIP礼遇通道，免排队、可加购举牌接机，全越南主要机场皆可预约。</p>
-    </div>
-    <a href="fast-track.html" class="btn-solid">查看快速通关报价 →</a>
-  </div>
-</section>
+<div class="gold-band"></div>
 
-<section id="overview">
+<section id="overview" class="watermark-section wm-right">
+  <img class="bg-watermark" src="../images/logo-watermark.png" alt="" aria-hidden="true">
   <div class="wrap">
     <div class="sec-head">
       <span class="eyebrow">What We Do</span>
       <h2>一条龙服务</h2>
-      <p>先搞定难题，解决你出发前的签证与快速通关；再带着你混，让你的商务考察与高订旅游既有底气又有排面；越南怎么玩，则是老司机亲自带路的私房第一手观察。</p>
+      <p>难题先搞定，混得再漂亮，玩得最尽兴——三件事，升龙一次罩。</p>
     </div>
 
     <div class="tier-list">
@@ -175,33 +159,37 @@
   </svg>
 </div>
 
+<div class="gold-band"></div>
+
 <section class="alt dot-texture" id="why">
   <div class="wrap">
     <div class="sec-head">
       <span class="eyebrow">Why Us</span>
       <h2>不是中介转包，是真正在地执行的团队</h2>
-      <p>团队深耕越南6年，2025年12月正式成立升龙旅行社，中英越三语沟通，有营业执照、有注册地址。</p>
+      <p>团队深耕越南6年，中英越三语沟通，有营业执照、有注册地址。</p>
     </div>
     <div class="grid cols-3">
       <div class="card">
         <svg class="icon" viewBox="0 0 32 32"><circle cx="16" cy="16" r="13"/><path d="M3 16h26M16 3c4 3.6 6 8 6 13s-2 9.4-6 13c-4-3.6-6-8-6-13s2-9.4 6-13z"/></svg>
         <h3>全越南都有人</h3>
-        <p>拒绝几条死板路线，北中南全境联动，你指到哪，我们就罩到哪。</p>
+        <p>北中南全境联动，你指到哪，我们就罩到哪。</p>
       </div>
       <div class="card">
         <svg class="icon" viewBox="0 0 32 32"><path d="M4 26 L12 16 L18 21 L28 8"/><path d="M20 8h8v8"/></svg>
         <h3>能搞钱也能起飞</h3>
-        <p>拒绝走马观花，我们已帮上百家企业成功在越落地、找厂房、打通关键关系。你需要的所有在地资源、市场推广与核心人脉，升龙直接带你见对的人，一趟行程商机直接起飞。</p>
+        <p>上百家企业靠我们在越南落地、找厂房、打通关系——商机直接起飞。</p>
       </div>
       <div class="card">
         <svg class="icon" viewBox="0 0 32 32"><circle cx="16" cy="16" r="13"/><path d="M16 8v8l6 3"/></svg>
         <h3>24小时有活人</h3>
-        <p>拒绝客服踢皮球！司机、导游、翻译全是在地亲自培训的嫡系部队，1对1专人对接。我们不怕你挑剔，因为我们随时能处理。</p>
+        <p>司机、导游、翻译全是在地嫡系部队，1对1专人对接，随时能处理。</p>
       </div>
     </div>
     <p class="center mt-lg"><a href="about.html" class="btn-ghost">看看谁在罩你 →</a></p>
   </div>
 </section>
+
+<div class="gold-band"></div>
 
 <section class="brand-promise">
   <img class="bg-watermark" src="../images/logo-watermark.png" alt="" aria-hidden="true">
@@ -212,12 +200,15 @@
   </div>
 </section>
 
-<section class="alt" id="blog-teaser">
+<div class="gold-band"></div>
+
+<section class="alt watermark-section wm-left" id="blog-teaser">
+  <img class="bg-watermark" src="../images/logo-watermark.png" alt="" aria-hidden="true">
   <div class="wrap">
     <div class="sec-head">
       <span class="eyebrow">Local Insider</span>
       <h2>在地人带路，用频道说故事</h2>
-      <p>与其看长篇文字介绍，不如直接看我们亲自走访的视频与动态。关注YouTube频道 <strong>@ShenLongVietNam</strong> 与Facebook主页，第一手掌握越南在地推荐。</p>
+      <p>文字太长不看？直接看视频。关注 <strong>@ShenLongVietNam</strong>，第一手在地推荐。</p>
     </div>
     <div class="grid cols-3">
       <div class="card">
@@ -314,6 +305,120 @@
   </button>
 </div>
 
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
+<script src="../js/firebase-config.js"></script>
 <script src="../js/widget.js"></script>
+<script>
+(function () {
+  var track = document.getElementById('hero-carousel');
+  var dotsBox = document.getElementById('hc-dots');
+  var prevBtn = document.getElementById('hc-prev');
+  var nextBtn = document.getElementById('hc-next');
+  var current = 0;
+  var timer = null;
+
+  var FALLBACK_SLIDES = [
+    {
+      order: 0, theme: 'dark', eyebrow: 'ShenLong Travel · Vietnam',
+      title: '人生很难，<em>就来越南</em>。',
+      desc: '升龙，源自河内古名「飞升之龙」——你在越南的专属靠山。越难办的事，就越要在越南办，升龙罩你，体验什么叫『升龙活虎』。',
+      ctaText: '专治各种难', ctaLink: 'essential-services.html',
+      cta2Text: '再来玩大的', cta2Link: 'premium-experience.html'
+    },
+    {
+      order: 1, theme: 'dark', eyebrow: '🔥 最多人问的服务',
+      title: '下机就有人等你——<em>机场快速通关</em>',
+      desc: 'VIP礼遇通道，免排队，全越南主要机场皆可预约，商务客、初次赴越、行程紧凑的旅客都适合。',
+      ctaText: '查看快速通关报价', ctaLink: 'fast-track.html'
+    },
+    {
+      order: 2, theme: 'light', eyebrow: 'Popular Routes',
+      title: '路线都帮你排好了，<em>直接上车就好</em>',
+      desc: '富国岛、芽庄美奈胡志明、吉婆岛团建⋯⋯精选热门路线，10人成团即可报价，行程细节一次讲清楚。',
+      ctaText: '查看热门路线', ctaLink: 'popular-routes.html'
+    },
+    {
+      order: 3, theme: 'dark', eyebrow: 'Essential Services',
+      title: '有『签』有保庇，<em>越南签证代办</em>',
+      desc: '商务签、旅游签、长期签，2–3个工作日出签，成功率99.9%，急件最快1天完成。',
+      ctaText: '查看签证代办', ctaLink: 'visa.html'
+    },
+    {
+      order: 4, theme: 'navy', eyebrow: '合作伙伴 · Soltech',
+      title: '出门在外，<em>电永远不断</em>',
+      desc: '升龙旅游客户专属合作——Soltech共享充电宝，越南各大景点、机场、商圈都借得到，出门玩不用担心手机没电。',
+      ctaText: '前往 Soltech 官网', ctaLink: 'https://soltechvn.com', ctaExternal: true
+    }
+  ];
+
+  function renderSlides(slides) {
+    slides.sort(function (a, b) { return (a.order || 0) - (b.order || 0); });
+    var loading = track.querySelector('.hc-loading');
+    if (loading) loading.remove();
+
+    slides.forEach(function (s, i) {
+      var slideEl = document.createElement('div');
+      slideEl.className = 'hc-slide theme-' + (s.theme || 'dark') + (i === 0 ? ' active' : '');
+      var cta2 = s.cta2Text ? '<a href="' + s.cta2Link + '" class="btn-ghost">' + s.cta2Text + '</a>' : '';
+      var target = s.ctaExternal ? ' target="_blank" rel="noopener"' : '';
+      slideEl.innerHTML =
+        '<div class="wrap hero-inner">' +
+          '<span class="eyebrow">' + (s.eyebrow || '') + '</span>' +
+          '<h2>' + s.title + '</h2>' +
+          '<p class="hc-desc">' + (s.desc || '') + '</p>' +
+          '<div class="hero-actions">' +
+            '<a href="' + s.ctaLink + '" class="btn-solid"' + target + '>' + s.ctaText + '</a>' + cta2 +
+          '</div>' +
+        '</div>';
+      track.insertBefore(slideEl, prevBtn);
+
+      var dot = document.createElement('button');
+      dot.className = 'hc-dot' + (i === 0 ? ' active' : '');
+      dot.setAttribute('aria-label', '第' + (i + 1) + '张');
+      dot.addEventListener('click', function () { goTo(i); resetTimer(); });
+      dotsBox.appendChild(dot);
+    });
+
+    var slideEls = track.querySelectorAll('.hc-slide');
+    var dotEls = dotsBox.querySelectorAll('.hc-dot');
+
+    function goTo(idx) {
+      current = (idx + slideEls.length) % slideEls.length;
+      slideEls.forEach(function (el, i) { el.classList.toggle('active', i === current); });
+      dotEls.forEach(function (el, i) { el.classList.toggle('active', i === current); });
+    }
+
+    prevBtn.addEventListener('click', function () { goTo(current - 1); resetTimer(); });
+    nextBtn.addEventListener('click', function () { goTo(current + 1); resetTimer(); });
+
+    function startTimer() {
+      if (slideEls.length <= 1) return;
+      timer = setInterval(function () { goTo(current + 1); }, 6000);
+    }
+    function resetTimer() { clearInterval(timer); startTimer(); }
+    startTimer();
+    track.addEventListener('mouseenter', function () { clearInterval(timer); });
+    track.addEventListener('mouseleave', startTimer);
+  }
+
+  if (typeof FIREBASE_READY === 'undefined' || !FIREBASE_READY) {
+    renderSlides(FALLBACK_SLIDES);
+  } else {
+    db.collection('heroSlides').where('active', '==', true).get().then(function (snap) {
+      var slides = [];
+      snap.forEach(function (doc) {
+        var d = doc.data();
+        slides.push({
+          order: d.order || 0, theme: d.theme, eyebrow: d.eyebrowSimp || d.eyebrowHant, title: d.titleSimp || d.titleHant,
+          desc: d.descSimp || d.descHant, ctaText: d.ctaTextSimp || d.ctaTextHant, ctaLink: d.ctaLink, ctaExternal: d.ctaExternal,
+          cta2Text: d.cta2TextSimp || d.cta2TextHant, cta2Link: d.cta2Link
+        });
+      });
+      renderSlides(slides.length ? slides : FALLBACK_SLIDES);
+    }).catch(function () { renderSlides(FALLBACK_SLIDES); });
+  }
+})();
+</script>
 </body>
 </html>

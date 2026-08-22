@@ -49,6 +49,8 @@ document.addEventListener('DOMContentLoaded', function () {
       loadItineraryRequests();
       loadSiteContent();
       loadFleetRequests();
+      loadRoutes2();
+      loadSlides();
     } else {
       loginScreen.style.display = 'flex';
       adminShell.classList.remove('show');
@@ -1083,5 +1085,333 @@ document.addEventListener('DOMContentLoaded', function () {
       });
     });
   }
+
+  /* =========================================================
+     熱門路線管理
+     ========================================================= */
+  var routesListEl = document.getElementById('routes-list');
+
+  function routeCardHTML(id, d) {
+    d = d || {};
+    return (
+      '<div class="admin-card" data-id="' + id + '">' +
+      '<div class="admin-row">' +
+        '<div class="admin-field"><label>路線名稱（繁）</label><input class="f-titleHant" value="' + (d.titleHant || '') + '"></div>' +
+        '<div class="admin-field"><label>路線名稱（簡）</label><input class="f-titleSimp" value="' + (d.titleSimp || '') + '"></div>' +
+        '<div class="admin-field"><label>天數</label><input class="f-days" value="' + (d.days || '') + '" placeholder="例：4天3夜"></div>' +
+        '<div class="admin-field"><label>排序</label><input class="f-order" type="number" value="' + (d.order != null ? d.order : 0) + '"></div>' +
+      '</div>' +
+      '<div class="admin-row">' +
+        '<div class="admin-field"><label>簡介（繁）</label><input class="f-descHant" value="' + (d.descHant || '') + '"></div>' +
+        '<div class="admin-field"><label>簡介（簡）</label><input class="f-descSimp" value="' + (d.descSimp || '') + '"></div>' +
+      '</div>' +
+      '<div class="admin-row">' +
+        '<div class="admin-field"><label>標籤（繁，逗號分隔）</label><input class="f-tagsHant" value="' + ((d.tagsHant || []).join('，')) + '" placeholder="例：4星酒店，雙語導遊"></div>' +
+        '<div class="admin-field"><label>標籤（簡，逗號分隔）</label><input class="f-tagsSimp" value="' + ((d.tagsSimp || []).join('，')) + '" placeholder="例：4星酒店，双语导游"></div>' +
+      '</div>' +
+      '<div class="admin-row">' +
+        '<div class="admin-field"><label>人民幣價格（留空則不用）</label><input class="f-priceCNY" type="number" value="' + (d.priceCNY != null ? d.priceCNY : '') + '"></div>' +
+        '<div class="admin-field"><label>越南盾價格（留空則不用，跟人民幣擇一）</label><input class="f-priceVND" type="number" value="' + (d.priceVND != null ? d.priceVND : '') + '"></div>' +
+        '<div class="admin-field"><label>價格備註（繁）</label><input class="f-priceNoteHant" value="' + (d.priceNoteHant || '') + '" placeholder="例：10人成團／每人含稅"></div>' +
+        '<div class="admin-field"><label>價格備註（簡）</label><input class="f-priceNoteSimp" value="' + (d.priceNoteSimp || '') + '"></div>' +
+      '</div>' +
+      '<div class="admin-field" style="margin-bottom:14px"><label>照片網址（選填，留空則不顯示圖片）</label><input class="f-photoUrl" value="' + (d.photoUrl || '') + '" placeholder="https://..."></div>' +
+      '<div class="admin-row">' +
+        '<div class="admin-field"><label>詳細行程（繁，換行照原樣顯示）</label><textarea class="f-detailHant" rows="5" style="width:100%;font-family:inherit;font-size:13px;padding:8px;border:1px solid var(--line-strong);border-radius:var(--radius)">' + (d.detailHant || '') + '</textarea></div>' +
+        '<div class="admin-field"><label>詳細行程（簡）</label><textarea class="f-detailSimp" rows="5" style="width:100%;font-family:inherit;font-size:13px;padding:8px;border:1px solid var(--line-strong);border-radius:var(--radius)">' + (d.detailSimp || '') + '</textarea></div>' +
+      '</div>' +
+      '<div class="admin-actions">' +
+        '<button class="btn-save save-route">儲存</button>' +
+        '<button class="btn-delete delete-route">刪除</button>' +
+      '</div>' +
+      '</div>'
+    );
+  }
+
+  function readRouteCard(card) {
+    var cny = card.querySelector('.f-priceCNY').value;
+    var vnd = card.querySelector('.f-priceVND').value;
+    return {
+      titleHant: card.querySelector('.f-titleHant').value.trim(),
+      titleSimp: card.querySelector('.f-titleSimp').value.trim(),
+      days: card.querySelector('.f-days').value.trim(),
+      descHant: card.querySelector('.f-descHant').value.trim(),
+      descSimp: card.querySelector('.f-descSimp').value.trim(),
+      tagsHant: card.querySelector('.f-tagsHant').value.split(/[，,]/).map(function (s) { return s.trim(); }).filter(Boolean),
+      tagsSimp: card.querySelector('.f-tagsSimp').value.split(/[，,]/).map(function (s) { return s.trim(); }).filter(Boolean),
+      priceCNY: cny === '' ? null : parseFloat(cny),
+      priceVND: vnd === '' ? null : parseFloat(vnd),
+      priceNoteHant: card.querySelector('.f-priceNoteHant').value.trim(),
+      priceNoteSimp: card.querySelector('.f-priceNoteSimp').value.trim(),
+      photoUrl: card.querySelector('.f-photoUrl').value.trim(),
+      detailHant: card.querySelector('.f-detailHant').value,
+      detailSimp: card.querySelector('.f-detailSimp').value,
+      order: parseInt(card.querySelector('.f-order').value, 10) || 0
+    };
+  }
+
+  function loadRoutes2() {
+    routesListEl.innerHTML = '<div class="admin-loading">載入中…</div>';
+    db.collection('popularRoutes').get().then(function (snap) {
+      if (snap.empty) { routesListEl.innerHTML = '<p class="desc">目前沒有路線資料，點下方按鈕新增。</p>'; return; }
+      var rows = [];
+      snap.forEach(function (doc) { rows.push({ id: doc.id, data: doc.data() }); });
+      rows.sort(function (a, b) { return (a.data.order || 0) - (b.data.order || 0); });
+      routesListEl.innerHTML = rows.map(function (r) { return routeCardHTML(r.id, r.data); }).join('');
+      bindRouteRowEvents();
+    });
+  }
+
+  function bindRouteRowEvents() {
+    routesListEl.querySelectorAll('.save-route').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var card = btn.closest('.admin-card');
+        var id = card.dataset.id;
+        var data = readRouteCard(card);
+        var ref = id.indexOf('new-') === 0 ? db.collection('popularRoutes').doc() : db.collection('popularRoutes').doc(id);
+        ref.set(data).then(function () { showToast('已儲存這條路線'); loadRoutes2(); });
+      });
+    });
+    routesListEl.querySelectorAll('.delete-route').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var card = btn.closest('.admin-card');
+        var id = card.dataset.id;
+        if (id.indexOf('new-') === 0) { card.remove(); return; }
+        if (!confirm('確定要刪除這條路線嗎？')) return;
+        db.collection('popularRoutes').doc(id).delete().then(function () { showToast('已刪除'); loadRoutes2(); });
+      });
+    });
+  }
+
+  document.getElementById('add-route-row').addEventListener('click', function () {
+    var tempId = 'new-' + Date.now();
+    routesListEl.insertAdjacentHTML('beforeend', routeCardHTML(tempId, { order: 0 }));
+    bindRouteRowEvents();
+  });
+
+  document.getElementById('seed-routes').addEventListener('click', function () {
+    db.collection('popularRoutes').limit(1).get().then(function (snap) {
+      if (!snap.empty && !confirm('資料庫已經有路線資料了，確定要再匯入一次嗎？（會產生重複資料）')) return;
+
+      var SEED = [
+        {
+          titleHant: '富國島 4天3夜', titleSimp: '富国岛 4天3夜', days: '4天3夜', order: 0,
+          descHant: 'Safari野生動物園、Grand World水舞秀、VinWonders珍珠樂園或香島跨海纜車＋Aquatopia水上樂園（AB擇一）。',
+          descSimp: 'Safari野生动物园、Grand World水舞秀、VinWonders珍珠乐园或香岛跨海缆车＋Aquatopia水上乐园（AB择一）。',
+          tagsHant: ['4星酒店', '雙語導遊', '含來回機票'], tagsSimp: ['4星酒店', '双语导游', '含来回机票'],
+          priceCNY: 4000, priceVND: null, priceNoteHant: '10人成團／每人含稅', priceNoteSimp: '10人成团／每人含税',
+          photoUrl: '',
+          detailHant: 'Day1 抵達富國島，專車接機，富國夜市自由活動\nDay2 Safari野生動物園＋Grand World富國大世界（水舞秀）\nDay3 自選行程日（AB二選一）：VinWonders珍珠樂園 或 香島跨海纜車＋Aquatopia水上樂園＋接吻橋\nDay4 酒店自由活動，依航班時間送機\n\n含4星級酒店3晚雙人房、景點門票套票、每日早餐＋特色餐食、中越雙語導遊、旅遊平安保險。',
+          detailSimp: 'Day1 抵达富国岛，专车接机，富国夜市自由活动\nDay2 Safari野生动物园＋Grand World富国大世界（水舞秀）\nDay3 自选行程日（AB二选一）：VinWonders珍珠乐园 或 香岛跨海缆车＋Aquatopia水上乐园＋接吻桥\nDay4 酒店自由活动，依航班时间送机\n\n含4星级酒店3晚双人房、景点门票套票、每日早餐＋特色餐食、中越双语导游、旅游平安保险。'
+        },
+        {
+          titleHant: '芽莊．美奈．胡志明市 4天3夜（企業團建）', titleSimp: '芽庄．美奈．胡志明市 4天3夜（企业团建）', days: '4天3夜', order: 1,
+          descHant: '芽莊大教堂、占婆塔，美奈白沙丘越野車，胡志明市統一宮、雙層觀光巴士「落日飛車」。',
+          descSimp: '芽庄大教堂、占婆塔，美奈白沙丘越野车，胡志明市统一宫、双层观光巴士「落日飞车」。',
+          tagsHant: ['企業團建', '4-5星酒店', '含國內段機票'], tagsSimp: ['企业团建', '4-5星酒店', '含国内段机票'],
+          priceCNY: 4000, priceVND: null, priceNoteHant: '10人成團／每人含稅', priceNoteSimp: '10人成团／每人含税',
+          photoUrl: '',
+          detailHant: 'Day1 河內－芽莊：專車接機，芽莊大教堂、占婆塔、五指岩\nDay2 芽莊－美奈－胡志明市：美奈漁村、白沙丘越野車，續車前往胡志明市\nDay3 胡志明市：統一宮、粉紅教堂、中央郵局、書街、雙層觀光巴士「落日飛車」\nDay4 胡志明市－河內：依航班時間送機\n\n含國內段來回機票、4-5星酒店（芽莊1晚、胡志明市2晚）、景點門票套票、6正餐3早餐、中越雙語導遊。',
+          detailSimp: 'Day1 河内－芽庄：专车接机，芽庄大教堂、占婆塔、五指岩\nDay2 芽庄－美奈－胡志明市：美奈渔村、白沙丘越野车，续车前往胡志明市\nDay3 胡志明市：统一宫、粉红教堂、中央邮局、书街、双层观光巴士「落日飞车」\nDay4 胡志明市－河内：依航班时间送机\n\n含国内段来回机票、4-5星酒店（芽庄1晚、胡志明市2晚）、景点门票套票、6正餐3早餐、中越双语导游。'
+        },
+        {
+          titleHant: '胡志明市深度慢旅 4天3夜', titleSimp: '胡志明市深度慢旅 4天3夜', days: '4天3夜', order: 2,
+          descHant: '全程僅住一間酒店，每日專注單一主要行程，減少往返車程。古芝地道、湄公河三角洲、西貢河游船晚宴。',
+          descSimp: '全程仅住一间酒店，每日专注单一主要行程，减少往返车程。古芝地道、湄公河三角洲、西贡河游船晚宴。',
+          tagsHant: ['定點深度遊', '單一酒店', '減少奔波'], tagsSimp: ['定点深度游', '单一酒店', '减少奔波'],
+          priceCNY: 4299, priceVND: null, priceNoteHant: '10人成團／每人含稅', priceNoteSimp: '10人成团／每人含税',
+          photoUrl: '',
+          detailHant: 'Day1 抵達胡志明市：專車接機，市區晚餐，范伍佬街或阮惠步行街\nDay2 古芝地道一日遊（含戰時樹薯體驗），西貢河遊船自助晚宴\nDay3 湄公河三角洲一日遊，晚間自由，雙層觀光巴士夜遊\nDay4 市區文化巡禮：統一宮、粉紅教堂、中央郵局、書街、紅教堂，午後送機\n\n全程僅一間4-5星酒店（3晚），含古芝地道、湄公河三角洲行程門票、雙層觀光巴士、特色餐食、中越雙語導遊。',
+          detailSimp: 'Day1 抵达胡志明市：专车接机，市区晚餐，范伍佬街或阮惠步行街\nDay2 古芝地道一日游（含战时树薯体验），西贡河游船自助晚宴\nDay3 湄公河三角洲一日游，晚间自由，双层观光巴士夜游\nDay4 市区文化巡礼：统一宫、粉红教堂、中央邮局、书街、红教堂，午后送机\n\n全程仅一间4-5星酒店（3晚），含古芝地道、湄公河三角洲行程门票、双层观光巴士、特色餐食、中越双语导游。'
+        },
+        {
+          titleHant: '吉婆島團建 2天1夜', titleSimp: '吉婆岛团建 2天1夜', days: '2天1夜', order: 3,
+          descHant: 'Flamingo Cat Ba Resort入住、吉婆纜車、蘭夏灣遊船、越海村魚療、天然戲水灘、Gala Dinner。',
+          descSimp: 'Flamingo Cat Ba Resort入住、吉婆缆车、兰夏湾游船、越海村鱼疗、天然戏水滩、Gala Dinner。',
+          tagsHant: ['海島團建', 'Gala Dinner', '蘭夏灣遊船'], tagsSimp: ['海岛团建', 'Gala Dinner', '兰夏湾游船'],
+          priceCNY: null, priceVND: 5000000, priceNoteHant: '每人（越南盾）', priceNoteSimp: '每人（越南盾）',
+          photoUrl: '',
+          detailHant: 'Day1 公司集合出發→海防纜車站→吉婆纜車站（跨海纜車）→自助餐午餐→入住Flamingo Cat Ba Resort→自由戲水／探索→18:30-21:30 Gala Dinner（Opera House 2，5樓）→自由活動（酒店2樓卡拉OK）\nDay2 酒店早餐→集合上車→碼頭→登船→蘭夏灣觀光＋划皮艇體驗（自費）→越海村＋小魚咬腳魚療→船上用餐→天然戲水灘（水上設施自費）→返回碼頭→纜車站出發，返回公司\n\n酒店設施：游泳池、健身房、VR Game Park、溫泉、Spa（8折優惠）、Sky Bar。GALA DINNER超時每30分鐘加收100萬越南盾，最晚不超過23:00。',
+          detailSimp: 'Day1 公司集合出发→海防缆车站→吉婆缆车站（跨海缆车）→自助餐午餐→入住Flamingo Cat Ba Resort→自由戏水／探索→18:30-21:30 Gala Dinner（Opera House 2，5楼）→自由活动（酒店2楼卡拉OK）\nDay2 酒店早餐→集合上车→码头→登船→兰夏湾观光＋划皮艇体验（自费）→越海村＋小鱼咬脚鱼疗→船上用餐→天然戏水滩（水上设施自费）→返回码头→缆车站出发，返回公司\n\n酒店设施：游泳池、健身房、VR Game Park、温泉、Spa（8折优惠）、Sky Bar。GALA DINNER超时每30分钟加收100万越南盾，最晚不超过23:00。'
+        }
+      ];
+
+      var batch = db.batch();
+      SEED.forEach(function (route) {
+        var ref = db.collection('popularRoutes').doc();
+        batch.set(ref, route);
+      });
+      batch.commit().then(function () { showToast('已匯入4條路線'); loadRoutes2(); });
+    });
+  });
+
+  /* =========================================================
+     首頁輪播管理
+     ========================================================= */
+  var slidesListEl = document.getElementById('slides-list');
+
+  function slideCardHTML(id, d) {
+    d = d || {};
+    var active = d.active !== false;
+    return (
+      '<div class="admin-card" data-id="' + id + '">' +
+      '<div class="admin-row">' +
+        '<div class="admin-field"><label>主題</label><select class="f-theme">' +
+          ['dark', 'light', 'navy'].map(function (t) { return '<option value="' + t + '"' + (d.theme === t ? ' selected' : '') + '>' + t + '</option>'; }).join('') +
+        '</select></div>' +
+        '<div class="admin-field"><label>排序</label><input class="f-order" type="number" value="' + (d.order != null ? d.order : 0) + '"></div>' +
+        '<div class="admin-field"><label>上架顯示</label><input class="f-active" type="checkbox"' + (active ? ' checked' : '') + ' style="width:20px;height:20px;margin-top:6px"></div>' +
+      '</div>' +
+      '<div class="admin-row">' +
+        '<div class="admin-field"><label>眉標（繁）</label><input class="f-eyebrowHant" value="' + (d.eyebrowHant || '') + '"></div>' +
+        '<div class="admin-field"><label>眉標（簡）</label><input class="f-eyebrowSimp" value="' + (d.eyebrowSimp || '') + '"></div>' +
+      '</div>' +
+      '<div class="admin-row">' +
+        '<div class="admin-field"><label>標題（繁，可用&lt;em&gt;強調文字&lt;/em&gt;）</label><input class="f-titleHant" value="' + (d.titleHant || '') + '"></div>' +
+        '<div class="admin-field"><label>標題（簡）</label><input class="f-titleSimp" value="' + (d.titleSimp || '') + '"></div>' +
+      '</div>' +
+      '<div class="admin-row">' +
+        '<div class="admin-field"><label>說明文字（繁）</label><input class="f-descHant" value="' + (d.descHant || '') + '"></div>' +
+        '<div class="admin-field"><label>說明文字（簡）</label><input class="f-descSimp" value="' + (d.descSimp || '') + '"></div>' +
+      '</div>' +
+      '<div class="admin-row">' +
+        '<div class="admin-field"><label>按鈕文字（繁）</label><input class="f-ctaTextHant" value="' + (d.ctaTextHant || '') + '"></div>' +
+        '<div class="admin-field"><label>按鈕文字（簡）</label><input class="f-ctaTextSimp" value="' + (d.ctaTextSimp || '') + '"></div>' +
+        '<div class="admin-field"><label>按鈕連結</label><input class="f-ctaLink" value="' + (d.ctaLink || '') + '" placeholder="例：fast-track.html 或 https://..."></div>' +
+        '<div class="admin-field"><label>外部連結（新分頁開啟）</label><input class="f-ctaExternal" type="checkbox"' + (d.ctaExternal ? ' checked' : '') + ' style="width:20px;height:20px;margin-top:6px"></div>' +
+      '</div>' +
+      '<div class="admin-row">' +
+        '<div class="admin-field"><label>第二按鈕文字（繁，選填）</label><input class="f-cta2TextHant" value="' + (d.cta2TextHant || '') + '"></div>' +
+        '<div class="admin-field"><label>第二按鈕文字（簡，選填）</label><input class="f-cta2TextSimp" value="' + (d.cta2TextSimp || '') + '"></div>' +
+        '<div class="admin-field"><label>第二按鈕連結（選填）</label><input class="f-cta2Link" value="' + (d.cta2Link || '') + '"></div>' +
+      '</div>' +
+      '<div class="admin-actions">' +
+        '<button class="btn-save save-slide">儲存</button>' +
+        '<button class="btn-delete delete-slide">刪除</button>' +
+      '</div>' +
+      '</div>'
+    );
+  }
+
+  function readSlideCard(card) {
+    return {
+      theme: card.querySelector('.f-theme').value,
+      order: parseInt(card.querySelector('.f-order').value, 10) || 0,
+      active: card.querySelector('.f-active').checked,
+      eyebrowHant: card.querySelector('.f-eyebrowHant').value.trim(),
+      eyebrowSimp: card.querySelector('.f-eyebrowSimp').value.trim(),
+      titleHant: card.querySelector('.f-titleHant').value.trim(),
+      titleSimp: card.querySelector('.f-titleSimp').value.trim(),
+      descHant: card.querySelector('.f-descHant').value.trim(),
+      descSimp: card.querySelector('.f-descSimp').value.trim(),
+      ctaTextHant: card.querySelector('.f-ctaTextHant').value.trim(),
+      ctaTextSimp: card.querySelector('.f-ctaTextSimp').value.trim(),
+      ctaLink: card.querySelector('.f-ctaLink').value.trim(),
+      ctaExternal: card.querySelector('.f-ctaExternal').checked,
+      cta2TextHant: card.querySelector('.f-cta2TextHant').value.trim(),
+      cta2TextSimp: card.querySelector('.f-cta2TextSimp').value.trim(),
+      cta2Link: card.querySelector('.f-cta2Link').value.trim()
+    };
+  }
+
+  function loadSlides() {
+    slidesListEl.innerHTML = '<div class="admin-loading">載入中…</div>';
+    db.collection('heroSlides').get().then(function (snap) {
+      if (snap.empty) { slidesListEl.innerHTML = '<p class="desc">目前沒有輪播資料，點下方按鈕新增（建議至少做出5張，跟目前網站預設的一致）。</p>'; return; }
+      var rows = [];
+      snap.forEach(function (doc) { rows.push({ id: doc.id, data: doc.data() }); });
+      rows.sort(function (a, b) { return (a.data.order || 0) - (b.data.order || 0); });
+      slidesListEl.innerHTML = rows.map(function (r) { return slideCardHTML(r.id, r.data); }).join('');
+      bindSlideRowEvents();
+    });
+  }
+
+  function bindSlideRowEvents() {
+    slidesListEl.querySelectorAll('.save-slide').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var card = btn.closest('.admin-card');
+        var id = card.dataset.id;
+        var data = readSlideCard(card);
+        var ref = id.indexOf('new-') === 0 ? db.collection('heroSlides').doc() : db.collection('heroSlides').doc(id);
+        ref.set(data).then(function () { showToast('已儲存這張輪播'); loadSlides(); });
+      });
+    });
+    slidesListEl.querySelectorAll('.delete-slide').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var card = btn.closest('.admin-card');
+        var id = card.dataset.id;
+        if (id.indexOf('new-') === 0) { card.remove(); return; }
+        if (!confirm('確定要刪除這張輪播嗎？')) return;
+        db.collection('heroSlides').doc(id).delete().then(function () { showToast('已刪除'); loadSlides(); });
+      });
+    });
+  }
+
+  document.getElementById('add-slide-row').addEventListener('click', function () {
+    var tempId = 'new-' + Date.now();
+    slidesListEl.insertAdjacentHTML('beforeend', slideCardHTML(tempId, { order: 0, active: true, theme: 'dark' }));
+    bindSlideRowEvents();
+  });
+
+  document.getElementById('seed-slides').addEventListener('click', function () {
+    db.collection('heroSlides').limit(1).get().then(function (snap) {
+      if (!snap.empty && !confirm('資料庫已經有輪播資料了，確定要再匯入一次嗎？（會產生重複資料）')) return;
+
+      var SEED = [
+        {
+          order: 0, theme: 'dark', active: true,
+          eyebrowHant: 'ShenLong Travel · Vietnam', eyebrowSimp: 'ShenLong Travel · Vietnam',
+          titleHant: '人生很難，<em>就來越南</em>。', titleSimp: '人生很难，<em>就来越南</em>。',
+          descHant: '升龍，源自河內古名「飛升之龍」——你在越南的專屬靠山。越難辦的事，就越要在越南辦，升龍罩你，體驗什麼叫『升龍活虎』。',
+          descSimp: '升龙，源自河内古名「飞升之龙」——你在越南的专属靠山。越难办的事，就越要在越南办，升龙罩你，体验什么叫『升龙活虎』。',
+          ctaTextHant: '專治各種難', ctaTextSimp: '专治各种难', ctaLink: 'essential-services.html', ctaExternal: false,
+          cta2TextHant: '再來玩大的', cta2TextSimp: '再来玩大的', cta2Link: 'premium-experience.html'
+        },
+        {
+          order: 1, theme: 'dark', active: true,
+          eyebrowHant: '🔥 最多人問的服務', eyebrowSimp: '🔥 最多人问的服务',
+          titleHant: '下機就有人等你——<em>機場快速通關</em>', titleSimp: '下机就有人等你——<em>机场快速通关</em>',
+          descHant: 'VIP禮遇通道，免排隊，全越南主要機場皆可預約，商務客、初次赴越、行程緊湊的旅客都適合。',
+          descSimp: 'VIP礼遇通道，免排队，全越南主要机场皆可预约，商务客、初次赴越、行程紧凑的旅客都适合。',
+          ctaTextHant: '查看快速通關報價', ctaTextSimp: '查看快速通关报价', ctaLink: 'fast-track.html', ctaExternal: false,
+          cta2TextHant: '', cta2TextSimp: '', cta2Link: ''
+        },
+        {
+          order: 2, theme: 'light', active: true,
+          eyebrowHant: 'Popular Routes', eyebrowSimp: 'Popular Routes',
+          titleHant: '路線都幫你排好了，<em>直接上車就好</em>', titleSimp: '路线都帮你排好了，<em>直接上车就好</em>',
+          descHant: '富國島、芽莊美奈胡志明、吉婆島團建⋯⋯精選熱門路線，10人成團即可報價，行程細節一次講清楚。',
+          descSimp: '富国岛、芽庄美奈胡志明、吉婆岛团建⋯⋯精选热门路线，10人成团即可报价，行程细节一次讲清楚。',
+          ctaTextHant: '查看熱門路線', ctaTextSimp: '查看热门路线', ctaLink: 'popular-routes.html', ctaExternal: false,
+          cta2TextHant: '', cta2TextSimp: '', cta2Link: ''
+        },
+        {
+          order: 3, theme: 'dark', active: true,
+          eyebrowHant: 'Essential Services', eyebrowSimp: 'Essential Services',
+          titleHant: '有『簽』有保庇，<em>越南簽證代辦</em>', titleSimp: '有『签』有保庇，<em>越南签证代办</em>',
+          descHant: '商務簽、旅遊簽、長期簽，2–3個工作天出簽，成功率99.9%，急件最快1天完成。',
+          descSimp: '商务签、旅游签、长期签，2–3个工作日出签，成功率99.9%，急件最快1天完成。',
+          ctaTextHant: '查看簽證代辦', ctaTextSimp: '查看签证代办', ctaLink: 'visa.html', ctaExternal: false,
+          cta2TextHant: '', cta2TextSimp: '', cta2Link: ''
+        },
+        {
+          order: 4, theme: 'navy', active: true,
+          eyebrowHant: '合作夥伴 · Soltech', eyebrowSimp: '合作伙伴 · Soltech',
+          titleHant: '出門在外，<em>電永遠不斷</em>', titleSimp: '出门在外，<em>电永远不断</em>',
+          descHant: '升龍旅遊客戶專屬合作——Soltech共享充電寶，越南各大景點、機場、商圈都借得到，出門玩不用擔心手機沒電。',
+          descSimp: '升龙旅游客户专属合作——Soltech共享充电宝，越南各大景点、机场、商圈都借得到，出门玩不用担心手机没电。',
+          ctaTextHant: '前往 Soltech 官網', ctaTextSimp: '前往 Soltech 官网', ctaLink: 'https://soltechvn.com', ctaExternal: true,
+          cta2TextHant: '', cta2TextSimp: '', cta2Link: ''
+        }
+      ];
+
+      var batch = db.batch();
+      SEED.forEach(function (slide) {
+        var ref = db.collection('heroSlides').doc();
+        batch.set(ref, slide);
+      });
+      batch.commit().then(function () { showToast('已匯入5張輪播'); loadSlides(); });
+    });
+  });
 
 });

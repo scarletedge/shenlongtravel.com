@@ -598,6 +598,51 @@ table.price tr:hover td{background:rgba(162,59,46,.04)}
 .content-block{background:var(--paper-alt);border:1px solid var(--line);padding:36px;border-radius:var(--radius);white-space:pre-line;font-size:15px;line-height:2;color:var(--ink)}
 .content-block.loading{color:var(--muted)}
 
+/* ===== 熱門路線卡片 ===== */
+.route-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1px;background:var(--line);border:1px solid var(--line)}
+.route-card{background:var(--paper);padding:32px 28px;position:relative;overflow:hidden}
+.route-card .rc-days{
+  display:inline-block;font-family:'Cormorant Garamond',serif;font-size:13px;letter-spacing:.15em;
+  color:var(--gold);border:1px solid var(--gold);padding:3px 12px;border-radius:20px;margin-bottom:16px;
+}
+.route-card h3{font-size:19px;margin-bottom:10px;line-height:1.4}
+.route-card .rc-desc{font-size:13.5px;color:var(--muted);margin-bottom:18px;line-height:1.8}
+.route-card .rc-tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
+.route-card .rc-tags span{font-size:11.5px;color:var(--muted);border:1px solid var(--line-strong);padding:4px 10px;border-radius:16px}
+.route-card .rc-price{font-family:'Noto Serif TC';font-size:22px;color:var(--accent);margin-bottom:4px}
+.route-card .rc-price-note{font-size:11.5px;color:var(--muted);margin-bottom:18px}
+.route-card img.rc-photo{width:100%;height:180px;object-fit:cover;border-radius:var(--radius);margin-bottom:18px}
+.route-detail{display:none;margin-top:18px;padding-top:18px;border-top:1px dashed var(--line-strong);font-size:13.5px;line-height:2;color:var(--ink);white-space:pre-line}
+.route-detail.open{display:block}
+.route-toggle-link{display:inline-block;font-size:13px;color:var(--accent);border-bottom:1px solid var(--accent);cursor:pointer}
+
+/* ===== 首頁大圖輪播 ===== */
+.hero-carousel{position:relative;overflow:hidden}
+.hc-slide{
+  display:none;padding:96px 0 90px;position:relative;color:var(--paper);
+  background:var(--ink);
+}
+.hc-slide.active{display:block}
+.hc-slide::after{content:"";position:absolute;inset:0;pointer-events:none}
+.hc-slide.theme-light{background:var(--paper);color:var(--ink)}
+.hc-slide.theme-navy{background:#0F1E3D}
+.hc-slide .wrap{position:relative;z-index:1}
+.hc-slide .eyebrow{color:var(--gold)}
+.hc-slide h2{font-size:clamp(26px,4vw,42px);margin-bottom:16px;font-family:'Noto Serif TC'}
+.hc-slide.theme-light h2{color:var(--ink)}
+.hc-slide:not(.theme-light) h2{color:var(--paper)}
+.hc-slide p.hc-desc{font-size:15px;max-width:36em;margin-bottom:26px;opacity:.85}
+.hc-dots{display:flex;gap:9px;justify-content:center;padding:20px 0;background:var(--paper-alt)}
+.hc-dot{width:9px;height:9px;border-radius:50%;background:var(--line-strong);cursor:pointer;border:none;padding:0;transition:all .2s}
+.hc-dot.active{background:var(--accent);width:24px;border-radius:5px}
+.hc-arrow{
+  position:absolute;top:50%;transform:translateY(-50%);z-index:2;background:rgba(0,0,0,.25);color:var(--paper);
+  border:none;width:40px;height:40px;border-radius:50%;cursor:pointer;font-size:18px;display:grid;place-items:center;
+}
+.hc-slide.theme-light .hc-arrow{background:rgba(0,0,0,.08);color:var(--ink)}
+.hc-arrow.prev{left:16px}.hc-arrow.next{right:16px}
+.hc-arrow:hover{background:var(--accent);color:var(--paper)}
+
 /* ===== 卡片簡約圖標 ===== */
 .card svg.icon{width:30px;height:30px;margin-bottom:16px;display:block}
 .card svg.icon path,.card svg.icon circle,.card svg.icon line{

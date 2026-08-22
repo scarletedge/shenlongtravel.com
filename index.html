@@ -87,34 +87,14 @@
 <main>
 
 <!-- ===== Hero ===== -->
-<div class="hero">
-  <img class="bg-watermark" src="images/logo-watermark.png" alt="" aria-hidden="true">
-  <div class="wrap hero-inner">
-    <span class="eyebrow">ShenLong Travel · Vietnam</span>
-    <h1>人生很難，<em>就來越南</em>。</h1>
-    <p class="serif" style="font-size:clamp(18px,2.2vw,24px);color:var(--muted);margin:-6px 0 26px">越南升龍，開啟越行之旅。</p>
-    <p class="lead">升龍，源自河內古名「飛升之龍」——你在越南的專屬靠山。越難辦的事，就越要在越南辦，升龍罩你，體驗什麼叫『升龍活虎』。</p>
-    <div class="hero-actions">
-      <a href="essential-services.html" class="btn-solid">專治各種難</a>
-      <a href="premium-experience.html" class="btn-ghost">再來玩大的</a>
-    </div>
-  </div>
+<div class="hero-carousel" id="hero-carousel">
+  <div class="hc-loading" style="padding:120px 0;text-align:center;color:var(--muted)">載入中…</div>
+  <button class="hc-arrow prev" id="hc-prev" aria-label="上一張">‹</button>
+  <button class="hc-arrow next" id="hc-next" aria-label="下一張">›</button>
 </div>
+<div class="hc-dots" id="hc-dots"></div>
 
 <div class="gold-band"></div>
-
-<!-- ===== 熱門服務：快速通關 ===== -->
-<section class="featured-banner">
-  <img class="bg-watermark" src="images/logo-watermark.png" alt="" aria-hidden="true" style="width:280px;height:280px;top:50%;right:40px;transform:translateY(-50%);opacity:.1;filter:brightness(3)">
-  <div class="wrap">
-    <div>
-      <span class="badge-hot">🔥 最多人問的服務</span>
-      <h2>下機就有人等你——機場快速通關</h2>
-      <p>VIP禮遇通道，免排隊，全越南主要機場皆可預約。</p>
-    </div>
-    <a href="fast-track.html" class="btn-solid">查看快速通關報價 →</a>
-  </div>
-</section>
 
 <div class="gold-band"></div>
 
@@ -334,6 +314,120 @@
   </button>
 </div>
 
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
+<script src="js/firebase-config.js"></script>
 <script src="js/widget.js"></script>
+<script>
+(function () {
+  var track = document.getElementById('hero-carousel');
+  var dotsBox = document.getElementById('hc-dots');
+  var prevBtn = document.getElementById('hc-prev');
+  var nextBtn = document.getElementById('hc-next');
+  var current = 0;
+  var timer = null;
+
+  var FALLBACK_SLIDES = [
+    {
+      order: 0, theme: 'dark', eyebrow: 'ShenLong Travel · Vietnam',
+      title: '人生很難，<em>就來越南</em>。',
+      desc: '升龍，源自河內古名「飛升之龍」——你在越南的專屬靠山。越難辦的事，就越要在越南辦，升龍罩你，體驗什麼叫『升龍活虎』。',
+      ctaText: '專治各種難', ctaLink: 'essential-services.html',
+      cta2Text: '再來玩大的', cta2Link: 'premium-experience.html'
+    },
+    {
+      order: 1, theme: 'dark', eyebrow: '🔥 最多人問的服務',
+      title: '下機就有人等你——<em>機場快速通關</em>',
+      desc: 'VIP禮遇通道，免排隊，全越南主要機場皆可預約，商務客、初次赴越、行程緊湊的旅客都適合。',
+      ctaText: '查看快速通關報價', ctaLink: 'fast-track.html'
+    },
+    {
+      order: 2, theme: 'light', eyebrow: 'Popular Routes',
+      title: '路線都幫你排好了，<em>直接上車就好</em>',
+      desc: '富國島、芽莊美奈胡志明、吉婆島團建⋯⋯精選熱門路線，10人成團即可報價，行程細節一次講清楚。',
+      ctaText: '查看熱門路線', ctaLink: 'popular-routes.html'
+    },
+    {
+      order: 3, theme: 'dark', eyebrow: 'Essential Services',
+      title: '有『簽』有保庇，<em>越南簽證代辦</em>',
+      desc: '商務簽、旅遊簽、長期簽，2–3個工作天出簽，成功率99.9%，急件最快1天完成。',
+      ctaText: '查看簽證代辦', ctaLink: 'visa.html'
+    },
+    {
+      order: 4, theme: 'navy', eyebrow: '合作夥伴 · Soltech',
+      title: '出門在外，<em>電永遠不斷</em>',
+      desc: '升龍旅遊客戶專屬合作——Soltech共享充電寶，越南各大景點、機場、商圈都借得到，出門玩不用擔心手機沒電。',
+      ctaText: '前往 Soltech 官網', ctaLink: 'https://soltechvn.com', ctaExternal: true
+    }
+  ];
+
+  function renderSlides(slides) {
+    slides.sort(function (a, b) { return (a.order || 0) - (b.order || 0); });
+    var loading = track.querySelector('.hc-loading');
+    if (loading) loading.remove();
+
+    slides.forEach(function (s, i) {
+      var slideEl = document.createElement('div');
+      slideEl.className = 'hc-slide theme-' + (s.theme || 'dark') + (i === 0 ? ' active' : '');
+      var cta2 = s.cta2Text ? '<a href="' + s.cta2Link + '" class="btn-ghost">' + s.cta2Text + '</a>' : '';
+      var target = s.ctaExternal ? ' target="_blank" rel="noopener"' : '';
+      slideEl.innerHTML =
+        '<div class="wrap hero-inner">' +
+          '<span class="eyebrow">' + (s.eyebrow || '') + '</span>' +
+          '<h2>' + s.title + '</h2>' +
+          '<p class="hc-desc">' + (s.desc || '') + '</p>' +
+          '<div class="hero-actions">' +
+            '<a href="' + s.ctaLink + '" class="btn-solid"' + target + '>' + s.ctaText + '</a>' + cta2 +
+          '</div>' +
+        '</div>';
+      track.insertBefore(slideEl, prevBtn);
+
+      var dot = document.createElement('button');
+      dot.className = 'hc-dot' + (i === 0 ? ' active' : '');
+      dot.setAttribute('aria-label', '第' + (i + 1) + '張');
+      dot.addEventListener('click', function () { goTo(i); resetTimer(); });
+      dotsBox.appendChild(dot);
+    });
+
+    var slideEls = track.querySelectorAll('.hc-slide');
+    var dotEls = dotsBox.querySelectorAll('.hc-dot');
+
+    function goTo(idx) {
+      current = (idx + slideEls.length) % slideEls.length;
+      slideEls.forEach(function (el, i) { el.classList.toggle('active', i === current); });
+      dotEls.forEach(function (el, i) { el.classList.toggle('active', i === current); });
+    }
+
+    prevBtn.addEventListener('click', function () { goTo(current - 1); resetTimer(); });
+    nextBtn.addEventListener('click', function () { goTo(current + 1); resetTimer(); });
+
+    function startTimer() {
+      if (slideEls.length <= 1) return;
+      timer = setInterval(function () { goTo(current + 1); }, 6000);
+    }
+    function resetTimer() { clearInterval(timer); startTimer(); }
+    startTimer();
+    track.addEventListener('mouseenter', function () { clearInterval(timer); });
+    track.addEventListener('mouseleave', startTimer);
+  }
+
+  if (typeof FIREBASE_READY === 'undefined' || !FIREBASE_READY) {
+    renderSlides(FALLBACK_SLIDES);
+  } else {
+    db.collection('heroSlides').where('active', '==', true).get().then(function (snap) {
+      var slides = [];
+      snap.forEach(function (doc) {
+        var d = doc.data();
+        slides.push({
+          order: d.order || 0, theme: d.theme, eyebrow: d.eyebrowHant, title: d.titleHant,
+          desc: d.descHant, ctaText: d.ctaTextHant, ctaLink: d.ctaLink, ctaExternal: d.ctaExternal,
+          cta2Text: d.cta2TextHant, cta2Link: d.cta2Link
+        });
+      });
+      renderSlides(slides.length ? slides : FALLBACK_SLIDES);
+    }).catch(function () { renderSlides(FALLBACK_SLIDES); });
+  }
+})();
+</script>
 </body>
 </html>

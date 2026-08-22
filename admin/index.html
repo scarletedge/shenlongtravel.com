@@ -57,6 +57,8 @@
     <button class="nav-tab" data-panel="panel-itinerary">定制行程需求</button>
     <button class="nav-tab" data-panel="panel-fleetreq">包車需求</button>
     <button class="nav-tab" data-panel="panel-content">頁面文字內容</button>
+    <button class="nav-tab" data-panel="panel-routes">熱門路線</button>
+    <button class="nav-tab" data-panel="panel-slides">首頁輪播</button>
   </div>
 
   <div class="admin-main">
@@ -197,6 +199,28 @@
         <div class="admin-actions">
           <button class="btn-save" id="save-deadlines">儲存</button>
         </div>
+      </div>
+    </div>
+
+    <!-- 熱門路線 -->
+    <div class="admin-panel" id="panel-routes">
+      <h2>熱門路線管理</h2>
+      <p class="desc">每條路線可填繁簡文案，價格填「人民幣」或「越南盾」擇一（例如吉婆島用越南盾，其餘用人民幣），系統會自動換算美金/越南盾對照顯示。完整行程說明放在「詳細行程」欄位，換行會照原樣顯示。</p>
+      <div id="routes-list"></div>
+      <div class="admin-actions">
+        <button class="btn-add" id="add-route-row" style="flex:1">＋ 新增一條路線</button>
+        <button class="btn-save" id="seed-routes" style="white-space:nowrap">一鍵匯入現有4條路線</button>
+      </div>
+    </div>
+
+    <!-- 首頁輪播 -->
+    <div class="admin-panel" id="panel-slides">
+      <h2>首頁輪播管理</h2>
+      <p class="desc">首頁最上方的大圖輪播，可自行新增、排序、上下架。「主題」決定文字顏色：dark＝深色底白字（預設）、light＝米白底深色字、navy＝藏藍色底白字（適合Soltech這類外部品牌）。外部連結（例如Soltech官網）記得勾選「外部連結」，才會在新分頁開啟。</p>
+      <div id="slides-list"></div>
+      <div class="admin-actions">
+        <button class="btn-add" id="add-slide-row" style="flex:1">＋ 新增一張輪播</button>
+        <button class="btn-save" id="seed-slides" style="white-space:nowrap">一鍵匯入現有5張輪播</button>
       </div>
     </div>
 
