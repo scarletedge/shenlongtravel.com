@@ -17,19 +17,21 @@
   --line-strong:rgba(33,28,21,.24);
   --radius:2px;
   --max:1080px;
+  --font-serif:'Noto Serif TC';   /* 標題／襯線字型，簡體頁面只要覆蓋這個變數就好，不用再逐一找哪裡寫死了字型 */
+  --font-sans:'Noto Sans TC';     /* 正文／無襯線字型 */
 }
 
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{
-  font-family:'Noto Sans TC',sans-serif;
+  font-family:var(--font-sans),sans-serif;
   background:var(--paper);
   color:var(--ink);
   line-height:1.8;
   font-size:16px;
   -webkit-font-smoothing:antialiased;
 }
-h1,h2,h3,.serif{font-family:'Noto Serif TC',serif;font-weight:700;letter-spacing:.02em}
+h1,h2,h3,.serif{font-family:var(--font-serif),serif;font-weight:700;letter-spacing:.02em}
 .eyebrow{
   font-family:'Cormorant Garamond',serif;font-style:italic;
   font-size:13px;letter-spacing:.32em;text-transform:uppercase;
@@ -53,7 +55,7 @@ header{
 .logo-mark{width:34px;height:34px;object-fit:contain;flex-shrink:0}
 .logo-mark path{stroke:var(--ink);stroke-width:6;fill:none;stroke-linecap:round}
 .logo-text{display:flex;flex-direction:column;line-height:1.2}
-.logo-name{font-family:'Noto Serif TC';font-weight:700;font-size:17px;letter-spacing:.1em}
+.logo-name{font-family:var(--font-serif);font-weight:700;font-size:17px;letter-spacing:.1em}
 .logo-sub{font-family:'Cormorant Garamond',serif;font-size:10px;letter-spacing:.3em;color:var(--muted);text-transform:uppercase}
 nav.menu{display:flex;gap:34px;font-size:14.5px;align-items:flex-end}
 nav.menu a{
@@ -154,7 +156,7 @@ section + section{border-top:1px solid var(--line)}
 /* ===== 統計數字 ===== */
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);margin-top:48px}
 .stat{background:var(--paper);padding:32px 24px;text-align:left}
-.stat .num{font-family:'Noto Serif TC';font-size:clamp(30px,4vw,42px);color:var(--accent);line-height:1}
+.stat .num{font-family:var(--font-serif);font-size:clamp(30px,4vw,42px);color:var(--accent);line-height:1}
 .stat .label{font-size:13px;color:var(--muted);margin-top:10px}
 @media(max-width:700px){.stats{grid-template-columns:1fr}}
 
@@ -185,7 +187,7 @@ section + section{border-top:1px solid var(--line)}
 
 /* ===== 案例佔位卡 ===== */
 .case-placeholder{border:1px dashed var(--line-strong);padding:30px 26px;color:var(--muted);font-size:13.5px;text-align:center}
-.case-placeholder strong{display:block;color:var(--ink);font-size:15px;margin-bottom:8px;font-family:'Noto Serif TC'}
+.case-placeholder strong{display:block;color:var(--ink);font-size:15px;margin-bottom:8px;font-family:var(--font-serif)}
 
 /* ===== 部落格 / 影片 ===== */
 .blog-cat{margin-bottom:8px}
@@ -200,7 +202,7 @@ section + section{border-top:1px solid var(--line)}
 /* ===== 對照表 ===== */
 table.compare{width:100%;border-collapse:collapse;margin-top:20px}
 table.compare th,table.compare td{text-align:left;padding:16px 18px;border-top:1px solid var(--line);font-size:14.5px;vertical-align:top}
-table.compare th{font-family:'Noto Serif TC';font-weight:700;color:var(--muted);font-size:13px;letter-spacing:.08em}
+table.compare th{font-family:var(--font-serif);font-weight:700;color:var(--muted);font-size:13px;letter-spacing:.08em}
 table.compare td:first-child{color:var(--muted)}
 table.compare td:last-child{color:var(--ink)}
 
@@ -211,7 +213,7 @@ table.compare td:last-child{color:var(--ink)}
 
 /* ===== 品牌承諾語 ===== */
 .brand-promise{text-align:center;padding:80px 0}
-.brand-promise p{font-family:'Noto Serif TC';font-size:clamp(20px,2.6vw,28px);line-height:1.7}
+.brand-promise p{font-family:var(--font-serif);font-size:clamp(20px,2.6vw,28px);line-height:1.7}
 .brand-promise p em{font-style:normal;color:var(--accent)}
 .brand-promise .divider{width:40px;height:1px;background:var(--gold);margin:20px auto}
 
@@ -219,7 +221,7 @@ table.compare td:last-child{color:var(--ink)}
 footer{background:var(--ink);color:#B9AF9B;padding:64px 0 32px;font-size:13.5px}
 .foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:40px;padding-bottom:40px;border-bottom:1px solid rgba(255,255,255,.12)}
 @media(max-width:760px){.foot-grid{grid-template-columns:1fr;gap:28px}}
-.foot-grid h4{color:#F0EBDD;font-family:'Noto Serif TC';font-size:14px;letter-spacing:.08em;margin-bottom:16px}
+.foot-grid h4{color:#F0EBDD;font-family:var(--font-serif);font-size:14px;letter-spacing:.08em;margin-bottom:16px}
 .foot-grid p,.foot-grid a{display:block;margin-bottom:8px;color:#B9AF9B}
 .foot-grid a:hover{color:#F0EBDD}
 .foot-bottom{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;padding-top:24px;font-size:12px;color:#7D735F}
@@ -239,7 +241,7 @@ footer{background:var(--ink);color:#B9AF9B;padding:64px 0 32px;font-size:13.5px}
 .contact-panel .ch a.chat-link{font-size:12px;color:var(--accent);border-bottom:1px solid var(--accent)}
 .ch-icon-fallback{
   width:64px;height:64px;border:1px solid var(--line);background:var(--paper-alt);flex-shrink:0;
-  display:grid;place-items:center;font-family:'Noto Serif TC';font-size:22px;color:var(--gold-dark);
+  display:grid;place-items:center;font-family:var(--font-serif);font-size:22px;color:var(--gold-dark);
 }
 
 /* ===== 快速聯絡列（不想填單版） ===== */
@@ -247,7 +249,7 @@ footer{background:var(--ink);color:#B9AF9B;padding:64px 0 32px;font-size:13.5px}
   display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;
   background:var(--ink);color:var(--paper);padding:24px 28px;border-radius:var(--radius);
 }
-.qcb-text strong{display:block;font-size:15px;margin-bottom:4px;font-family:'Noto Serif TC'}
+.qcb-text strong{display:block;font-size:15px;margin-bottom:4px;font-family:var(--font-serif)}
 .qcb-text span{font-size:12.5px;color:#B9AF9B}
 .qcb-buttons{display:flex;gap:10px;flex-wrap:wrap}
 .qcb-btn{background:var(--accent);color:var(--paper);padding:10px 20px;border-radius:20px;font-size:13.5px;white-space:nowrap;transition:background .2s}
@@ -297,7 +299,7 @@ footer{background:var(--ink);color:#B9AF9B;padding:64px 0 32px;font-size:13.5px}
 .team-avatar{
   width:76px;height:76px;border-radius:50%;margin:0 auto 20px;
   display:grid;place-items:center;background:var(--ink);color:var(--paper);
-  font-family:'Noto Serif TC',serif;font-size:22px;letter-spacing:.05em;
+  font-family:var(--font-serif),serif;font-size:22px;letter-spacing:.05em;
 }
 .team-card h3{font-size:17px;margin-bottom:4px}
 .team-card .role{font-size:12.5px;color:var(--gold-dark);letter-spacing:.08em;margin-bottom:14px;display:block}
@@ -375,7 +377,7 @@ footer{background:var(--ink);color:#B9AF9B;padding:64px 0 32px;font-size:13.5px}
 }
 .budget-estimate .be-label{font-size:12.5px;color:var(--muted);letter-spacing:.05em;display:block;margin-bottom:8px}
 .budget-estimate .be-empty{font-size:13.5px;color:var(--muted)}
-.budget-estimate .be-range{font-family:'Noto Serif TC';font-size:clamp(22px,3vw,28px);color:var(--accent)}
+.budget-estimate .be-range{font-family:var(--font-serif);font-size:clamp(22px,3vw,28px);color:var(--accent)}
 .budget-estimate .be-range-usd{font-size:13px;color:var(--muted);margin-top:4px}
 .budget-estimate .be-note{font-size:11.5px;color:var(--muted);margin-top:12px;padding-top:12px;border-top:1px solid var(--line);line-height:1.7}
 
@@ -383,7 +385,7 @@ footer{background:var(--ink);color:#B9AF9B;padding:64px 0 32px;font-size:13.5px}
 .region-groups{display:flex;flex-direction:column;gap:18px}
 .region-group{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
 .region-group .region-label{
-  font-family:'Noto Serif TC';font-size:13px;color:var(--gold-dark);letter-spacing:.1em;
+  font-family:var(--font-serif);font-size:13px;color:var(--gold-dark);letter-spacing:.1em;
   flex-shrink:0;width:52px;
 }
 .region-group .tag-select{flex:1}
@@ -467,7 +469,7 @@ footer{background:var(--ink);color:#B9AF9B;padding:64px 0 32px;font-size:13.5px}
 .request-id-box{
   background:var(--paper);border:1px solid var(--accent);padding:24px;text-align:center;border-radius:var(--radius);
 }
-.request-id-box .id{font-family:'Noto Serif TC';font-size:24px;color:var(--accent);letter-spacing:.05em}
+.request-id-box .id{font-family:var(--font-serif);font-size:24px;color:var(--accent);letter-spacing:.05em}
 .request-id-box .hint{font-size:13px;color:var(--muted);margin-top:10px}
 
 .toggle-link{
@@ -496,9 +498,9 @@ footer{background:var(--ink);color:#B9AF9B;padding:64px 0 32px;font-size:13.5px}
 .calc-result{
   margin-top:8px;padding:28px;background:var(--paper);border:1px solid var(--line);text-align:center;
 }
-.calc-result .price-usd{font-family:'Noto Serif TC';font-size:clamp(30px,4vw,40px);color:var(--accent)}
+.calc-result .price-usd{font-family:var(--font-serif);font-size:clamp(30px,4vw,40px);color:var(--accent)}
 .calc-result .price-vnd{font-size:14px;color:var(--muted);margin-top:6px}
-.calc-result .price-ask{font-family:'Noto Serif TC';font-size:22px;color:var(--muted)}
+.calc-result .price-ask{font-family:var(--font-serif);font-size:22px;color:var(--muted)}
 .calc-result .hint{font-size:12.5px;color:var(--muted);margin-top:16px;padding-top:16px;border-top:1px solid var(--line)}
 
 /* ===== 價目表 ===== */
@@ -507,10 +509,10 @@ footer{background:var(--ink);color:#B9AF9B;padding:64px 0 32px;font-size:13.5px}
 .price-table-wrap .sub{font-size:13px;color:var(--muted);margin-bottom:16px}
 table.price{width:100%;border-collapse:collapse}
 table.price th,table.price td{text-align:left;padding:12px 14px;border-top:1px solid var(--line);font-size:14px}
-table.price th{font-family:'Noto Serif TC';font-weight:700;color:var(--muted);font-size:12.5px;letter-spacing:.06em;background:var(--paper-alt)}
-table.price td:last-child{font-family:'Noto Serif TC';font-weight:700;color:var(--accent);white-space:nowrap}
-table.price .vnd-ref{display:block;font-family:'Noto Sans TC';font-weight:400;font-size:11px;color:var(--muted);margin-top:2px}
-table.price td.ask{color:var(--muted);font-family:'Noto Sans TC';font-weight:400;font-style:italic}
+table.price th{font-family:var(--font-serif);font-weight:700;color:var(--muted);font-size:12.5px;letter-spacing:.06em;background:var(--paper-alt)}
+table.price td:last-child{font-family:var(--font-serif);font-weight:700;color:var(--accent);white-space:nowrap}
+table.price .vnd-ref{display:block;font-family:var(--font-sans);font-weight:400;font-size:11px;color:var(--muted);margin-top:2px}
+table.price td.ask{color:var(--muted);font-family:var(--font-sans);font-weight:400;font-style:italic}
 table.price tr:hover td{background:rgba(162,59,46,.04)}
 .price-note{font-size:12.5px;color:var(--muted);margin-top:12px;padding:12px 16px;border-left:2px solid var(--gold);background:var(--paper-alt)}
 
@@ -548,6 +550,16 @@ table.price tr:hover td{background:rgba(162,59,46,.04)}
 .watermark-section.wm-center .bg-watermark{top:50%;left:50%;transform:translate(-50%,-50%)}
 @media(max-width:700px){.watermark-section .bg-watermark{width:220px;height:220px}}
 
+/* ===== 八卦圖裝飾（龍紋以外的第二種裝飾元素，全站頁尾與Hero搭配使用） ===== */
+.bg-bagua{
+  position:absolute;pointer-events:none;user-select:none;opacity:.05;z-index:0;
+  width:300px;height:300px;object-fit:contain;
+}
+footer{position:relative;overflow:hidden}
+footer .bg-bagua{bottom:-80px;right:-40px}
+.hero .bg-bagua{bottom:-60px;left:-50px;width:220px;height:220px;opacity:.05}
+@media(max-width:700px){.bg-bagua{width:160px;height:160px}.hero .bg-bagua{width:140px;height:140px}}
+
 /* ===== 金色紋理分隔帶（取代大面積橙金黃底色，改成精緻織紋感） ===== */
 .gold-band{
   height:3px;background:linear-gradient(90deg, transparent, var(--gold) 20%, var(--accent) 50%, var(--gold) 80%, transparent);
@@ -577,7 +589,7 @@ table.price tr:hover td{background:rgba(162,59,46,.04)}
 .timeline-step:not(:last-child)::after{content:"";position:absolute;top:19px;right:0;width:100%;height:1px;background:var(--line-strong)}
 .timeline-step .tl-num{
   width:38px;height:38px;border-radius:50%;background:var(--ink);color:var(--paper);
-  display:grid;place-items:center;font-family:'Noto Serif TC';font-size:15px;margin-bottom:16px;position:relative;z-index:2;
+  display:grid;place-items:center;font-family:var(--font-serif);font-size:15px;margin-bottom:16px;position:relative;z-index:2;
 }
 .timeline-step h4{font-size:15px;margin-bottom:6px}
 .timeline-step p{font-size:13px;color:var(--muted)}
@@ -623,7 +635,7 @@ table.price tr:hover td{background:rgba(162,59,46,.04)}
 .route-card .rc-desc{font-size:13.5px;color:var(--muted);margin-bottom:18px;line-height:1.8}
 .route-card .rc-tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
 .route-card .rc-tags span{font-size:11.5px;color:var(--muted);border:1px solid var(--line-strong);padding:4px 10px;border-radius:16px}
-.route-card .rc-price{font-family:'Noto Serif TC';font-size:22px;color:var(--accent);margin-bottom:4px}
+.route-card .rc-price{font-family:var(--font-serif);font-size:22px;color:var(--accent);margin-bottom:4px}
 .route-card .rc-price-note{font-size:11.5px;color:var(--muted);margin-bottom:18px}
 .route-card img.rc-photo{width:100%;height:180px;object-fit:cover;border-radius:var(--radius);margin-bottom:18px}
 .route-detail{display:none;margin-top:18px;padding-top:18px;border-top:1px dashed var(--line-strong);font-size:13.5px;line-height:2;color:var(--ink);white-space:pre-line}
@@ -644,7 +656,7 @@ table.price tr:hover td{background:rgba(162,59,46,.04)}
 .hc-slide.theme-navy{background:#0F1E3D}
 .hc-slide .wrap{position:relative;z-index:1}
 .hc-slide .eyebrow{color:var(--gold)}
-.hc-slide h2{font-size:clamp(26px,4vw,42px);margin-bottom:16px;font-family:'Noto Serif TC';font-style:normal}
+.hc-slide h2{font-size:clamp(26px,4vw,42px);margin-bottom:16px;font-family:var(--font-serif);font-style:normal}
 .hc-slide h2 em{font-style:normal;color:var(--gold)}
 .hc-slide.theme-light h2 em{color:var(--accent)}
 .hc-slide.theme-light h2{color:var(--ink)}
@@ -674,7 +686,7 @@ table.price tr:hover td{background:rgba(162,59,46,.04)}
 .vg-card{background:var(--paper);border:1px solid var(--line);border-top:4px solid var(--gold);padding:26px 24px;border-radius:var(--radius)}
 .vg-card.vg-accent{border-top-color:var(--accent)}
 .vg-card.vg-jade{border-top-color:var(--jade)}
-.vg-card h4{font-size:16.5px;margin-bottom:16px;font-family:'Noto Serif TC'}
+.vg-card h4{font-size:16.5px;margin-bottom:16px;font-family:var(--font-serif)}
 .vg-card.vg-gold h4{color:var(--gold-dark)}
 .vg-card.vg-accent h4{color:var(--accent)}
 .vg-card.vg-jade h4{color:var(--jade)}
@@ -694,7 +706,7 @@ table.price tr:hover td{background:rgba(162,59,46,.04)}
 .visa-guide-tips strong{display:block;font-size:13.5px;margin-bottom:6px;color:var(--jade)}
 .visa-guide-tips p{font-size:13px;color:var(--muted);line-height:1.8}
 
-.visa-guide-closing{text-align:center;font-family:'Noto Serif TC';font-size:15px;color:var(--ink);max-width:44em;margin:0 auto 8px}
+.visa-guide-closing{text-align:center;font-family:var(--font-serif);font-size:15px;color:var(--ink);max-width:44em;margin:0 auto 8px}
 
 /* ===== 卡片簡約圖標 ===== */
 .card svg.icon{width:30px;height:30px;margin-bottom:16px;display:block}
