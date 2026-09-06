@@ -1,129 +1,238 @@
-// 懸浮諮詢按鈕：開關面板
-document.addEventListener('DOMContentLoaded', function () {
-  // ===== 語言偵測提示條 =====
-  (function () {
-    var banner = document.querySelector('.lang-banner');
-    if (!banner) return;
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>後台管理｜升龍旅行社</title>
+<meta name="robots" content="noindex, nofollow">
 
-    var DISMISS_KEY = 'shenlong-lang-dismissed';
-    if (localStorage.getItem(DISMISS_KEY)) return;
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="stylesheet" href="../css/admin.css">
+<link rel="icon" href="../favicon.ico">
+</head>
+<body class="admin-body">
 
-    var currentLang = document.documentElement.lang || 'zh-Hant'; // 'zh-Hant' or 'zh-Hans'
-    var browserLang = ((navigator.languages && navigator.languages[0]) || navigator.language || '').toLowerCase();
+<!-- ===== 登入畫面 ===== -->
+<div class="login-screen" id="login-screen">
+  <div class="login-box">
+    <div class="logo-row">
+      <img src="../images/logo.png" alt="升龍旅行社">
+      <span style="font-family:'Noto Serif TC';font-weight:700">升龍旅行社</span>
+    </div>
+    <h1>後台管理登入</h1>
+    <p class="sub">員工帳號登入後可編輯網站內容</p>
+    <form id="login-form">
+      <div class="field">
+        <label for="login-email">Email</label>
+        <input type="email" id="login-email" required autocomplete="username">
+      </div>
+      <div class="field">
+        <label for="login-pass">密碼</label>
+        <input type="password" id="login-pass" required autocomplete="current-password">
+      </div>
+      <button type="submit">登入</button>
+      <p class="login-error" id="login-error">帳號或密碼錯誤，請再試一次。</p>
+    </form>
+  </div>
+</div>
 
-    // 判斷使用者裝置語言偏好的是簡體還是繁體
-    var prefersSimplified = browserLang.indexOf('zh-cn') !== -1 || browserLang.indexOf('zh-sg') !== -1 || browserLang === 'zh-hans';
-    var prefersTraditional = browserLang.indexOf('zh-tw') !== -1 || browserLang.indexOf('zh-hk') !== -1 || browserLang === 'zh-hant';
+<!-- ===== 後台主畫面 ===== -->
+<div class="admin-shell" id="admin-shell">
+  <div class="admin-header">
+    <div class="brand"><img src="../images/logo.png" alt="" style="width:22px;height:22px;vertical-align:middle;margin-right:8px">升龍旅行社．後台管理</div>
+    <div class="user-info">
+      <span id="user-email"></span>
+      <button class="logout-btn" id="logout-btn">登出</button>
+    </div>
+  </div>
 
-    var shouldSuggest = (currentLang === 'zh-Hant' && prefersSimplified) || (currentLang === 'zh-Hans' && prefersTraditional);
-    if (!shouldSuggest) return;
+  <div class="admin-nav">
+    <button class="nav-tab active" data-panel="panel-rates">匯率設定</button>
+    <button class="nav-tab" data-panel="panel-visa">簽證價目表</button>
+    <button class="nav-tab" data-panel="panel-team">團隊成員</button>
+    <button class="nav-tab" data-panel="panel-guides">地陪導遊</button>
+    <button class="nav-tab" data-panel="panel-fleet">包車與派車</button>
+    <button class="nav-tab" data-panel="panel-fasttrack">快速通關</button>
+    <button class="nav-tab" data-panel="panel-itinerary">定制行程需求</button>
+    <button class="nav-tab" data-panel="panel-fleetreq">包車需求</button>
+    <button class="nav-tab" data-panel="panel-content">頁面文字內容</button>
+    <button class="nav-tab" data-panel="panel-routes">熱門路線</button>
+    <button class="nav-tab" data-panel="panel-slides">首頁輪播</button>
+  </div>
 
-    // 計算對應語言版本的網址（root <-> zh-cn 資料夾對應同檔名）
-    var path = window.location.pathname;
-    var targetHref;
-    if (currentLang === 'zh-Hant') {
-      var file = path.split('/').pop() || 'index.html';
-      targetHref = 'zh-cn/' + file;
-    } else {
-      targetHref = '../' + (path.split('/').pop() || 'index.html');
-    }
+  <div class="admin-main">
 
-    var switchLabel = currentLang === 'zh-Hant' ? '简体中文' : '繁體中文';
-    var msgText = currentLang === 'zh-Hant'
-      ? '检测到您的设备语言可能是简体中文，是否切换？'
-      : '偵測到您的裝置語言可能是繁體中文，要切換嗎？';
-    var dismissText = currentLang === 'zh-Hant' ? '不用了' : '不用了';
+    <!-- 匯率設定 -->
+    <div class="admin-panel active" id="panel-rates">
+      <h2>匯率設定</h2>
+      <p class="desc">這裡改的數字，會即時反映在簽證頁的計算機與價目表上。來源幣別為人民幣（CNY）。</p>
+      <div class="admin-card">
+        <div class="admin-row">
+          <div class="admin-field">
+            <label>1 人民幣 = 多少美金（USD）</label>
+            <input type="number" step="0.0001" id="rate-usd" placeholder="例：0.1477">
+          </div>
+          <div class="admin-field">
+            <label>1 人民幣 = 多少越南盾（VND）</label>
+            <input type="number" step="1" id="rate-vnd" placeholder="例：3868">
+          </div>
+        </div>
+        <div class="admin-actions">
+          <button class="btn-save" id="save-rates">儲存匯率</button>
+          <button class="btn-delete" id="fill-default-rates" style="border-color:var(--line-strong);color:var(--muted)">帶入目前預設值</button>
+        </div>
+      </div>
+    </div>
 
-    banner.innerHTML =
-      '<span>' + msgText + '</span>' +
-      '<a class="switch-btn" href="' + targetHref + '">' + switchLabel + '</a>' +
-      '<button type="button" class="dismiss-btn">' + dismissText + '</button>';
+    <!-- 簽證價目表 -->
+    <div class="admin-panel" id="panel-visa">
+      <h2>簽證價目表</h2>
+      <p class="desc">價格請填人民幣（CNY）金額；不確定的項目價格欄位留空，網站會自動顯示「價格詳詢」。排序數字越小越前面。</p>
+      <div id="visa-list"></div>
+      <div class="admin-actions">
+        <button class="btn-add" id="add-visa-row" style="flex:1">＋ 新增一筆價目</button>
+        <button class="btn-save" id="seed-visa" style="white-space:nowrap">一鍵匯入現有30筆資料</button>
+      </div>
+    </div>
 
-    banner.classList.add('show');
+    <!-- 團隊成員 -->
+    <div class="admin-panel" id="panel-team">
+      <h2>團隊成員</h2>
+      <p class="desc">「關於我們」頁面的團隊介紹卡片，繁中／簡中內容分開填寫。排序數字越小越前面。</p>
+      <div id="team-list"></div>
+      <div class="admin-actions">
+        <button class="btn-add" id="add-team-row" style="flex:1">＋ 新增一位成員</button>
+        <button class="btn-save" id="seed-team" style="white-space:nowrap">一鍵匯入現有4位成員</button>
+      </div>
+    </div>
 
-    banner.querySelector('.dismiss-btn').addEventListener('click', function () {
-      banner.classList.remove('show');
-      localStorage.setItem(DISMISS_KEY, '1');
-    });
-  })();
+    <!-- 地陪導遊 -->
+    <div class="admin-panel" id="panel-guides">
+      <h2>地陪導遊管理</h2>
+      <p class="desc">導遊自己在網站上報名後，會先出現在「待審核申請」；審核通過會移到「已核准名單」。客戶配對需求會出現在「配對需求」，配對完成後手動記錄配對的導遊即可。</p>
 
-  // ===== 定制行程表單：優先送到 Google Sheet，未設定或失敗時退回 mailto =====
-  // 部署好 Google Apps Script 網頁應用程式後，把網址貼在下面這行取代預設值
-  var GOOGLE_SHEET_ENDPOINT = 'PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE';
+      <h3 style="font-size:16px;margin-bottom:14px">待審核申請</h3>
+      <div id="guides-pending-list" class="mt-lg" style="margin-top:0;margin-bottom:36px"></div>
 
-  (function () {
-    var form = document.getElementById('itinerary-form');
-    if (!form) return;
+      <h3 style="font-size:16px;margin-bottom:14px">已核准名單</h3>
+      <div id="guides-approved-list" style="margin-bottom:36px"></div>
 
-    var isSimplified = (form.querySelector('[name="lang"]') || {}).value === 'zh-Hans';
+      <h3 style="font-size:16px;margin-bottom:14px">客戶配對需求</h3>
+      <div id="guide-requests-list"></div>
+    </div>
 
-    function buildMailtoBody() {
-      var lines = [];
-      var fields = form.querySelectorAll('input[name], select[name], textarea[name]');
-      fields.forEach(function (el) {
-        if (el.type === 'hidden') return;
-        var labelEl = form.querySelector('label[for="' + el.id + '"]');
-        var label = labelEl ? labelEl.textContent : el.name;
-        var value = el.value ? el.value.trim() : '';
-        if (value) lines.push(label + '：' + value);
-      });
-      return lines.join('\n');
-    }
+    <!-- 包車與派車 -->
+    <div class="admin-panel" id="panel-fleet">
+      <h2>包車與派車管理</h2>
+      <p class="desc">
+        每一筆資料同時包含「售價」（客戶端會顯示）與「成本」（只有這裡看得到，客戶端網頁完全不會讀取這個欄位）。<br>
+        <strong>模式</strong>：point＝點到點路線；hourly＝論時數包車（車型欄位請填「普通5-7座」／「商務7座」／「商務9-11座」，需與客戶端選項完全一致）。<br>
+        中文司機加價：留空＝該組合不提供指定中文司機；有填數字＝客戶勾選後改用這個總價顯示。<br>
+        勾選「＊價格待複核」的項目，客戶端會顯示提醒文字，请儘快確認正確數字後取消勾選。
+      </p>
+      <div id="fleet-list"></div>
+      <div class="admin-actions">
+        <button class="btn-add" id="add-fleet-row" style="flex:1">＋ 新增一筆路線／時數資料</button>
+        <button class="btn-save" id="seed-fleet" style="white-space:nowrap">一鍵匯入現有7條路線＋時數資料</button>
+      </div>
+    </div>
 
-    function fallbackMailto() {
-      var to = form.getAttribute('data-mailto') || '';
-      var subject = form.getAttribute('data-subject') || '';
-      var body = buildMailtoBody();
-      window.location.href = 'mailto:' + to + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
-    }
+    <!-- 快速通關 -->
+    <div class="admin-panel" id="panel-fasttrack">
+      <h2>快速通關管理</h2>
+      <p class="desc">每個機場可分別設定日間／夜間價格與舉牌加價金額。留空日間或夜間價格＝該時段顯示「詳詢」。客戶送出的預約需求（不含護照/簽證/航班資料）會列在下方，方便妳追蹤有多少人詢問。</p>
+      <h3 style="font-size:16px;margin-bottom:14px">機場價格設定</h3>
+      <div id="fasttrack-list" style="margin-bottom:36px"></div>
+      <div class="admin-actions" style="margin-bottom:36px">
+        <button class="btn-add" id="add-fasttrack-row" style="flex:1">＋ 新增一個機場</button>
+        <button class="btn-save" id="seed-fasttrack" style="white-space:nowrap">一鍵匯入越南20個主要機場</button>
+      </div>
+      <h3 style="font-size:16px;margin-bottom:14px">客戶預約需求</h3>
+      <div id="fasttrack-requests-list"></div>
+    </div>
 
-    function showSuccess() {
-      var msg = isSimplified
-        ? '<p class="serif" style="font-size:19px">✓ 已收到您的需求，我们会尽快与您联系。</p>'
-        : '<p class="serif" style="font-size:19px">✓ 已收到您的需求，我們會盡快與您聯繫。</p>';
-      form.innerHTML = msg;
-    }
+    <!-- 定制行程需求 -->
+    <div class="admin-panel" id="panel-itinerary">
+      <h2>定制行程需求</h2>
+      <p class="desc">客戶送出的完整定制行程需求（不含護照等敏感資料）。可標記處理狀態，方便追蹤報價進度。</p>
+      <div id="itinerary-requests-list"></div>
+    </div>
 
-    form.addEventListener('submit', function (e) {
-      e.preventDefault();
+    <!-- 包車需求 -->
+    <div class="admin-panel" id="panel-fleetreq">
+      <h2>包車需求</h2>
+      <p class="desc">客戶透過包車計算機送出的預約需求，含聯絡方式，方便主動聯繫。</p>
+      <div id="fleet-requests-list"></div>
+    </div>
 
-      var sheetConfigured = GOOGLE_SHEET_ENDPOINT && GOOGLE_SHEET_ENDPOINT.indexOf('PASTE_') === -1;
+    <!-- 頁面文字內容 -->
+    <div class="admin-panel" id="panel-content">
+      <h2>頁面文字內容</h2>
+      <p class="desc">這裡的內容會直接顯示在對應的網站頁面上（例如留學諮詢頁的「短期班所需材料」「長期班報名與截止日期」按鈕連過去的頁面）。換行會照原樣顯示，不用打任何HTML語法。</p>
 
-      if (!sheetConfigured) {
-        fallbackMailto();
-        return;
-      }
+      <div class="admin-card">
+        <h3 style="font-size:16px;margin-bottom:14px">短期班所需材料</h3>
+        <div class="admin-field" style="margin-bottom:14px">
+          <label>繁體中文內容</label>
+          <textarea id="content-materials-hant" rows="6" style="width:100%;font-family:inherit;font-size:14px;padding:10px;border:1px solid var(--line-strong);border-radius:var(--radius)"></textarea>
+        </div>
+        <div class="admin-field" style="margin-bottom:14px">
+          <label>簡體中文內容</label>
+          <textarea id="content-materials-simp" rows="6" style="width:100%;font-family:inherit;font-size:14px;padding:10px;border:1px solid var(--line-strong);border-radius:var(--radius)"></textarea>
+        </div>
+        <div class="admin-actions">
+          <button class="btn-save" id="save-materials">儲存</button>
+        </div>
+      </div>
 
-      var formData = new FormData(form);
-      fetch(GOOGLE_SHEET_ENDPOINT, { method: 'POST', mode: 'no-cors', body: formData })
-        .then(function () { showSuccess(); })
-        .catch(function () { fallbackMailto(); });
-    });
-  })();
+      <div class="admin-card">
+        <h3 style="font-size:16px;margin-bottom:14px">長期班報名與截止日期</h3>
+        <div class="admin-field" style="margin-bottom:14px">
+          <label>繁體中文內容</label>
+          <textarea id="content-deadlines-hant" rows="6" style="width:100%;font-family:inherit;font-size:14px;padding:10px;border:1px solid var(--line-strong);border-radius:var(--radius)"></textarea>
+        </div>
+        <div class="admin-field" style="margin-bottom:14px">
+          <label>簡體中文內容</label>
+          <textarea id="content-deadlines-simp" rows="6" style="width:100%;font-family:inherit;font-size:14px;padding:10px;border:1px solid var(--line-strong);border-radius:var(--radius)"></textarea>
+        </div>
+        <div class="admin-actions">
+          <button class="btn-save" id="save-deadlines">儲存</button>
+        </div>
+      </div>
+    </div>
 
-  var toggle = document.querySelector('.widget-toggle');
-  var panel = document.querySelector('.contact-panel');
-  if (!toggle || !panel) return;
+    <!-- 熱門路線 -->
+    <div class="admin-panel" id="panel-routes">
+      <h2>熱門路線管理</h2>
+      <p class="desc">每條路線可填繁簡文案，價格填「人民幣」或「越南盾」擇一（例如吉婆島用越南盾，其餘用人民幣），系統會自動換算美金/越南盾對照顯示。完整行程說明放在「詳細行程」欄位，換行會照原樣顯示。</p>
+      <div id="routes-list"></div>
+      <div class="admin-actions">
+        <button class="btn-add" id="add-route-row" style="flex:1">＋ 新增一條路線</button>
+        <button class="btn-save" id="seed-routes" style="white-space:nowrap">一鍵匯入現有4條路線</button>
+      </div>
+    </div>
 
-  toggle.addEventListener('click', function () {
-    var isOpen = panel.classList.toggle('open');
-    toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-  });
+    <!-- 首頁輪播 -->
+    <div class="admin-panel" id="panel-slides">
+      <h2>首頁輪播管理</h2>
+      <p class="desc">首頁最上方的大圖輪播，可自行新增、排序、上下架。「主題」決定文字顏色：dark＝深色底白字（預設）、light＝米白底深色字、navy＝藏藍色底白字（適合Soltech這類外部品牌）。外部連結（例如Soltech官網）記得勾選「外部連結」，才會在新分頁開啟。</p>
+      <div id="slides-list"></div>
+      <div class="admin-actions">
+        <button class="btn-add" id="add-slide-row" style="flex:1">＋ 新增一張輪播</button>
+        <button class="btn-save" id="seed-slides" style="white-space:nowrap">一鍵匯入現有5張輪播</button>
+      </div>
+    </div>
 
-  document.addEventListener('click', function (e) {
-    if (!panel.contains(e.target) && !toggle.contains(e.target)) {
-      panel.classList.remove('open');
-      toggle.setAttribute('aria-expanded', 'false');
-    }
-  });
+  </div>
+</div>
 
-  // 手機版選單開關
-  var menuToggle = document.querySelector('.menu-toggle');
-  var menu = document.querySelector('nav.menu');
-  if (menuToggle && menu) {
-    menuToggle.addEventListener('click', function () {
-      var isOpen = menu.classList.toggle('mobile-open');
-      menuToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-    });
-  }
-});
+<div class="save-toast" id="save-toast">已儲存</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
+<script src="../js/firebase-config.js"></script>
+<script src="../js/admin.js"></script>
+</body>
+</html>
