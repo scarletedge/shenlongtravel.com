@@ -1,0 +1,60 @@
+<svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+<circle cx="200.0" cy="200.0" r="190" fill="none" stroke="#816430" stroke-width="1"/>
+<circle cx="200.0" cy="200.0" r="110" fill="none" stroke="#816430" stroke-width="1"/>
+<g transform="translate(200.0,50.0) rotate(0.0)">
+<rect x="-23.0" y="-15.0" width="46" height="6" fill="#816430"/>
+<rect x="-23.0" y="-3.0" width="46" height="6" fill="#816430"/>
+<rect x="-23.0" y="9.0" width="46" height="6" fill="#816430"/>
+</g>
+<g transform="translate(306.06601717798213,93.93398282201788) rotate(45.0)">
+<rect x="-23.0" y="-15.0" width="46" height="6" fill="#816430"/>
+<rect x="-23.0" y="-3.0" width="46" height="6" fill="#816430"/>
+<rect x="-23.0" y="9.0" width="18.0" height="6" fill="#816430"/>
+<rect x="5.0" y="9.0" width="18.0" height="6" fill="#816430"/>
+</g>
+<g transform="translate(350.0,200.0) rotate(90.0)">
+<rect x="-23.0" y="-15.0" width="46" height="6" fill="#816430"/>
+<rect x="-23.0" y="-3.0" width="18.0" height="6" fill="#816430"/>
+<rect x="5.0" y="-3.0" width="18.0" height="6" fill="#816430"/>
+<rect x="-23.0" y="9.0" width="46" height="6" fill="#816430"/>
+</g>
+<g transform="translate(306.06601717798213,306.06601717798213) rotate(135.0)">
+<rect x="-23.0" y="-15.0" width="46" height="6" fill="#816430"/>
+<rect x="-23.0" y="-3.0" width="18.0" height="6" fill="#816430"/>
+<rect x="5.0" y="-3.0" width="18.0" height="6" fill="#816430"/>
+<rect x="-23.0" y="9.0" width="18.0" height="6" fill="#816430"/>
+<rect x="5.0" y="9.0" width="18.0" height="6" fill="#816430"/>
+</g>
+<g transform="translate(200.0,350.0) rotate(180.0)">
+<rect x="-23.0" y="-15.0" width="18.0" height="6" fill="#816430"/>
+<rect x="5.0" y="-15.0" width="18.0" height="6" fill="#816430"/>
+<rect x="-23.0" y="-3.0" width="46" height="6" fill="#816430"/>
+<rect x="-23.0" y="9.0" width="46" height="6" fill="#816430"/>
+</g>
+<g transform="translate(93.93398282201788,306.06601717798213) rotate(225.0)">
+<rect x="-23.0" y="-15.0" width="18.0" height="6" fill="#816430"/>
+<rect x="5.0" y="-15.0" width="18.0" height="6" fill="#816430"/>
+<rect x="-23.0" y="-3.0" width="46" height="6" fill="#816430"/>
+<rect x="-23.0" y="9.0" width="18.0" height="6" fill="#816430"/>
+<rect x="5.0" y="9.0" width="18.0" height="6" fill="#816430"/>
+</g>
+<g transform="translate(50.0,200.00000000000003) rotate(270.0)">
+<rect x="-23.0" y="-15.0" width="18.0" height="6" fill="#816430"/>
+<rect x="5.0" y="-15.0" width="18.0" height="6" fill="#816430"/>
+<rect x="-23.0" y="-3.0" width="18.0" height="6" fill="#816430"/>
+<rect x="5.0" y="-3.0" width="18.0" height="6" fill="#816430"/>
+<rect x="-23.0" y="9.0" width="46" height="6" fill="#816430"/>
+</g>
+<g transform="translate(93.93398282201785,93.93398282201788) rotate(315.0)">
+<rect x="-23.0" y="-15.0" width="18.0" height="6" fill="#816430"/>
+<rect x="5.0" y="-15.0" width="18.0" height="6" fill="#816430"/>
+<rect x="-23.0" y="-3.0" width="18.0" height="6" fill="#816430"/>
+<rect x="5.0" y="-3.0" width="18.0" height="6" fill="#816430"/>
+<rect x="-23.0" y="9.0" width="18.0" height="6" fill="#816430"/>
+<rect x="5.0" y="9.0" width="18.0" height="6" fill="#816430"/>
+</g>
+<circle cx="200.0" cy="200.0" r="30" fill="none" stroke="#816430" stroke-width="1.2"/>
+<path d="M 200.0 170.0 A 15 15 0 0 1 200.0 200.0 A 15 15 0 0 0 200.0 230.0" fill="none" stroke="#816430" stroke-width="1.2"/>
+<circle cx="200.0" cy="185.0" r="4" fill="#816430"/>
+<circle cx="200.0" cy="215.0" r="4" fill="none" stroke="#816430" stroke-width="1.2"/>
+</svg>
