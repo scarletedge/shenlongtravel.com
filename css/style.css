@@ -729,3 +729,47 @@ footer .bg-bagua{bottom:-80px;right:-40px}
   -webkit-mask-image:linear-gradient(to bottom, transparent, black 30%, black 70%, transparent);
 }
 .dot-texture > *{position:relative;z-index:1}
+
+/* ===== Phase 21：主選單改直白服務名稱、彩蛋文字 ===== */
+nav.menu{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
+nav.menu::-webkit-scrollbar{display:none}
+nav.menu a{white-space:nowrap}
+.easter-egg{font-size:10.5px;color:var(--muted);opacity:.32;text-align:center;margin-top:10px;letter-spacing:.08em;user-select:none}
+
+/* ===== 首頁：主視覺龍+車banner，左右按鈕組 ===== */
+.hero-dragon-banner{padding:52px 0}
+.hdb-grid{display:grid;grid-template-columns:1fr minmax(260px,420px) 1fr;gap:28px;align-items:center}
+.hdb-img-wrap{text-align:center}
+.hdb-img-wrap img{width:100%;border-radius:var(--radius);box-shadow:0 16px 40px rgba(33,28,21,.16)}
+.hdb-img-wrap .hdb-caption{font-size:13px;color:var(--muted);margin-top:10px}
+.hdb-btns{display:flex;flex-direction:column;gap:14px}
+.hdb-btns.right{align-items:flex-start}
+.hdb-btn{display:flex;flex-direction:column;gap:2px;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:16px 20px;text-decoration:none;transition:border-color .2s,transform .2s;width:100%}
+.hdb-btn:hover{border-color:var(--accent);transform:translateY(-2px)}
+.hdb-btn .hdb-btn-title{font-size:16px;font-weight:700;color:var(--ink)}
+.hdb-btn .hdb-btn-sub{font-size:12.5px;color:var(--muted)}
+@media (max-width:860px){
+  .hdb-grid{grid-template-columns:1fr;gap:18px}
+  .hdb-btns{flex-direction:row;flex-wrap:wrap}
+  .hdb-btns .hdb-btn{width:calc(50% - 7px)}
+}
+
+/* ===== 團隊區：統一描述句＋單一CTA（取代每人分別的介紹與導引語） ===== */
+.team-shared-desc{max-width:640px;margin:28px auto 0;text-align:center;font-size:14.5px;color:var(--muted);line-height:1.8}
+.team-cta{margin-top:14px;font-size:13.5px;color:var(--accent-deep)}
+
+/* ===== 為什麼可以信任你（信任區塊） ===== */
+.trust-banner{width:100%;border-radius:var(--radius);display:block;box-shadow:0 14px 34px rgba(33,28,21,.16);margin-bottom:10px}
+.trust-banner-cap{text-align:center;font-size:13px;color:var(--muted);margin-bottom:30px}
+.trust-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:10px}
+.trust-grid img{width:100%;aspect-ratio:9/13;object-fit:cover;border-radius:var(--radius);box-shadow:0 6px 18px rgba(33,28,21,.12)}
+.trust-grid-cap{text-align:center;font-size:13px;color:var(--muted);margin:14px 0 36px}
+.trust-license{display:grid;grid-template-columns:260px 1fr;gap:28px;align-items:center;background:var(--paper-alt);border-radius:var(--radius);padding:24px}
+.trust-license img{width:100%;border-radius:8px;box-shadow:0 6px 18px rgba(33,28,21,.14)}
+.trust-license h3{font-size:16.5px;margin-bottom:8px}
+.trust-license p{font-size:13.5px;color:var(--muted);line-height:1.8;margin-bottom:4px}
+@media (max-width:640px){.trust-license{grid-template-columns:1fr}}
+
+/* ===== 信任區塊：獨家空拍視角 ===== */
+.trust-aerial-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;margin-bottom:10px}
+.trust-aerial-grid img{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:var(--radius);box-shadow:0 8px 22px rgba(33,28,21,.14)}
