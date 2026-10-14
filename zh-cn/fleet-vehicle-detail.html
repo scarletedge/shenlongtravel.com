@@ -66,7 +66,7 @@
 </header>
 
 <div class="breadcrumb">
-  <div class="wrap"><a href="index.html">首页</a><span>／</span><a href="fleet.html">包车服务</a><span>／</span><a href="fleet-vehicles.html">选择车型</a><span>／</span><span id="bc-type-name">车型详情</span></div>
+  <div class="wrap"><a href="index.html">首页</a><span>／</span><a href="fleet.html">包车服务</a><span>／</span><a href="fleet.html#vehicle-section">选择车型</a><span>／</span><span id="bc-type-name">车型详情</span></div>
 </div>
 
 <main>
@@ -90,7 +90,9 @@
       <span class="eyebrow">实拍照片</span>
       <h2 id="dt-gallery-head">车辆外观与内装</h2>
     </div>
-    <div class="gallery-grid" id="dt-gallery"></div>
+    <div class="gallery-grid single" id="dt-gallery-exterior"></div>
+    <p class="hint" id="dt-interior-label" style="display:none;margin:14px 0 10px">车内实拍：</p>
+    <div class="gallery-grid" id="dt-gallery-interior"></div>
     <p class="hint" id="dt-gallery-note" style="display:none"></p>
 
     <div class="sec-head" style="margin-top:36px">
@@ -101,36 +103,15 @@
     <div class="fee-box" id="dt-fee-box" style="display:none"></div>
     <p class="hint" id="dt-request-quote" style="display:none">此车型价格依人数、天数、路线面洽，请直接送出需求，客服会尽快回复报价。</p>
 
-    <div class="calc-box mt-lg" id="dt-form-box">
-      <div class="sec-head" style="margin-bottom:18px">
-        <span class="eyebrow">02 · 送出预约需求</span>
-        <h2 style="font-size:19px">填写联系方式，直接送出</h2>
+    <div class="member-promo" style="margin-top:36px">
+      <div>
+        <h3>看中这台车？直接私讯客服</h3>
+        <p id="dt-contact-note">把您想要的城市、时段告诉客服，1–2小时内确认调度与报价，不需要另外填表。</p>
       </div>
-      <div class="form-row">
-        <div class="field">
-          <label for="dt-contact-method">您惯用的联系平台</label>
-          <select id="dt-contact-method">
-            <option value="WhatsApp">WhatsApp</option>
-            <option value="Zalo">Zalo</option>
-            <option value="LINE">LINE</option>
-            <option value="WeChat">WeChat</option>
-            <option value="Facebook Messenger">Facebook Messenger</option>
-            <option value="电话">电话（直接拨打）</option>
-          </select>
-        </div>
-        <div class="field">
-          <label for="dt-contact">帐号或号码</label>
-          <input id="dt-contact" type="text" placeholder="例：+886 912345678 或 帐号ID">
-        </div>
-      </div>
-      <p style="font-size:12px;color:var(--muted);margin:10px 0 0">请务必选对联系平台，方便客服一次联系上您。通过表单送出：24小时内回复；直接私讯右下角客服：1–2小时内回复。</p>
-      <div class="admin-actions" style="margin-top:14px">
-        <button class="btn-save" id="dt-submit-btn" style="flex:1;padding:13px">送出预约需求</button>
-      </div>
-      <div id="dt-submit-result" style="margin-top:16px"></div>
+      <button type="button" class="btn-solid" id="dt-open-contact">私讯右下角客服 →</button>
     </div>
 
-    <p class="center mt-lg"><a href="fleet-vehicles.html" class="btn-ghost">← 返回选择其他车型</a></p>
+    <p class="center mt-lg"><a href="fleet.html#vehicle-section" class="btn-ghost">← 返回选择其他车型</a></p>
   </div>
 </section>
 
@@ -228,7 +209,7 @@
         { label: '4小时／50公里（基本）', price: 1000000 },
         { label: '8小时／100公里', price: 1300000 }
       ],
-      feeNote: '超过基本时数或里程后，<strong>超时费</strong>以每小时 100,000₫ 计算，<strong>超里费</strong>以每公里 15,000₫ 计算（不足1小时／1公里以1计）。岘港、胡志明、河内、富国岛、大叻、芽庄皆为同一价格。',
+      feeNote: '超过基本时数或里程后，<strong>超时费</strong>以每小时 100,000₫ 计算，<strong>超里费</strong>以每公里 15,000₫ 计算（不足1小时／1公里以1计）。',
       note: '单趟接送、1–2人轻便出行首选，内装实拍照片如上。'
     },
     '5seat': {
@@ -256,8 +237,12 @@
     '18seat': { name: '18人座', photos: ['images/fleet/v-18seat.jpg'], tiers: [], priceOnRequest: true, note: '团体活动、商务考察团首选，价格依人数、天数、路线面洽。' },
     '24seat': { name: '24人座', photos: ['images/fleet/v-24seat.jpg'], tiers: [], priceOnRequest: true, note: '中巴团体包场，价格依人数、天数、路线面洽。' },
     '29seat': { name: '29人座', photos: ['images/fleet/v-29seat.jpg'], tiers: [], priceOnRequest: true, note: '大型团体包场，价格依人数、天数、路线面洽。' },
-    '33seat': { name: '33人座', photos: ['images/fleet/v-33seat.jpg'], tiers: [], priceOnRequest: true, note: '大型团体包场，价格依人数、天数、路线面洽。' },
-    '45seat': { name: '45人座', photos: [], tiers: [], priceOnRequest: true, note: '大型游览车，公司员旅、大型活动包场首选，照片补充中，价格依人数、天数、路线面洽。' }
+    '33seat': {
+      name: '33人座',
+      photos: ['images/fleet/v-33seat.jpg', 'images/fleet/v-33seat-interior-1.jpg', 'images/fleet/v-33seat-interior-2.jpg', 'images/fleet/v-33seat-interior-3.jpg', 'images/fleet/v-33seat-interior-4.jpg'],
+      tiers: [], priceOnRequest: true, note: '大型团体包场，真皮座椅、车内空间宽敞，价格依人数、天数、路线面洽。'
+    },
+    '45seat': { name: '45人座', photos: ['images/fleet/v-45seat.jpg'], tiers: [], priceOnRequest: true, note: '大型游览车，公司员旅、大型活动包场首选，价格依人数、天数、路线面洽。' }
   };
 
   var params = new URLSearchParams(location.search);
@@ -273,7 +258,7 @@
   if (!data) {
     document.getElementById('dt-title').textContent = '请先选择车型';
     document.getElementById('dt-lead').textContent = '这个链接看起来不完整，请返回选择车型页面重新挑选。';
-    document.getElementById('dt-form-box').style.display = 'none';
+    document.querySelector('.member-promo').style.display = 'none';
     document.getElementById('dt-gallery-head').parentElement.style.display = 'none';
     return;
   }
@@ -284,14 +269,24 @@
   document.getElementById('dt-lead').textContent = data.note || '实拍照片、报价与计费方式，一次看清楚。';
   document.getElementById('dt-gallery-head').textContent = data.name + '：车辆外观' + (data.photos.length > 1 ? '与内装' : '');
 
-  // ===== 相片 =====
-  var galleryEl = document.getElementById('dt-gallery');
+  // ===== 相片：第一张是外观（单张大图），其余最多4张内装排成2x2 =====
+  var exteriorEl = document.getElementById('dt-gallery-exterior');
+  var interiorEl = document.getElementById('dt-gallery-interior');
+  var interiorLabel = document.getElementById('dt-interior-label');
   if (data.photos.length) {
-    galleryEl.innerHTML = data.photos.map(function (src) {
-      return '<img src="' + src + '" alt="' + data.name + '" loading="lazy">';
-    }).join('');
+    exteriorEl.innerHTML = '<img src="' + data.photos[0] + '" alt="' + data.name + '（外观）" loading="lazy">';
+    var interiorPhotos = data.photos.slice(1, 5);
+    if (interiorPhotos.length) {
+      interiorLabel.style.display = 'block';
+      interiorEl.innerHTML = interiorPhotos.map(function (src) {
+        return '<img src="' + src + '" alt="' + data.name + '（内装）" loading="lazy">';
+      }).join('');
+    } else {
+      interiorEl.style.display = 'none';
+    }
   } else {
-    galleryEl.style.display = 'none';
+    exteriorEl.style.display = 'none';
+    interiorEl.style.display = 'none';
     var note = document.getElementById('dt-gallery-note');
     note.style.display = 'block';
     note.textContent = '这个车型的实拍照片还在补充中，确认调度后我们会提供车辆信息给您。';
@@ -326,103 +321,25 @@
     feeBox.innerHTML = '<strong>计费说明：</strong>' + data.feeNote;
   }
 
-  // ===== 送出预约需求 =====
-  var CNY_TO_USD = 1 / 6.7716;
-  function genRequestId(prefix) {
-    var d = new Date();
-    var ymd = String(d.getFullYear()).slice(2) + String(d.getMonth() + 1).padStart(2, '0') + String(d.getDate()).padStart(2, '0');
-    var rand = Math.random().toString(36).slice(2, 6).toUpperCase();
-    return prefix + ymd + '-' + rand;
+  // ===== 直接导去私讯客服（已拿掉送出预约表单） =====
+  var cityLabel = city && CITY_NAMES[city] ? CITY_NAMES[city] : null;
+  var contactNote = document.getElementById('dt-contact-note');
+  if (contactNote) {
+    contactNote.textContent = '把您想要的' + (cityLabel ? cityLabel + '、' : '') + '时段告诉客服' +
+      (selectedTier ? '（参考方案：' + selectedTier.label + '）' : '') +
+      '，1–2小时内确认调度与报价，不需要另外填表。';
   }
 
-  var WHATSAPP_NUMBER = '85268746147';
-  function whatsappLink(text) {
-    if (!WHATSAPP_NUMBER || WHATSAPP_NUMBER.indexOf('PASTE_') === 0) return 'https://wa.me/qr/O264YVQPDFH4G1';
-    return 'https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(text);
-  }
-
-  function renderContactPanel(summary) {
-    var esc = summary.replace(/'/g, "\\'").replace(/\n/g, '\\n');
-    return (
-      '<div class="contact-panel-inline">' +
-        '<p class="cpi-title">选一个平台，把这笔需求直接送给我们：</p>' +
-        '<div class="cpi-buttons">' +
-          '<a class="qcb-btn" target="_blank" rel="noopener" href="' + whatsappLink(summary) + '">WhatsApp（已自动带入内容）</a>' +
-          '<a class="qcb-btn" target="_blank" rel="noopener" href="https://zalo.me/84975898625">Zalo</a>' +
-          '<a class="qcb-btn" target="_blank" rel="noopener" href="https://line.me/ti/p/tg6LUFsHGD">LINE</a>' +
-          '<a class="qcb-btn" target="_blank" rel="noopener" href="https://work.weixin.qq.com/kfid/kfc223a3b9c102b6a18">WeChat</a>' +
-          '<a class="qcb-btn" target="_blank" rel="noopener" href="https://m.me/61592091476467">Messenger</a>' +
-        '</div>' +
-        '<button type="button" class="btn-ghost" id="dt-copy-btn" style="margin-top:12px" data-text="' + esc + '">📋 拷贝需求内容（LINE／Zalo／WeChat／Messenger请粘贴后发送）</button>' +
-      '</div>'
-    );
-  }
-
-  function bindCopyButton() {
-    var btn = document.getElementById('dt-copy-btn');
-    if (!btn) return;
-    btn.addEventListener('click', function () {
-      var text = btn.dataset.text.replace(/\\n/g, '\n').replace(/\\'/g, "'");
-      if (navigator.clipboard) {
-        navigator.clipboard.writeText(text).then(function () { btn.textContent = '✓ 已拷贝，打开对话框粘贴发送即可'; });
-      } else { alert(text); }
+  var openContactBtn = document.getElementById('dt-open-contact');
+  if (openContactBtn) {
+    openContactBtn.addEventListener('click', function () {
+      var toggle = document.querySelector('.widget-toggle');
+      if (toggle) {
+        toggle.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        if (!document.querySelector('.contact-panel').classList.contains('open')) toggle.click();
+      }
     });
   }
-
-  var contactMethodSel = document.getElementById('dt-contact-method');
-  var contactInput = document.getElementById('dt-contact');
-  var submitBtn = document.getElementById('dt-submit-btn');
-  var submitResult = document.getElementById('dt-submit-result');
-
-  var isMember = false;
-  if (typeof FIREBASE_READY !== 'undefined' && FIREBASE_READY && typeof firebase !== 'undefined' && firebase.auth) {
-    firebase.auth().onAuthStateChanged(function (user) { isMember = !!user; });
-  }
-
-  submitBtn.addEventListener('click', function () {
-    var contact = contactInput.value.trim();
-    if (!contact) { alert('请填写联系帐号或号码，方便我们主动与您联系安排'); contactInput.focus(); return; }
-
-    var reqId = genRequestId('FL');
-    var contactFull = contactMethodSel.value + '：' + contact;
-    var cityLabel = city && CITY_NAMES[city] ? CITY_NAMES[city] : null;
-
-    var lines = ['您好，我想预约包车服务。', '需求编号：' + reqId, '车型：' + data.name];
-    if (cityLabel) lines.push('城市：' + cityLabel);
-    if (selectedTier) lines.push('方案：' + selectedTier.label + '／' + selectedTier.price.toLocaleString('en-US') + '₫');
-    if (isMember) lines.push('会员身份：是（9折优惠）');
-    var summary = lines.join('\n');
-    submitBtn.disabled = true;
-
-    function showResult() {
-      submitResult.innerHTML =
-        '<div class="hint">需求编号 <strong>' + reqId + '</strong>　已收到您的需求，通过表单送出将于24小时内回复；若想更快，欢迎直接私讯右下角客服，1–2小时内回复。</div>' +
-        renderContactPanel(summary);
-      bindCopyButton();
-      submitBtn.textContent = '✓ 已送出';
-    }
-
-    if (typeof FIREBASE_READY === 'undefined' || !FIREBASE_READY) { showResult(); return; }
-
-    db.collection('fleetRequests').add({
-      requestId: reqId,
-      mode: 'hourly',
-      vehicleType: data.name,
-      city: cityLabel,
-      tierLabel: selectedTier ? selectedTier.label : null,
-      priceVND: selectedTier ? selectedTier.price : null,
-      isMember: isMember,
-      driver: false,
-      needsReview: !!data.priceOnRequest,
-      contactMethod: contactMethodSel.value,
-      contact: contactFull,
-      status: '待处理',
-      lang: 'zh-Hant',
-      createdAt: firebase.firestore.FieldValue.serverTimestamp()
-    }).then(showResult).catch(function () {
-      showResult();
-    }).finally(function () { submitBtn.disabled = false; });
-  });
 })();
 </script>
 </body>

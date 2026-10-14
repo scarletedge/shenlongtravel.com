@@ -61,7 +61,7 @@
     </nav>
     <div class="lang-switch"><a href="zh-cn/fleet.html">简</a><span>／</span><a class="active">繁</a></div>
     <div style="display:flex;align-items:center;gap:14px">
-      <a href="fleet-vehicles.html" class="cta-btn">立即查看車型與報價</a>
+      <a href="#vehicle-section" class="cta-btn">立即查看車型與報價</a>
       <button class="menu-toggle" aria-label="開啟選單" aria-expanded="false">☰</button>
     </div>
   </div>
@@ -78,8 +78,7 @@
   <img class="bg-bagua" src="images/bagua-watermark.svg" alt="" aria-hidden="true">
   <div class="wrap hero-inner">
     <span class="eyebrow">Private Fleet · 包車服務</span>
-    <h1>有『車』就有底氣，司機熟路，您只管上車。</h1>
-    <p class="serif" style="font-size:clamp(17px,2vw,21px);color:var(--muted);margin:-4px 0 24px">「千里之行，始於足下」——但腳下這段，交給我們的司機。</p>
+    <p class="serif" style="font-size:clamp(17px,2vw,21px);color:var(--muted);margin:10px 0 24px">「千里之行，始於足下」——但腳下這段，交給我們的司機。</p>
     <p class="lead">4人座到45人座全車型，峴港、河內、胡志明、芽莊、富國島、大叻——越南全境皆可調度。先選城市，再選適合的車型，費用與時長在下一頁一次看清楚。</p>
   </div>
 </div>
@@ -90,52 +89,170 @@
       <div>
         <span class="eyebrow">服務範圍 · Choose Your City</span>
         <h2>先選城市，再選車</h2>
-        <p>點一下您要出發的城市，接著就能看到適合的車型與報價；不只這6個城市——越南全境皆可調度，其餘城市歡迎私訊客服確認。</p>
+        <p>點一下您要出發的城市（選填），接著往下選車型，就能看到完整報價；不只這6個城市——越南全境皆可調度，其餘城市歡迎私訊客服確認。</p>
       </div>
-      <a class="view-all" href="fleet-vehicles.html">不選城市，直接看全部車型 →</a>
+      <a class="view-all" href="#vehicle-section">直接選車型 ↓</a>
     </div>
     <div class="city-grid-v2">
-      <a class="city-card-v2" href="fleet-vehicles.html?city=danang">
+      <button type="button" class="city-card-v2" data-city="danang" data-city-name="峴港">
         <img src="images/cities/danang.jpg" alt="峴港">
         <span class="ccv2-eyebrow">中部 · Central</span>
-        <span class="ccv2-arrow">↗</span>
-        <span class="ccv2-name">峴港</span>
-        <span class="ccv2-en">Da Nang</span>
-      </a>
-      <a class="city-card-v2" href="fleet-vehicles.html?city=hanoi">
+        <span class="ccv2-bottom">
+          <span><span class="ccv2-name">峴港</span><span class="ccv2-en">Da Nang</span></span>
+          <span class="ccv2-arrow">↗</span>
+        </span>
+      </button>
+      <button type="button" class="city-card-v2" data-city="hanoi" data-city-name="河內">
         <img src="images/cities/hanoi.jpg" alt="河內">
         <span class="ccv2-eyebrow">北部 · North</span>
-        <span class="ccv2-arrow">↗</span>
-        <span class="ccv2-name">河內</span>
-        <span class="ccv2-en">Hanoi</span>
-      </a>
-      <a class="city-card-v2" href="fleet-vehicles.html?city=hcmc">
+        <span class="ccv2-bottom">
+          <span><span class="ccv2-name">河內</span><span class="ccv2-en">Hanoi</span></span>
+          <span class="ccv2-arrow">↗</span>
+        </span>
+      </button>
+      <button type="button" class="city-card-v2" data-city="hcmc" data-city-name="胡志明">
         <img src="images/cities/hcmc.jpg" alt="胡志明市">
         <span class="ccv2-eyebrow">南部 · South</span>
-        <span class="ccv2-arrow">↗</span>
-        <span class="ccv2-name">胡志明</span>
-        <span class="ccv2-en">Ho Chi Minh City</span>
-      </a>
-      <a class="city-card-v2" href="fleet-vehicles.html?city=nhatrang">
+        <span class="ccv2-bottom">
+          <span><span class="ccv2-name">胡志明</span><span class="ccv2-en">Ho Chi Minh City</span></span>
+          <span class="ccv2-arrow">↗</span>
+        </span>
+      </button>
+      <button type="button" class="city-card-v2" data-city="nhatrang" data-city-name="芽莊">
         <img src="images/cities/nhatrang.jpg" alt="芽莊">
         <span class="ccv2-eyebrow">中部 · Central Coast</span>
-        <span class="ccv2-arrow">↗</span>
-        <span class="ccv2-name">芽莊</span>
-        <span class="ccv2-en">Nha Trang</span>
-      </a>
-      <a class="city-card-v2" href="fleet-vehicles.html?city=phuquoc">
+        <span class="ccv2-bottom">
+          <span><span class="ccv2-name">芽莊</span><span class="ccv2-en">Nha Trang</span></span>
+          <span class="ccv2-arrow">↗</span>
+        </span>
+      </button>
+      <button type="button" class="city-card-v2" data-city="phuquoc" data-city-name="富國島">
         <img src="images/cities/phuquoc.jpg" alt="富國島">
         <span class="ccv2-eyebrow">南部島嶼 · South Island</span>
-        <span class="ccv2-arrow">↗</span>
-        <span class="ccv2-name">富國島</span>
-        <span class="ccv2-en">Phu Quoc</span>
-      </a>
-      <a class="city-card-v2" href="fleet-vehicles.html?city=dalat">
+        <span class="ccv2-bottom">
+          <span><span class="ccv2-name">富國島</span><span class="ccv2-en">Phu Quoc</span></span>
+          <span class="ccv2-arrow">↗</span>
+        </span>
+      </button>
+      <button type="button" class="city-card-v2" data-city="dalat" data-city-name="大叻">
         <img src="images/cities/dalat.jpg" alt="大叻">
         <span class="ccv2-eyebrow">中部高原 · Highlands</span>
-        <span class="ccv2-arrow">↗</span>
-        <span class="ccv2-name">大叻</span>
-        <span class="ccv2-en">Da Lat</span>
+        <span class="ccv2-bottom">
+          <span><span class="ccv2-name">大叻</span><span class="ccv2-en">Da Lat</span></span>
+          <span class="ccv2-arrow">↗</span>
+        </span>
+      </button>
+    </div>
+  </div>
+</section>
+
+<section class="alt" id="vehicle-section">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">選擇車型</span>
+      <h2>4人座到45人座，按小時計費</h2>
+      <p id="vehicle-city-hint">尚未選擇城市也沒關係，送出需求時客服會直接確認調度地點。</p>
+    </div>
+    <div class="vcard-grid">
+      <a class="vcard" data-type="4seat" href="fleet-vehicle-detail.html?type=4seat">
+        <div class="vcard-photo"><img src="images/fleet/v-4seat.jpg" alt="4人座"></div>
+        <div class="vcard-body">
+          <span class="vcard-tag">明確報價</span>
+          <h3>4人座</h3>
+          <p class="vcard-price">1,000,000₫起／4小時</p>
+          <p class="vcard-note">單趟接送、1–2人輕便出行首選。</p>
+          <span class="vcard-more">查看詳情 →</span>
+        </div>
+      </a>
+      <a class="vcard" data-type="5seat" href="fleet-vehicle-detail.html?type=5seat">
+        <div class="vcard-photo"><img src="images/fleet/v-5seat.jpg" alt="5人座保母車"></div>
+        <div class="vcard-body">
+          <span class="vcard-tag">明確報價</span>
+          <h3>5人座保母車</h3>
+          <p class="vcard-price">2,000,000₫起／5小時</p>
+          <p class="vcard-note">適合2–4人市區代步、機場接送。</p>
+          <span class="vcard-more">查看詳情 →</span>
+        </div>
+      </a>
+      <a class="vcard" data-type="7seat" href="fleet-vehicle-detail.html?type=7seat">
+        <div class="vcard-photo"><img src="images/fleet/v-7seat.jpg" alt="7人座保母車"></div>
+        <div class="vcard-body">
+          <span class="vcard-tag">明確報價</span>
+          <h3>7人座保母車</h3>
+          <p class="vcard-price">2,100,000₫起／5小時</p>
+          <p class="vcard-note">小家庭或多人小團體出遊首選。</p>
+          <span class="vcard-more">查看詳情 →</span>
+        </div>
+      </a>
+      <a class="vcard" data-type="9seat" href="fleet-vehicle-detail.html?type=9seat">
+        <div class="vcard-photo"><img src="images/fleet/v-9seat.jpg" alt="9人座保母車"></div>
+        <div class="vcard-body">
+          <span class="vcard-tag">明確報價</span>
+          <h3>9人座保母車</h3>
+          <p class="vcard-price">2,500,000₫起／5小時</p>
+          <p class="vcard-note">中型團體跨城市移動首選。</p>
+          <span class="vcard-more">查看詳情 →</span>
+        </div>
+      </a>
+      <a class="vcard" data-type="16seat" href="fleet-vehicle-detail.html?type=16seat">
+        <div class="vcard-photo"><img src="images/fleet/v-16seat.jpg" alt="16人座"></div>
+        <div class="vcard-body">
+          <span class="vcard-tag">團體包車</span>
+          <h3>16人座</h3>
+          <p class="vcard-price">價格面洽</p>
+          <p class="vcard-note">公司員旅、團體活動首選。</p>
+          <span class="vcard-more">查看詳情 →</span>
+        </div>
+      </a>
+      <a class="vcard" data-type="18seat" href="fleet-vehicle-detail.html?type=18seat">
+        <div class="vcard-photo"><img src="images/fleet/v-18seat.jpg" alt="18人座"></div>
+        <div class="vcard-body">
+          <span class="vcard-tag">團體包車</span>
+          <h3>18人座</h3>
+          <p class="vcard-price">價格面洽</p>
+          <p class="vcard-note">團體活動、商務考察團首選。</p>
+          <span class="vcard-more">查看詳情 →</span>
+        </div>
+      </a>
+      <a class="vcard" data-type="24seat" href="fleet-vehicle-detail.html?type=24seat">
+        <div class="vcard-photo"><img src="images/fleet/v-24seat.jpg" alt="24人座"></div>
+        <div class="vcard-body">
+          <span class="vcard-tag">團體包車</span>
+          <h3>24人座</h3>
+          <p class="vcard-price">價格面洽</p>
+          <p class="vcard-note">中巴團體包場。</p>
+          <span class="vcard-more">查看詳情 →</span>
+        </div>
+      </a>
+      <a class="vcard" data-type="29seat" href="fleet-vehicle-detail.html?type=29seat">
+        <div class="vcard-photo"><img src="images/fleet/v-29seat.jpg" alt="29人座"></div>
+        <div class="vcard-body">
+          <span class="vcard-tag">團體包車</span>
+          <h3>29人座</h3>
+          <p class="vcard-price">價格面洽</p>
+          <p class="vcard-note">大型團體包場。</p>
+          <span class="vcard-more">查看詳情 →</span>
+        </div>
+      </a>
+      <a class="vcard" data-type="33seat" href="fleet-vehicle-detail.html?type=33seat">
+        <div class="vcard-photo"><img src="images/fleet/v-33seat.jpg" alt="33人座"></div>
+        <div class="vcard-body">
+          <span class="vcard-tag">團體包車</span>
+          <h3>33人座</h3>
+          <p class="vcard-price">價格面洽</p>
+          <p class="vcard-note">大型團體包場，內裝實拍照片已更新。</p>
+          <span class="vcard-more">查看詳情 →</span>
+        </div>
+      </a>
+      <a class="vcard" data-type="45seat" href="fleet-vehicle-detail.html?type=45seat">
+        <div class="vcard-photo"><img src="images/fleet/v-45seat.jpg" alt="45人座"></div>
+        <div class="vcard-body">
+          <span class="vcard-tag">團體包車</span>
+          <h3>45人座</h3>
+          <p class="vcard-price">價格面洽</p>
+          <p class="vcard-note">大型遊覽車，公司員旅、大型活動包場首選。</p>
+          <span class="vcard-more">查看詳情 →</span>
+        </div>
       </a>
     </div>
   </div>
@@ -261,6 +378,35 @@
 <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
 <script src="js/firebase-config.js"></script>
 <script src="js/widget.js"></script>
+<script>
+(function () {
+  // ===== 選城市：不跳頁，直接把城市帶入下方車型連結 =====
+  var cityCards = document.querySelectorAll('.city-card-v2');
+  var vehicleLinks = document.querySelectorAll('.vcard[data-type]');
+  var vehicleCityHint = document.getElementById('vehicle-city-hint');
+  var selectedCity = null, selectedCityName = null;
+
+  cityCards.forEach(function (card) {
+    card.addEventListener('click', function () {
+      var isActive = card.classList.contains('active');
+      cityCards.forEach(function (c) { c.classList.remove('active'); });
+      if (isActive) {
+        selectedCity = null; selectedCityName = null;
+        vehicleCityHint.textContent = '尚未選擇城市也沒關係，送出需求時客服會直接確認調度地點。';
+      } else {
+        card.classList.add('active');
+        selectedCity = card.dataset.city; selectedCityName = card.dataset.cityName;
+        vehicleCityHint.textContent = '已選擇城市：' + selectedCityName + '——往下選車型即可送出需求。';
+      }
+      vehicleLinks.forEach(function (a) {
+        var url = new URL(a.getAttribute('href'), location.href);
+        if (selectedCity) { url.searchParams.set('city', selectedCity); } else { url.searchParams.delete('city'); }
+        a.setAttribute('href', url.pathname + url.search);
+      });
+    });
+  });
+})();
+</script>
 <script>
 (function () {
   // ===== 免費註冊會員，9折起（Google 帳號登入） =====
