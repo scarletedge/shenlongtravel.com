@@ -94,54 +94,54 @@
       <a class="view-all" href="#vehicle-section">直接選車型 ↓</a>
     </div>
     <div class="city-grid-v2">
-      <button type="button" class="city-card-v2" data-city="danang" data-city-name="峴港">
+      <a class="city-card-v2" href="city-guide.html?city=danang" data-city="danang" data-city-name="峴港">
         <img src="images/cities/danang.jpg" alt="峴港">
         <span class="ccv2-eyebrow">中部 · Central</span>
         <span class="ccv2-bottom">
           <span><span class="ccv2-name">峴港</span><span class="ccv2-en">Da Nang</span></span>
           <span class="ccv2-arrow">↗</span>
         </span>
-      </button>
-      <button type="button" class="city-card-v2" data-city="hanoi" data-city-name="河內">
+      </a>
+      <a class="city-card-v2" href="city-guide.html?city=hanoi" data-city="hanoi" data-city-name="河內">
         <img src="images/cities/hanoi.jpg" alt="河內">
         <span class="ccv2-eyebrow">北部 · North</span>
         <span class="ccv2-bottom">
           <span><span class="ccv2-name">河內</span><span class="ccv2-en">Hanoi</span></span>
           <span class="ccv2-arrow">↗</span>
         </span>
-      </button>
-      <button type="button" class="city-card-v2" data-city="hcmc" data-city-name="胡志明">
+      </a>
+      <a class="city-card-v2" href="city-guide.html?city=hcmc" data-city="hcmc" data-city-name="胡志明">
         <img src="images/cities/hcmc.jpg" alt="胡志明市">
         <span class="ccv2-eyebrow">南部 · South</span>
         <span class="ccv2-bottom">
           <span><span class="ccv2-name">胡志明</span><span class="ccv2-en">Ho Chi Minh City</span></span>
           <span class="ccv2-arrow">↗</span>
         </span>
-      </button>
-      <button type="button" class="city-card-v2" data-city="nhatrang" data-city-name="芽莊">
+      </a>
+      <a class="city-card-v2" href="city-guide.html?city=nhatrang" data-city="nhatrang" data-city-name="芽莊">
         <img src="images/cities/nhatrang.jpg" alt="芽莊">
         <span class="ccv2-eyebrow">中部 · Central Coast</span>
         <span class="ccv2-bottom">
           <span><span class="ccv2-name">芽莊</span><span class="ccv2-en">Nha Trang</span></span>
           <span class="ccv2-arrow">↗</span>
         </span>
-      </button>
-      <button type="button" class="city-card-v2" data-city="phuquoc" data-city-name="富國島">
+      </a>
+      <a class="city-card-v2" href="city-guide.html?city=phuquoc" data-city="phuquoc" data-city-name="富國島">
         <img src="images/cities/phuquoc.jpg" alt="富國島">
         <span class="ccv2-eyebrow">南部島嶼 · South Island</span>
         <span class="ccv2-bottom">
           <span><span class="ccv2-name">富國島</span><span class="ccv2-en">Phu Quoc</span></span>
           <span class="ccv2-arrow">↗</span>
         </span>
-      </button>
-      <button type="button" class="city-card-v2" data-city="dalat" data-city-name="大叻">
+      </a>
+      <a class="city-card-v2" href="city-guide.html?city=dalat" data-city="dalat" data-city-name="大叻">
         <img src="images/cities/dalat.jpg" alt="大叻">
         <span class="ccv2-eyebrow">中部高原 · Highlands</span>
         <span class="ccv2-bottom">
           <span><span class="ccv2-name">大叻</span><span class="ccv2-en">Da Lat</span></span>
           <span class="ccv2-arrow">↗</span>
         </span>
-      </button>
+      </a>
     </div>
   </div>
 </section>
@@ -380,31 +380,26 @@
 <script src="js/widget.js"></script>
 <script>
 (function () {
-  // ===== 選城市：不跳頁，直接把城市帶入下方車型連結 =====
+  // ===== 從網址帶入城市（由城市介紹頁的「直接選車型」按鈕導回） =====
+  var CITY_NAMES = { danang: '峴港', hanoi: '河內', hcmc: '胡志明', nhatrang: '芽莊', phuquoc: '富國島', dalat: '大叻' };
   var cityCards = document.querySelectorAll('.city-card-v2');
   var vehicleLinks = document.querySelectorAll('.vcard[data-type]');
   var vehicleCityHint = document.getElementById('vehicle-city-hint');
-  var selectedCity = null, selectedCityName = null;
+  var selectedCity = new URLSearchParams(location.search).get('city');
 
-  cityCards.forEach(function (card) {
-    card.addEventListener('click', function () {
-      var isActive = card.classList.contains('active');
-      cityCards.forEach(function (c) { c.classList.remove('active'); });
-      if (isActive) {
-        selectedCity = null; selectedCityName = null;
-        vehicleCityHint.textContent = '尚未選擇城市也沒關係，送出需求時客服會直接確認調度地點。';
-      } else {
-        card.classList.add('active');
-        selectedCity = card.dataset.city; selectedCityName = card.dataset.cityName;
-        vehicleCityHint.textContent = '已選擇城市：' + selectedCityName + '——往下選車型即可送出需求。';
-      }
-      vehicleLinks.forEach(function (a) {
-        var url = new URL(a.getAttribute('href'), location.href);
-        if (selectedCity) { url.searchParams.set('city', selectedCity); } else { url.searchParams.delete('city'); }
-        a.setAttribute('href', url.pathname + url.search);
-      });
+  if (selectedCity && CITY_NAMES[selectedCity]) {
+    cityCards.forEach(function (c) {
+      c.classList.toggle('active', c.dataset.city === selectedCity);
     });
-  });
+    if (vehicleCityHint) {
+      vehicleCityHint.textContent = '已選擇城市：' + CITY_NAMES[selectedCity] + '——往下選車型即可送出需求。';
+    }
+    vehicleLinks.forEach(function (a) {
+      var url = new URL(a.getAttribute('href'), location.href);
+      url.searchParams.set('city', selectedCity);
+      a.setAttribute('href', url.pathname + url.search);
+    });
+  }
 })();
 </script>
 <script>
