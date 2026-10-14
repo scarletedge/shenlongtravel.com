@@ -101,7 +101,7 @@
     </div>
     <div class="tier-grid" id="dt-tiers"></div>
     <div class="fee-box" id="dt-fee-box" style="display:none"></div>
-    <p class="hint" id="dt-request-quote" style="display:none">此车型价格依人数、天数、路线面洽，请直接送出需求，客服会尽快回复报价。</p>
+    <p class="hint" id="dt-request-quote" style="display:none">此车型价格请私讯右下角客服报价。</p>
 
     <div class="member-promo" style="margin-top:36px">
       <div>
@@ -204,45 +204,75 @@
   var VEHICLE_DATA = {
     '4seat': {
       name: '4人座',
-      photos: ['images/fleet/v-4seat.jpg', 'images/fleet/v-4seat-interior-1.jpg', 'images/fleet/v-4seat-interior-2.jpg'],
+      photos: ['../images/fleet/v-4seat.jpg', '../images/fleet/v-4seat-interior-1.jpg', '../images/fleet/v-4seat-interior-2.jpg'],
       tiers: [
         { label: '4小时／50公里（基本）', price: 1000000 },
-        { label: '8小时／100公里', price: 1300000 }
+        { label: '8小时／100公里', price: 1500000 },
+        { label: '10小时／100公里', price: 1800000 }
       ],
       feeNote: '超过基本时数或里程后，<strong>超时费</strong>以每小时 100,000₫ 计算，<strong>超里费</strong>以每公里 15,000₫ 计算（不足1小时／1公里以1计）。',
       note: '单趟接送、1–2人轻便出行首选，内装实拍照片如上。'
     },
     '5seat': {
-      name: '5人座保母车',
-      photos: ['images/fleet/v-5seat.jpg'],
-      tiers: [{ label: '5小时起（基本）', price: 2000000 }],
-      feeNote: '超过5小时的<strong>超时费</strong>与超过市区基本里程的<strong>超里程费</strong>，皆按小时计算🧮——确切费率依出发地与日期而定，请私讯客服一次问清楚。',
+      name: '5人座',
+      photos: ['../images/fleet/v-5seat.jpg'],
+      tiers: [
+        { label: '4小时／50公里（基本）', price: 1200000 },
+        { label: '8小时／100公里', price: 1700000 },
+        { label: '10小时／100公里', price: 2000000 }
+      ],
+      feeNote: '超过所选方案时数的<strong>超时费</strong>与超过方案基本里程的<strong>超里程费</strong>，皆按小时计算🧮——确切费率依出发地与日期而定，请私讯客服一次问清楚。',
       note: '适合2–4人市区代步、机场接送、短途会议往返。'
     },
     '7seat': {
-      name: '7人座保母车',
-      photos: ['images/fleet/v-7seat.jpg'],
-      tiers: [{ label: '5小时起（基本）', price: 2100000 }],
-      feeNote: '超过5小时的<strong>超时费</strong>与超过市区基本里程的<strong>超里程费</strong>，皆按小时计算🧮——确切费率依出发地与日期而定，请私讯客服一次问清楚。',
+      name: '7人座',
+      photos: ['../images/fleet/v-7seat.jpg'],
+      tiers: [
+        { label: '4小时／50公里（基本）', price: 1500000 },
+        { label: '8小时／100公里', price: 2000000 },
+        { label: '10小时／100公里', price: 2500000 }
+      ],
+      feeNote: '超过所选方案时数的<strong>超时费</strong>与超过方案基本里程的<strong>超里程费</strong>，皆按小时计算🧮——确切费率依出发地与日期而定，请私讯客服一次问清楚。',
       note: '小家庭或多人小团体出游首选，行李空间更宽裕。'
     },
     '9seat': {
-      name: '9人座保母车',
-      photos: ['images/fleet/v-9seat.jpg'],
-      tiers: [{ label: '5小时起（基本）', price: 2500000 }],
-      feeNote: '超过5小时的<strong>超时费</strong>与超过市区基本里程的<strong>超里程费</strong>，皆按小时计算🧮——确切费率依出发地与日期而定，请私讯客服一次问清楚。',
+      name: '9人座Limousine',
+      photos: ['../images/fleet/v-9seat.jpg'],
+      tiers: [
+        { label: '4小时／50公里（基本）', price: 2600000 },
+        { label: '8小时／100公里', price: 3500000 },
+        { label: '10小时／100公里', price: 3800000 }
+      ],
+      feeNote: '超过所选方案时数的<strong>超时费</strong>与超过方案基本里程的<strong>超里程费</strong>，皆按小时计算🧮——确切费率依出发地与日期而定，请私讯客服一次问清楚。',
       note: '中型团体跨城市移动、商务考察团首选。'
     },
-    '16seat': { name: '16人座', photos: ['images/fleet/v-16seat.jpg'], tiers: [], priceOnRequest: true, note: '公司员旅、团体活动首选，价格依人数、天数、路线面洽。' },
-    '18seat': { name: '18人座', photos: ['images/fleet/v-18seat.jpg'], tiers: [], priceOnRequest: true, note: '团体活动、商务考察团首选，价格依人数、天数、路线面洽。' },
-    '24seat': { name: '24人座', photos: ['images/fleet/v-24seat.jpg'], tiers: [], priceOnRequest: true, note: '中巴团体包场，价格依人数、天数、路线面洽。' },
-    '29seat': { name: '29人座', photos: ['images/fleet/v-29seat.jpg'], tiers: [], priceOnRequest: true, note: '大型团体包场，价格依人数、天数、路线面洽。' },
+    '16seat': {
+      name: '16人座Limousine',
+      photos: ['../images/fleet/v-16seat.jpg'],
+      tiers: [
+        { label: '4小时／50公里（基本）', price: 3600000 },
+        { label: '8小时／100公里', price: 5000000 },
+        { label: '10小时／100公里', price: 5300000 }
+      ],
+      note: '公司员旅、团体活动首选。'
+    },
+    '18seat': {
+      name: '18人座',
+      photos: ['../images/fleet/v-18seat.jpg'],
+      tiers: [
+        { label: '8小时／100公里（基本）', price: 4000000 },
+        { label: '10小时／200公里', price: 5000000 }
+      ],
+      note: '团体活动、商务考察团首选。'
+    },
+    '24seat': { name: '24人座', photos: ['../images/fleet/v-24seat.jpg'], tiers: [], priceOnRequest: true, note: '中巴团体包场，价格请私讯客服报价。' },
+    '29seat': { name: '29人座', photos: ['../images/fleet/v-29seat.jpg'], tiers: [], priceOnRequest: true, note: '大型团体包场，价格请私讯客服报价。' },
     '33seat': {
       name: '33人座',
-      photos: ['images/fleet/v-33seat.jpg', 'images/fleet/v-33seat-interior-1.jpg', 'images/fleet/v-33seat-interior-2.jpg', 'images/fleet/v-33seat-interior-3.jpg', 'images/fleet/v-33seat-interior-4.jpg'],
-      tiers: [], priceOnRequest: true, note: '大型团体包场，真皮座椅、车内空间宽敞，价格依人数、天数、路线面洽。'
+      photos: ['../images/fleet/v-33seat.jpg', '../images/fleet/v-33seat-interior-1.jpg', '../images/fleet/v-33seat-interior-2.jpg', '../images/fleet/v-33seat-interior-3.jpg', '../images/fleet/v-33seat-interior-4.jpg'],
+      tiers: [], priceOnRequest: true, note: '大型团体包场，真皮座椅、车内空间宽敞，价格请私讯客服报价。'
     },
-    '45seat': { name: '45人座', photos: ['images/fleet/v-45seat.jpg'], tiers: [], priceOnRequest: true, note: '大型游览车，公司员旅、大型活动包场首选，价格依人数、天数、路线面洽。' }
+    '45seat': { name: '45人座', photos: ['../images/fleet/v-45seat.jpg'], tiers: [], priceOnRequest: true, note: '大型游览车，公司员旅、大型活动包场首选，价格请私讯客服报价。' }
   };
 
   var params = new URLSearchParams(location.search);

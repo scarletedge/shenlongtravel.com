@@ -169,7 +169,7 @@
         <div class="vcard-body">
           <span class="vcard-tag">明确报价</span>
           <h3>5人座</h3>
-          <p class="vcard-price">2,000,000₫起／5小时</p>
+          <p class="vcard-price">1,200,000₫起／4小时</p>
           <p class="vcard-note">适合2–4人市区代步、机场接送。</p>
           <span class="vcard-more">查看详情 →</span>
         </div>
@@ -179,27 +179,27 @@
         <div class="vcard-body">
           <span class="vcard-tag">明确报价</span>
           <h3>7人座</h3>
-          <p class="vcard-price">2,100,000₫起／5小时</p>
+          <p class="vcard-price">1,500,000₫起／4小时</p>
           <p class="vcard-note">小家庭或多人小团体出游首选。</p>
           <span class="vcard-more">查看详情 →</span>
         </div>
       </a>
       <a class="vcard" data-type="9seat" href="fleet-vehicle-detail.html?type=9seat">
-        <div class="vcard-photo"><img src="../images/fleet/v-9seat.jpg" alt="9人座保母车"></div>
+        <div class="vcard-photo"><img src="../images/fleet/v-9seat.jpg" alt="9人座Limousine"></div>
         <div class="vcard-body">
           <span class="vcard-tag">明确报价</span>
-          <h3>9人座保母车</h3>
-          <p class="vcard-price">2,500,000₫起／5小时</p>
+          <h3>9人座Limousine</h3>
+          <p class="vcard-price">2,600,000₫起／4小时</p>
           <p class="vcard-note">中型团体跨城市移动首选。</p>
           <span class="vcard-more">查看详情 →</span>
         </div>
       </a>
       <a class="vcard" data-type="16seat" href="fleet-vehicle-detail.html?type=16seat">
-        <div class="vcard-photo"><img src="../images/fleet/v-16seat.jpg" alt="16人座"></div>
+        <div class="vcard-photo"><img src="../images/fleet/v-16seat.jpg" alt="16人座Limousine"></div>
         <div class="vcard-body">
-          <span class="vcard-tag">团体包车</span>
-          <h3>16人座</h3>
-          <p class="vcard-price">价格面洽</p>
+          <span class="vcard-tag">明确报价</span>
+          <h3>16人座Limousine</h3>
+          <p class="vcard-price">3,600,000₫起／4小时</p>
           <p class="vcard-note">公司员旅、团体活动首选。</p>
           <span class="vcard-more">查看详情 →</span>
         </div>
@@ -207,9 +207,9 @@
       <a class="vcard" data-type="18seat" href="fleet-vehicle-detail.html?type=18seat">
         <div class="vcard-photo"><img src="../images/fleet/v-18seat.jpg" alt="18人座"></div>
         <div class="vcard-body">
-          <span class="vcard-tag">团体包车</span>
+          <span class="vcard-tag">明确报价</span>
           <h3>18人座</h3>
-          <p class="vcard-price">价格面洽</p>
+          <p class="vcard-price">4,000,000₫起／8小时</p>
           <p class="vcard-note">团体活动、商务考察团首选。</p>
           <span class="vcard-more">查看详情 →</span>
         </div>
@@ -219,7 +219,7 @@
         <div class="vcard-body">
           <span class="vcard-tag">团体包车</span>
           <h3>24人座</h3>
-          <p class="vcard-price">价格面洽</p>
+          <p class="vcard-price">请私讯客服报价</p>
           <p class="vcard-note">中巴团体包场。</p>
           <span class="vcard-more">查看详情 →</span>
         </div>
@@ -229,7 +229,7 @@
         <div class="vcard-body">
           <span class="vcard-tag">团体包车</span>
           <h3>29人座</h3>
-          <p class="vcard-price">价格面洽</p>
+          <p class="vcard-price">请私讯客服报价</p>
           <p class="vcard-note">大型团体包场。</p>
           <span class="vcard-more">查看详情 →</span>
         </div>
@@ -239,7 +239,7 @@
         <div class="vcard-body">
           <span class="vcard-tag">团体包车</span>
           <h3>33人座</h3>
-          <p class="vcard-price">价格面洽</p>
+          <p class="vcard-price">请私讯客服报价</p>
           <p class="vcard-note">大型团体包场，内装实拍照片已更新。</p>
           <span class="vcard-more">查看详情 →</span>
         </div>
@@ -249,7 +249,7 @@
         <div class="vcard-body">
           <span class="vcard-tag">团体包车</span>
           <h3>45人座</h3>
-          <p class="vcard-price">价格面洽</p>
+          <p class="vcard-price">请私讯客服报价</p>
           <p class="vcard-note">大型游览车，公司员旅、大型活动包场首选。</p>
           <span class="vcard-more">查看详情 →</span>
         </div>
@@ -457,7 +457,7 @@
     if (user) {
       if (memberPromo) memberPromo.style.display = 'none';
       if (memberStatus) memberStatus.classList.add('show');
-      if (memberAvatar) memberAvatar.src = user.photoURL || 'images/logo.png';
+      if (memberAvatar) memberAvatar.src = user.photoURL || '../images/logo.png';
       if (memberStatusText) memberStatusText.textContent = '已登录会员：' + (user.email || user.displayName || '') + '，包车服务9折已套用';
       try { localStorage.setItem('slMemberEmail', user.email || ''); } catch (e) {}
 
