@@ -51,6 +51,7 @@ document.addEventListener('DOMContentLoaded', function () {
       loadFleetRequests();
       loadRoutes2();
       loadSlides();
+      loadMembers();
     } else {
       loginScreen.style.display = 'flex';
       adminShell.classList.remove('show');
@@ -1413,5 +1414,73 @@ document.addEventListener('DOMContentLoaded', function () {
       batch.commit().then(function () { showToast('已匯入5張輪播'); loadSlides(); });
     });
   });
+
+  /* =========================================================
+     會員運營中心
+     ========================================================= */
+  var membersListEl = document.getElementById('members-list');
+  var DISCOUNT_OPTIONS = ['9折', '85折', '8折', '無優惠'];
+
+  function memberCardHTML(id, d) {
+    d = d || {};
+    var registered = d.registeredAt && d.registeredAt.toDate ? d.registeredAt.toDate().toLocaleString('zh-TW') : '—';
+    var lastLogin = d.lastLoginAt && d.lastLoginAt.toDate ? d.lastLoginAt.toDate().toLocaleString('zh-TW') : '—';
+    var avatar = d.photoURL || '../images/logo.png';
+    return (
+      '<div class="admin-card" data-id="' + id + '">' +
+      '<div class="admin-row" style="align-items:center">' +
+        '<img src="' + avatar + '" alt="" style="width:44px;height:44px;border-radius:50%;object-fit:cover;flex-shrink:0">' +
+        '<div class="admin-field"><label style="color:var(--accent);font-weight:700">📧 Gmail</label><input value="' + (d.email || '—') + '" disabled style="font-weight:700;color:var(--accent)"></div>' +
+        '<div class="admin-field"><label>姓名</label><input value="' + (d.displayName || '—') + '" disabled></div>' +
+      '</div>' +
+      '<div class="admin-row">' +
+        '<div class="admin-field"><label>註冊時間</label><input value="' + registered + '" disabled></div>' +
+        '<div class="admin-field"><label>最後登入</label><input value="' + lastLogin + '" disabled></div>' +
+        '<div class="admin-field"><label>國籍／地區</label><input class="m-nationality" value="' + (d.nationality || '') + '" placeholder="例：台灣"></div>' +
+      '</div>' +
+      '<div class="admin-row">' +
+        '<div class="admin-field"><label>積分</label><input class="m-points" type="number" value="' + (d.points != null ? d.points : 0) + '"></div>' +
+        '<div class="admin-field"><label>可享優惠</label><select class="m-discount">' +
+          DISCOUNT_OPTIONS.map(function (o) { return '<option' + (d.discountTier === o ? ' selected' : '') + '>' + o + '</option>'; }).join('') +
+        '</select></div>' +
+        '<div class="admin-field"><label>Google UID</label><input value="' + id + '" disabled style="font-size:11px;color:var(--muted)"></div>' +
+      '</div>' +
+      '<div class="admin-actions">' +
+        '<button class="btn-save save-member">儲存</button>' +
+        '<button class="btn-delete delete-member">刪除會員</button>' +
+      '</div>' +
+      '</div>'
+    );
+  }
+
+  function loadMembers() {
+    if (!membersListEl) return;
+    membersListEl.innerHTML = '<div class="admin-loading">載入中…</div>';
+    db.collection('members').orderBy('registeredAt', 'desc').get().then(function (snap) {
+      if (snap.empty) { membersListEl.innerHTML = '<p class="desc">目前還沒有會員註冊。</p>'; return; }
+      var html = '';
+      snap.forEach(function (doc) { html += memberCardHTML(doc.id, doc.data()); });
+      membersListEl.innerHTML = html;
+      membersListEl.querySelectorAll('.save-member').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var card = btn.closest('.admin-card');
+          db.collection('members').doc(card.dataset.id).set({
+            points: Number(card.querySelector('.m-points').value) || 0,
+            discountTier: card.querySelector('.m-discount').value,
+            nationality: card.querySelector('.m-nationality').value.trim() || null
+          }, { merge: true }).then(function () { showToast('已更新會員資料'); loadMembers(); });
+        });
+      });
+      membersListEl.querySelectorAll('.delete-member').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          if (!confirm('確定要刪除這位會員嗎？')) return;
+          var card = btn.closest('.admin-card');
+          db.collection('members').doc(card.dataset.id).delete().then(function () { showToast('已刪除'); loadMembers(); });
+        });
+      });
+    }).catch(function () {
+      membersListEl.innerHTML = '<p class="desc">載入失敗，請確認 Firestore 規則已更新並重新整理頁面。</p>';
+    });
+  }
 
 });
