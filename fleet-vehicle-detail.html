@@ -87,13 +87,24 @@
     </div>
 
     <div class="sec-head">
-      <span class="eyebrow">實拍照片</span>
+      <span class="eyebrow" id="dt-gallery-eyebrow">實拍照片</span>
       <h2 id="dt-gallery-head">車輛外觀與內裝</h2>
     </div>
     <div class="gallery-grid single" id="dt-gallery-exterior"></div>
     <p class="hint" id="dt-interior-label" style="display:none;margin:14px 0 10px">車內實拍：</p>
     <div class="gallery-grid" id="dt-gallery-interior"></div>
     <p class="hint" id="dt-gallery-note" style="display:none"></p>
+
+    <div id="dt-luggage" style="display:none">
+      <div class="sec-head" style="margin-top:36px">
+        <span class="eyebrow">行李載放</span>
+        <h2 id="dt-luggage-head">行李載放數量</h2>
+      </div>
+      <div class="luggage-box">
+        <img id="dt-luggage-img" src="" alt="行李載放示意" loading="lazy">
+        <ul class="luggage-list" id="dt-luggage-list"></ul>
+      </div>
+    </div>
 
     <div class="sec-head" style="margin-top:36px">
       <span class="eyebrow">報價與時長</span>
@@ -215,7 +226,9 @@
     },
     '5seat': {
       name: '5人座',
-      photos: ['images/fleet/v-5seat.jpg'],
+      photos: ['images/fleet/v-5seat.jpg', 'images/fleet/v-5seat-interior-1.jpg', 'images/fleet/v-5seat-interior-2.jpg', 'images/fleet/v-5seat-interior-3.jpg', 'images/fleet/v-5seat-interior-4.jpg'],
+      concept: true,
+      luggage: { photo: 'images/fleet/v-5seat-luggage.jpg', items: [['28吋大行李箱', '2個'], ['20吋登機箱／手提包', '2～3個']] },
       tiers: [
         { label: '4小時／50公里（基本）', price: 1200000 },
         { label: '8小時／100公里', price: 1700000 },
@@ -320,6 +333,25 @@
     var note = document.getElementById('dt-gallery-note');
     note.style.display = 'block';
     note.textContent = '這個車型的實拍照片還在補充中，確認調度後我們會提供車輛資訊給您。';
+  }
+
+  // ===== AI概念圖車型：改掉「實拍」字樣 =====
+  if (data.concept && data.photos.length) {
+    document.getElementById('dt-gallery-eyebrow').textContent = '車輛圖片';
+    interiorLabel.textContent = '車內示意圖：';
+    var conceptNote = document.getElementById('dt-gallery-note');
+    conceptNote.style.display = 'block';
+    conceptNote.textContent = '以上圖片為AI概念示意圖，非實拍。';
+  }
+
+  // ===== 行李載放 =====
+  if (data.luggage) {
+    document.getElementById('dt-luggage').style.display = 'block';
+    document.getElementById('dt-luggage-img').src = data.luggage.photo;
+    document.getElementById('dt-luggage-head').textContent = data.name + '行李載放數量';
+    document.getElementById('dt-luggage-list').innerHTML = data.luggage.items.map(function (it) {
+      return '<li><span>' + it[0] + '</span><strong>' + it[1] + '</strong></li>';
+    }).join('');
   }
 
   // ===== 報價 =====
