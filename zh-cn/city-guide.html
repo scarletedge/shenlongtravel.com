@@ -73,10 +73,14 @@
 
 <section class="city-hero">
   <div class="wrap">
-    <span class="eyebrow" id="ch-eyebrow">VIETNAM</span>
-    <h1 id="ch-title">城市介绍</h1>
-    <p id="ch-desc">城市介绍内容准备中。</p>
-    <a class="city-hero-cta" id="ch-cta" href="fleet.html#vehicle-section">直接选车型 +</a>
+    <div class="city-hero-photo"><img id="ch-photo" src="../images/cities/hanoi.jpg" alt=""></div>
+    <div class="city-hero-info">
+      <span class="eyebrow" id="ch-eyebrow">VIETNAM</span>
+      <h1 id="ch-title">城市介绍</h1>
+      <p id="ch-desc">城市介绍内容准备中。</p>
+      <a class="city-hero-cta" id="ch-cta" href="fleet.html#vehicle-section">直接选车型 +</a>
+      <p class="city-hero-caption" id="ch-caption"></p>
+    </div>
   </div>
 </section>
 
@@ -220,20 +224,31 @@
 
   var CITY_NAMES_EN = { danang: 'DA NANG', hanoi: 'HANOI', hcmc: 'HO CHI MINH CITY', nhatrang: 'NHA TRANG', phuquoc: 'PHU QUOC', dalat: 'DA LAT' };
   var CITY_NAMES = { danang: '岘港', hanoi: '河内', hcmc: '胡志明', nhatrang: '芽庄', phuquoc: '富国岛', dalat: '大叻' };
+  // 城市首图：沿用 fleet.html 选城市时同一张照片
+  var CITY_PHOTOS = { danang: '../images/cities/danang.jpg', hanoi: '../images/cities/hanoi.jpg', hcmc: '../images/cities/hcmc.jpg', nhatrang: '../images/cities/nhatrang.jpg', phuquoc: '../images/cities/phuquoc.jpg', dalat: '../images/cities/dalat.jpg' };
 
   var city = new URLSearchParams(location.search).get('city');
   var data = CITY_DATA[city];
 
+  var photoEl = document.getElementById('ch-photo');
   var eyebrowEl = document.getElementById('ch-eyebrow');
   var titleEl = document.getElementById('ch-title');
   var descEl = document.getElementById('ch-desc');
   var ctaEl = document.getElementById('ch-cta');
+  var captionEl = document.getElementById('ch-caption');
   var floatCtaEl = document.getElementById('ch-float-cta');
   var icEyebrowEl = document.getElementById('ic-eyebrow');
   var icTitleEl = document.getElementById('ic-title');
   var icLinkEl = document.getElementById('ic-link');
   var icGridEl = document.getElementById('ic-grid');
   var bcEl = document.getElementById('bc-city-name');
+
+  if (city && CITY_PHOTOS[city]) {
+    photoEl.src = CITY_PHOTOS[city];
+    photoEl.alt = (CITY_NAMES[city] || city) + '城市形象照';
+  } else {
+    document.querySelector('.city-hero-photo').style.display = 'none';
+  }
 
   function setVehicleLink(a) {
     if (city) {
@@ -252,6 +267,7 @@
     descEl.textContent = data.desc;
     icEyebrowEl.textContent = data.infoEyebrow;
     icTitleEl.textContent = data.infoTitle;
+    captionEl.textContent = data.name + '城市形象照';
     icGridEl.innerHTML = data.cards.map(function (c) {
       return '<div class="info-card">' +
         (c.photo ? '<div class="info-card-photo"><img src="' + c.photo + '" alt="' + c.title + '" loading="lazy"></div>' : '') +
@@ -266,6 +282,7 @@
     eyebrowEl.textContent = 'VIETNAM / ' + (CITY_NAMES_EN[city] || city.toUpperCase());
     titleEl.textContent = cname;
     descEl.textContent = cname + '的完整城市介绍正在准备中。升龙可帮你定制行程，协助你判断包车路线与时间安排，车型和费用公开，注册会员可享95折——欢迎先私讯客服了解更多。';
+    captionEl.textContent = cname + '城市形象照';
     icEyebrowEl.textContent = '景点简介准备中';
     icTitleEl.textContent = cname + '景点简介';
     icGridEl.innerHTML = '<div class="info-card"><div class="info-card-body"><h3>内容准备中</h3><p>这座城市的景点简介还在整理，欢迎先私讯客服，由专人为您介绍路线与景点。</p></div></div>';
