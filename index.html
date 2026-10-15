@@ -140,7 +140,7 @@
     <div class="sec-head">
       <span class="eyebrow">What We Do</span>
       <h2>一條龍服務</h2>
-      <p>「千里之行，始於足下」——升龍負責辦妥手續和安排行程，你只負責玩得盡興，一條龍在地服務。</p>
+      <p>「千里之行，始於足下」——升龍負責辦妥手續和安排行程，您只負責玩得盡興，一條龍在地服務。</p>
     </div>
 
     <div class="tier-list">
@@ -389,23 +389,6 @@
 <script src="js/widget.js"></script>
 <script>
 (function () {
-  // ===== 導覽列主 CTA：未登入 → 點擊開啟 Google 登入彈窗；已登入 → 顯示「會員已登入」並連到車型區 =====
-  // 登入邏輯在 js/member-auth.js（與包車頁共用）。會員系統不可用時，按鈕維持原本連結，導向包車頁會員區塊（#member）。
-  var btn = document.getElementById('nav-member-cta');
-  if (!btn || !window.SLMember || !SLMember.available) return;
-  btn.addEventListener('click', function (e) {
-    if (SLMember.user) return;
-    e.preventDefault();
-    SLMember.signIn();
-  });
-  SLMember.onChange(function (user) {
-    if (user) { btn.textContent = '會員已登入'; btn.href = 'fleet.html#vehicle-section'; }
-    else { btn.textContent = '我也要成龍'; btn.href = 'fleet.html#member'; }
-  });
-})();
-</script>
-<script>
-(function () {
   var track = document.getElementById('hero-carousel');
   var dotsBox = document.getElementById('hc-dots');
   var prevBtn = document.getElementById('hc-prev');
@@ -417,20 +400,20 @@
     {
       order: 0, theme: 'dark', eyebrow: 'ShenLong Travel · Vietnam',
       title: '人生很難，<em>就來越南</em>。',
-      desc: '升龍，源自河內古名「飛升之龍」——你在越南的專屬靠山。「授人以魚，不如授人以升龍」，越難辦的事，就越要在越南辦，這條路我們比你熟。',
+      desc: '升龍，源自河內古名「飛升之龍」——您在越南的專屬靠山。「授人以魚，不如授人以漁——我們不只帶路，更讓您看懂在地門道。」越難辦的事，就越要在越南辦，這條路我們比您熟。',
       ctaText: '專治各種難', ctaLink: 'essential-services.html',
       cta2Text: '再來玩大的', cta2Link: 'premium-experience.html'
     },
     {
       order: 1, theme: 'dark', eyebrow: '越難越行　快速通關',
-      title: '下機就有人等你——<em>機場快速通關</em>',
+      title: '下機就有人等您——<em>機場快速通關</em>',
       desc: '「知者不排隊，排隊者不知。」VIP禮遇通道，免排隊，全越南主要機場皆可預約——下機第一步，就贏在起跑點。',
       ctaText: '查看快速通關報價', ctaLink: 'fast-track.html'
     },
     {
       order: 2, theme: 'light', eyebrow: '熱門路線',
-      title: '路線都幫你排好了，<em>直接上車就好</em>',
-      desc: '路，我們都探過了，你只管上車。富國島、芽莊美奈胡志明、吉婆島團建⋯⋯精選熱門路線，10人成團即可報價。',
+      title: '路線都幫您排好了，<em>直接上車就好</em>',
+      desc: '路，我們都探過了，您只管上車。富國島、芽莊美奈胡志明、吉婆島團建⋯⋯精選熱門路線，10人成團即可報價。',
       ctaText: '查看熱門路線', ctaLink: 'popular-routes.html'
     },
     {

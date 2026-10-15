@@ -1363,8 +1363,8 @@ document.addEventListener('DOMContentLoaded', function () {
           order: 0, theme: 'dark', active: true,
           eyebrowHant: 'ShenLong Travel · Vietnam', eyebrowSimp: 'ShenLong Travel · Vietnam',
           titleHant: '人生很難，<em>就來越南</em>。', titleSimp: '人生很难，<em>就来越南</em>。',
-          descHant: '升龍，源自河內古名「飛升之龍」——你在越南的專屬靠山。越難辦的事，就越要在越南辦，升龍罩你，體驗什麼叫『升龍活虎』。',
-          descSimp: '升龙，源自河内古名「飞升之龙」——你在越南的专属靠山。越难办的事，就越要在越南办，升龙罩你，体验什么叫『升龙活虎』。',
+          descHant: '升龍，源自河內古名「飛升之龍」——你在越南的專屬靠山。越難辦的事，就越要在越南辦，有升龍在，體驗什麼叫『升龍活虎』。',
+          descSimp: '升龙，源自河内古名「飞升之龙」——你在越南的专属靠山。越难办的事，就越要在越南办，有升龙在，体验什么叫『升龙活虎』。',
           ctaTextHant: '專治各種難', ctaTextSimp: '专治各种难', ctaLink: 'essential-services.html', ctaExternal: false,
           cta2TextHant: '再來玩大的', cta2TextSimp: '再来玩大的', cta2Link: 'premium-experience.html'
         },

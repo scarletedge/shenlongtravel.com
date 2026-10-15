@@ -60,14 +60,14 @@
     </nav>
     <div class="lang-switch"><a class="active">简</a><span>／</span><a href="../premium-experience.html">繁</a></div>
     <div style="display:flex;align-items:center;gap:14px">
-      <a href="#itinerary" class="cta-btn">升龙带你飞</a>
+      <a href="fleet.html#member" class="cta-btn" id="nav-member-cta">我也要成龙</a>
       <button class="menu-toggle" aria-label="打开菜单" aria-expanded="false">☰</button>
     </div>
   </div>
 </header>
 
 <div class="breadcrumb">
-  <div class="wrap"><a href="index.html">首页</a><span>／</span>越混越好</div>
+  <div class="wrap"><a href="index.html">首页</a><span>／</span>定制行程与地陪导游</div>
 </div>
 
 <main>
@@ -76,10 +76,10 @@
   <img class="bg-watermark" src="../images/logo-watermark.png" alt="" aria-hidden="true">
   <img class="bg-bagua" src="../images/bagua-watermark.svg" alt="" aria-hidden="true">
   <div class="wrap hero-inner">
-    <span class="eyebrow">Premium Experience · 越混越好</span>
-    <h1>越『混』越好，才叫玩得起。</h1>
+    <span class="eyebrow">Premium Experience · 越走越深</span>
+    <h1>越走越『深』，才算真正认识越南。</h1>
     <p class="serif" style="font-size:clamp(17px,2vw,21px);color:var(--muted);margin:-4px 0 24px">跟着升龙，有钱更要有面儿。</p>
-    <p class="lead">这是我们的核心获利点，也是升龙最能发挥「越南全境资源＋在地执行能力」的地方。不是中介转包，是真正跑在路上的团队——排面，我们帮你『混』出来。</p>
+    <p class="lead">这是我们的核心获利点，也是升龙最能发挥「越南全境资源＋在地执行能力」的地方。不是中介转包，是真正跑在路上的团队——您要的体面，我们为您一步步安排到位。</p>
   </div>
 </div>
 
@@ -116,19 +116,19 @@
         <p>适合公司团建或多日行程团体。</p>
       </div>
       <div class="fleet-card biz">
-        <span class="badge">老板排面款</span>
+        <span class="badge">商务尊享款</span>
         <svg class="fleet-icon" viewBox="0 0 60 30"><path d="M4 22 L8 12 L20 7 L40 7 L50 13 L56 22 M4 22 L56 22 M14 22 a4 4 0 1 0 0.1 0 M44 22 a4 4 0 1 0 0.1 0"/></svg>
         <h3>7座商务车</h3>
         <p>商务接待、高阶主管出行首选，内装舒适。</p>
       </div>
       <div class="fleet-card biz">
-        <span class="badge">老板排面款</span>
+        <span class="badge">商务尊享款</span>
         <svg class="fleet-icon" viewBox="0 0 60 30"><path d="M4 22 L8 12 L20 7 L42 7 L52 13 L56 22 M4 22 L56 22 M14 22 a4 4 0 1 0 0.1 0 M46 22 a4 4 0 1 0 0.1 0"/></svg>
         <h3>9座商务车（保姆车）</h3>
         <p>商务考察团或摄影团队，空间与舒适兼具。</p>
       </div>
       <div class="fleet-card biz">
-        <span class="badge">老板排面款</span>
+        <span class="badge">商务尊享款</span>
         <svg class="fleet-icon" viewBox="0 0 60 30"><path d="M4 22 L8 12 L20 7 L42 7 L52 13 L56 22 M4 22 L56 22 M14 22 a4 4 0 1 0 0.1 0 M46 22 a4 4 0 1 0 0.1 0"/></svg>
         <h3>11座商务车</h3>
         <p>大型商务考察团的尊荣级选择。</p>
@@ -237,7 +237,7 @@
   <div class="wrap">
     <div class="sec-head">
       <span class="eyebrow">02 · Tailored Itinerary</span>
-      <h2>私人定制行程——『混』出你的排面</h2>
+      <h2>私人定制行程——走出您的体面</h2>
       <p>我们不提供固定套装行程。告诉我们你的细节，团队将为你规划专属路线——不确定的栏位可以跳过，先填你知道的部分就好。</p>
     </div>
 
@@ -672,7 +672,7 @@
       </div>
     </div>
 
-    <p class="center mt-lg"><a href="local-insider.html" class="btn-ghost">下一步：越玩越疯 →</a></p>
+    <p class="center mt-lg"><a href="local-insider.html" class="btn-ghost">下一步：在地探店 →</a></p>
   </div>
 </section>
 
@@ -696,8 +696,8 @@
         <a href="fleet.html">包车服务</a>
         <a href="premium-experience.html">定制行程／地陪导游</a>
         <a href="partner-stores.html">合作店家</a>
-        <a href="local-insider.html">越玩越疯（在地探店）</a>
-        <a href="about.html">谁在罩你（关于我们）</a>
+        <a href="local-insider.html">在地探店</a>
+        <a href="about.html">关于我们</a>
       </div>
       <div>
         <h4>联系与关注</h4>
@@ -756,8 +756,10 @@
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
 <script src="../js/firebase-config.js"></script>
+<script src="../js/member-auth.js"></script>
 <script src="../js/widget.js"></script>
 <script>
 (function () {

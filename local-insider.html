@@ -61,14 +61,14 @@
     </nav>
     <div class="lang-switch"><a href="zh-cn/local-insider.html">简</a><span>／</span><a class="active">繁</a></div>
     <div style="display:flex;align-items:center;gap:14px">
-      <a href="visa.html" class="cta-btn">升龍帶你飛</a>
+      <a href="fleet.html#member" class="cta-btn" id="nav-member-cta">我也要成龍</a>
       <button class="menu-toggle" aria-label="開啟選單" aria-expanded="false">☰</button>
     </div>
   </div>
 </header>
 
 <div class="breadcrumb">
-  <div class="wrap"><a href="index.html">首頁</a><span>／</span>越玩越瘋</div>
+  <div class="wrap"><a href="index.html">首頁</a><span>／</span>在地探店</div>
 </div>
 
 <main>
@@ -77,8 +77,8 @@
   <img class="bg-watermark" src="images/logo-watermark.png" alt="" aria-hidden="true">
   <img class="bg-bagua" src="images/bagua-watermark.svg" alt="" aria-hidden="true">
   <div class="wrap hero-inner">
-    <span class="eyebrow">Local Insider · 越玩越瘋</span>
-    <h1>越玩越『瘋』，才不枉來一趟越南。</h1>
+    <span class="eyebrow">Local Insider · 在地探店</span>
+    <h1>越玩越『懂』，才不枉來一趟越南。</h1>
     <p class="serif" style="font-size:clamp(17px,2vw,21px);color:var(--muted);margin:-4px 0 24px">升龍帶路，用影片說故事。</p>
     <p class="lead">與其看長篇文字介紹，不如直接看我們親自走訪的影片。所有推薦皆來自團隊實地探訪，不用你自己踩雷。訂閱 YouTube 頻道掌握第一手更新。</p>
     <p class="channel-row">
@@ -140,7 +140,7 @@
       <li>在地人才知道的隱藏版小店</li>
       <li>用餐禮儀與點餐小提醒</li>
     </ul>
-    <p class="center mt-lg"><a href="premium-experience.html" class="btn-ghost">想安排專屬行程？越混越好 →</a></p>
+    <p class="center mt-lg"><a href="premium-experience.html" class="btn-ghost">想安排專屬行程？越走越深 →</a></p>
   </div>
 </section>
 
@@ -164,8 +164,8 @@
         <a href="fleet.html">包車服務</a>
         <a href="premium-experience.html">定制行程／地陪導遊</a>
         <a href="partner-stores.html">合作店家</a>
-        <a href="local-insider.html">越玩越瘋（在地探店）</a>
-        <a href="about.html">誰在罩你（關於我們）</a>
+        <a href="local-insider.html">在地探店</a>
+        <a href="about.html">關於我們</a>
       </div>
       <div>
         <h4>聯絡與追蹤</h4>
@@ -223,6 +223,11 @@
   </button>
 </div>
 
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+<script src="js/member-auth.js"></script>
 <script src="js/widget.js"></script>
 </body>
 </html>

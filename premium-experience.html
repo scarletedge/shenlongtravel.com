@@ -61,14 +61,14 @@
     </nav>
     <div class="lang-switch"><a href="zh-cn/premium-experience.html">简</a><span>／</span><a class="active">繁</a></div>
     <div style="display:flex;align-items:center;gap:14px">
-      <a href="#itinerary" class="cta-btn">升龍帶你飛</a>
+      <a href="fleet.html#member" class="cta-btn" id="nav-member-cta">我也要成龍</a>
       <button class="menu-toggle" aria-label="開啟選單" aria-expanded="false">☰</button>
     </div>
   </div>
 </header>
 
 <div class="breadcrumb">
-  <div class="wrap"><a href="index.html">首頁</a><span>／</span>越混越好</div>
+  <div class="wrap"><a href="index.html">首頁</a><span>／</span>定制行程與地陪導遊</div>
 </div>
 
 <main>
@@ -77,10 +77,10 @@
   <img class="bg-watermark" src="images/logo-watermark.png" alt="" aria-hidden="true">
   <img class="bg-bagua" src="images/bagua-watermark.svg" alt="" aria-hidden="true">
   <div class="wrap hero-inner">
-    <span class="eyebrow">Premium Experience · 越混越好</span>
-    <h1>越『混』越好，才叫玩得起。</h1>
+    <span class="eyebrow">Premium Experience · 越走越深</span>
+    <h1>越走越『深』，才算真正認識越南。</h1>
     <p class="serif" style="font-size:clamp(17px,2vw,21px);color:var(--muted);margin:-4px 0 24px">跟著升龍，有錢更要有面。</p>
-    <p class="lead">這是我們的核心獲利點，也是升龍最能發揮「越南全境資源＋在地執行能力」的地方。不是中介轉包，是真正跑在路上的團隊——排面，我們幫你『混』出來。</p>
+    <p class="lead">這是我們的核心獲利點，也是升龍最能發揮「越南全境資源＋在地執行能力」的地方。不是中介轉包，是真正跑在路上的團隊——您要的體面，我們為您一步步安排到位。</p>
   </div>
 </div>
 
@@ -115,7 +115,7 @@
   <div class="wrap">
     <div class="sec-head">
       <span class="eyebrow">02 · Tailored Itinerary</span>
-      <h2>私人定制行程——『混』出你的排面</h2>
+      <h2>私人定制行程——走出您的體面</h2>
       <p>我們不提供固定套裝行程。告訴我們您的細節，團隊將為您規劃專屬路線——不確定的欄位可以跳過，先填您知道的部分就好。</p>
     </div>
 
@@ -551,7 +551,7 @@
       </div>
     </div>
 
-    <p class="center mt-lg"><a href="local-insider.html" class="btn-ghost">下一步：越玩越瘋 →</a></p>
+    <p class="center mt-lg"><a href="local-insider.html" class="btn-ghost">下一步：在地探店 →</a></p>
   </div>
 </section>
 
@@ -575,8 +575,8 @@
         <a href="fleet.html">包車服務</a>
         <a href="premium-experience.html">定制行程／地陪導遊</a>
         <a href="partner-stores.html">合作店家</a>
-        <a href="local-insider.html">越玩越瘋（在地探店）</a>
-        <a href="about.html">誰在罩你（關於我們）</a>
+        <a href="local-insider.html">在地探店</a>
+        <a href="about.html">關於我們</a>
       </div>
       <div>
         <h4>聯絡與追蹤</h4>
@@ -635,8 +635,10 @@
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
 <script src="js/firebase-config.js"></script>
+<script src="js/member-auth.js"></script>
 <script src="js/widget.js"></script>
 <script>
 (function () {

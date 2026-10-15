@@ -137,7 +137,7 @@
     <div class="sec-head">
       <span class="eyebrow">What We Do</span>
       <h2>一条龙服务</h2>
-      <p>「千里之行，始于足下」——升龙负责办妥手续和安排行程，你只负责玩得尽兴，一条龙在地服务。</p>
+      <p>「千里之行，始于足下」——升龙负责办妥手续和安排行程，您只负责玩得尽兴，一条龙在地服务。</p>
     </div>
 
     <div class="tier-list">
@@ -176,7 +176,7 @@
         <div>
           <a class="tier-link" href="local-insider.html">
             <h3>在地探索——升龙带路</h3>
-            <p>顶级Spa、高端KTV与夜生活、宝藏餐厅——「大巧若拙」，真正的内行从不张扬，我们用视频带你看门道。</p>
+            <p>顶级Spa、高端KTV与夜生活、宝藏餐厅——「大巧若拙」，真正的内行从不张扬，我们用视频带您看门道。</p>
           </a>
           <div class="tier-tags">
             <a href="local-insider.html#spa">Spa推荐</a>
@@ -255,7 +255,7 @@
   <div class="wrap">
     <p>只有想不到，<em>没有做不到</em>。</p>
     <div class="divider"></div>
-    <p>定制化程度，<em>超乎你的想象</em>。</p>
+    <p>定制化程度，<em>超乎您的想象</em>。</p>
     <p class="center mt-lg"><a href="premium-experience.html#itinerary" class="btn-ghost">告诉我们您的需求，为您规划行程 →</a></p>
   </div>
 </section>
@@ -382,23 +382,6 @@
 <script src="../js/widget.js"></script>
 <script>
 (function () {
-  // ===== 導覽列主 CTA：未登入 → 點擊開啟 Google 登入彈窗；已登入 → 顯示「会员已登录」並連到車型區 =====
-  // 登入邏輯在 js/member-auth.js（與包車頁共用）。會員系統不可用時，按鈕維持原本連結，導向包車頁會員區塊（#member）。
-  var btn = document.getElementById('nav-member-cta');
-  if (!btn || !window.SLMember || !SLMember.available) return;
-  btn.addEventListener('click', function (e) {
-    if (SLMember.user) return;
-    e.preventDefault();
-    SLMember.signIn();
-  });
-  SLMember.onChange(function (user) {
-    if (user) { btn.textContent = '会员已登录'; btn.href = 'fleet.html#vehicle-section'; }
-    else { btn.textContent = '我也要成龙'; btn.href = 'fleet.html#member'; }
-  });
-})();
-</script>
-<script>
-(function () {
   var track = document.getElementById('hero-carousel');
   var dotsBox = document.getElementById('hc-dots');
   var prevBtn = document.getElementById('hc-prev');
@@ -410,20 +393,20 @@
     {
       order: 0, theme: 'dark', eyebrow: 'ShenLong Travel · Vietnam',
       title: '人生很难，<em>就来越南</em>。',
-      desc: '升龙，源自河内古名「飞升之龙」——你在越南的专属靠山。「授人以鱼，不如授人以升龙」，越难办的事，就越要在越南办，这条路我们比你熟。',
+      desc: '升龙，源自河内古名「飞升之龙」——您在越南的专属靠山。「授人以鱼，不如授人以渔——我们不只带路，更让您看懂在地门道。」越难办的事，就越要在越南办，这条路我们比您熟。',
       ctaText: '专治各种难', ctaLink: 'essential-services.html',
       cta2Text: '再来玩大的', cta2Link: 'premium-experience.html'
     },
     {
       order: 1, theme: 'dark', eyebrow: '越难越行　快速通关',
-      title: '下机就有人等你——<em>机场快速通关</em>',
+      title: '下机就有人等您——<em>机场快速通关</em>',
       desc: '「知者不排队，排队者不知。」VIP礼遇通道，免排队，全越南主要机场皆可预约——下机第一步，就赢在起跑点。',
       ctaText: '查看快速通关报价', ctaLink: 'fast-track.html'
     },
     {
       order: 2, theme: 'light', eyebrow: '热门路线',
-      title: '路线都帮你排好了，<em>直接上车就好</em>',
-      desc: '路，我们都探过了，你只管上车。富国岛、芽庄美奈胡志明、吉婆岛团建⋯⋯精选热门路线，10人成团即可报价。',
+      title: '路线都帮您排好了，<em>直接上车就好</em>',
+      desc: '路，我们都探过了，您只管上车。富国岛、芽庄美奈胡志明、吉婆岛团建⋯⋯精选热门路线，10人成团即可报价。',
       ctaText: '查看热门路线', ctaLink: 'popular-routes.html'
     },
     {

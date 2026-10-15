@@ -11,6 +11,7 @@
        .onChange(cb)             cb(user, info)；user 為 null 代表未登入；
                                  info = { isNew, hasNationality }
        .user                     目前登入者（未登入為 null）
+   - 另會自動接管頁面上 id="nav-member-cta" 的導覽列按鈕（見下方 wireNavCta）。
    ========================================================= */
 (function (w) {
   var isHans = (document.documentElement.lang || '').toLowerCase().indexOf('hans') > -1;
@@ -26,6 +27,8 @@
   var available = typeof FIREBASE_READY !== 'undefined' && FIREBASE_READY &&
     typeof firebase !== 'undefined' && !!firebase.auth &&
     typeof auth !== 'undefined' && !!auth && typeof db !== 'undefined' && !!db;
+
+  var CTA_TEXT = isHans ? { out: '我也要成龙', in: '会员已登录' } : { out: '我也要成龍', in: '會員已登入' };
 
   var SLMember = {
     available: available,
@@ -64,6 +67,24 @@
     SLMember.user = user;
     listeners.slice().forEach(function (cb) { cb(user, info); });
   }
+
+  // ===== 導覽列主 CTA（id="nav-member-cta"）：未登入 → 點擊開 Google 登入彈窗；已登入 → 「會員已登入」連到車型區 =====
+  // 會員系統不可用時不接手，按鈕維持頁面上原本的連結（fleet.html#member）。
+  function wireNavCta() {
+    var btn = document.getElementById('nav-member-cta');
+    if (!btn) return;
+    btn.addEventListener('click', function (e) {
+      if (SLMember.user) return;
+      e.preventDefault();
+      SLMember.signIn();
+    });
+    SLMember.onChange(function (user) {
+      if (user) { btn.textContent = CTA_TEXT['in']; btn.href = 'fleet.html#vehicle-section'; }
+      else { btn.textContent = CTA_TEXT.out; btn.href = 'fleet.html#member'; }
+    });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', wireNavCta);
+  else wireNavCta();
 
   auth.onAuthStateChanged(function (user) {
     if (!user) {

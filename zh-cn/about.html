@@ -78,14 +78,14 @@
     </nav>
     <div class="lang-switch"><a class="active">简</a><span>／</span><a href="../about.html">繁</a></div>
     <div style="display:flex;align-items:center;gap:14px">
-      <a href="visa.html" class="cta-btn">升龙带你飞</a>
+      <a href="fleet.html#member" class="cta-btn" id="nav-member-cta">我也要成龙</a>
       <button class="menu-toggle" aria-label="打开菜单" aria-expanded="false">☰</button>
     </div>
   </div>
 </header>
 
 <div class="breadcrumb">
-  <div class="wrap"><a href="index.html">首页</a><span>／</span>谁在罩你</div>
+  <div class="wrap"><a href="index.html">首页</a><span>／</span>关于我们</div>
 </div>
 
 <main>
@@ -94,9 +94,9 @@
   <img class="bg-watermark" src="../images/logo-watermark.png" alt="" aria-hidden="true">
   <img class="bg-bagua" src="../images/bagua-watermark.svg" alt="" aria-hidden="true">
   <div class="wrap hero-inner">
-    <span class="eyebrow">About Us · 谁在罩你</span>
-    <h1>谁在罩你？<em>升龙罩你</em>。</h1>
-    <p class="serif" style="font-size:clamp(17px,2vw,21px);color:var(--muted);margin:-4px 0 24px">不是中介、不是二道贩子，是真正在地『罩』着你的团队。</p>
+    <span class="eyebrow">About Us · 关于我们</span>
+    <h1>在越南，有<em>升龙</em>为您把关。</h1>
+    <p class="serif" style="font-size:clamp(17px,2vw,21px);color:var(--muted);margin:-4px 0 24px">不是中介、不是二道贩子，是真正在地执行、全程为您把关的团队。</p>
     <p class="lead">升龙旅行社 ShenLong Travel，2025年12月15日成立于越南兴安省（Hưng Yên），团队成员在越南生活工作7年以上。我们是一家有营业执照、有注册地址的在地公司——不是中介，是真正在跑的团队。</p>
   </div>
 </div>
@@ -105,7 +105,7 @@
   <div class="wrap">
     <div class="sec-head">
       <span class="eyebrow">Concerns → Solutions</span>
-      <h2>你担心的，我们都『罩』得住</h2>
+      <h2>您担心的，我们都替您想到了</h2>
     </div>
     <table class="compare">
       <thead>
@@ -211,7 +211,7 @@
         <span class="role">导游翻译</span>
       </div>
     </div>
-    <p class="team-shared-desc">藏龙越南10年，手上握着扎实、最多样的越南在地资源，什么问题都能秒回，最擅长在还没开口之前，就先猜需要什么。</p>
+    <p class="team-shared-desc">扎根越南7年以上，手上握着扎实、最多样的越南在地资源，什么问题都能秒回，最擅长在还没开口之前，就先猜需要什么。</p>
     <p class="center team-cta">→ 私信右下角咨询按钮，找Joey谈商务合作或整体行程统筹，我们会直接帮你对接窗口。</p>
   </div>
 </section>
@@ -290,8 +290,8 @@
         <a href="fleet.html">包车服务</a>
         <a href="premium-experience.html">定制行程／地陪导游</a>
         <a href="partner-stores.html">合作店家</a>
-        <a href="local-insider.html">越玩越疯（在地探店）</a>
-        <a href="about.html">谁在罩你（关于我们）</a>
+        <a href="local-insider.html">在地探店</a>
+        <a href="about.html">关于我们</a>
       </div>
       <div>
         <h4>联系与关注</h4>
@@ -350,8 +350,10 @@
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
 <script src="../js/firebase-config.js"></script>
+<script src="../js/member-auth.js"></script>
 <script src="../js/widget.js"></script>
 <script>
 (function () {
