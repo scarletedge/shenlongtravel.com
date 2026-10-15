@@ -81,9 +81,9 @@
 
 <section>
   <div class="wrap">
-    <div class="vt-city-banner" id="vt-city-banner" style="display:none">
-      <span>您選擇的城市：<strong id="vt-city-name"></strong></span>
-      <a class="change-city" href="fleet.html">重新選擇城市 →</a>
+    <div class="vt-city-banner" id="vt-city-banner">
+      <span>您選擇的城市：<strong id="vt-city-name">尚未選擇（客服會與您確認調度地點）</strong></span>
+      <a class="change-city" href="fleet.html#city-section" id="vt-change-city">選擇城市 →</a>
     </div>
 
     <div class="sec-head">
@@ -100,10 +100,7 @@
         <span class="eyebrow">行李載放</span>
         <h2 id="dt-luggage-head">行李載放數量</h2>
       </div>
-      <div class="luggage-box">
-        <img id="dt-luggage-img" src="" alt="行李載放示意" loading="lazy">
-        <ul class="luggage-list" id="dt-luggage-list"></ul>
-      </div>
+      <div id="dt-luggage-wrap"></div>
     </div>
 
     <div class="sec-head" style="margin-top:36px">
@@ -113,6 +110,20 @@
     <div class="tier-grid" id="dt-tiers"></div>
     <div class="fee-box" id="dt-fee-box" style="display:none"></div>
     <p class="hint" id="dt-request-quote" style="display:none">此車型價格請私訊右下角客服報價。</p>
+    <noscript><p class="hint">請開啟瀏覽器的 JavaScript 以查看報價；各車型起價請見<a href="fleet.html#vehicle-section">包車列表</a>，或直接私訊右下角客服。</p></noscript>
+
+    <div class="fee-info" id="fee-info">
+      <div class="sec-head" style="margin-top:36px">
+        <span class="eyebrow">Fees</span>
+        <h2>費用說明</h2>
+      </div>
+      <div class="grid cols-3">
+      <div class="card"><h3>費用已包含</h3><ul class="fee-list"><li>專屬司機服務</li><li>油資</li><li>過路費</li><li>停車費</li><li>司機餐費</li></ul></div>
+      <div class="card"><h3>里程</h3><ul class="fee-list"><li>每次包車含 100 公里。</li><li>超出 100 公里的部分，每公里加收 50,000₫。</li></ul></div>
+      <div class="card"><h3>超時費</h3><ul class="fee-list"><li>超出包車時數的部分，依車型及當日司機時薪計算。</li><li>越南法定假日的司機時薪與平日不同，假日超時費率會另外計算。</li><li>確切金額由客服在確認行程時一併告知，實際費用以客服確認為準。</li></ul></div>
+      </div>
+    </div>
+
 
     <div class="member-promo" style="margin-top:36px">
       <div>
@@ -135,7 +146,9 @@
       <div>
         <h4>升龍旅行社 ShenLong Travel</h4>
         <p>您在越南的專屬私人管家</p>
+        <p>CÔNG TY TNHH DU LỊCH SHEN LONG TRAVEL</p>
         <p>Căn 50 San Hô 20, Khu đô thị Vinhomes Ocean Park 2,<br>Xã Nghĩa Trụ, Tỉnh Hưng Yên, Việt Nam</p>
+        <p>稅號（MST）：0901220145</p>
         <p>成立於 2025 年 12 月</p>
       </div>
       <div>
@@ -239,7 +252,12 @@
     },
     '7seat': {
       name: '7人座',
-      photos: ['images/fleet/v-7seat.jpg'],
+      photos: ['images/fleet/v-7seat.jpg', 'images/fleet/v-7seat-interior-1.jpg', 'images/fleet/v-7seat-interior-2.jpg', 'images/fleet/v-7seat-interior-3.jpg', 'images/fleet/v-7seat-interior-4.jpg'],
+      concept: true,
+      luggage: { options: [
+        { photo: 'images/fleet/v-7seat-luggage-1.jpg', label: '2個28吋＋2個20吋' },
+        { photo: 'images/fleet/v-7seat-luggage-2.jpg', label: '3個24吋' }
+      ] },
       tiers: [
         { label: '4小時／50公里（基本）', price: 1500000 },
         { label: '8小時／100公里', price: 2000000 },
@@ -276,7 +294,8 @@
         { label: '8小時／100公里（基本）', price: 4000000 },
         { label: '10小時／200公里', price: 5000000 }
       ],
-      note: '團體活動、商務考察團首選。'
+      feeNote: '18人座<strong>8小時起租</strong>，沒有4小時方案；24人座以上請私訊客服報價。',
+      note: '團體活動、商務考察團首選，8小時起租。'
     },
     '24seat': { name: '24人座', photos: ['images/fleet/v-24seat.jpg'], tiers: [], priceOnRequest: true, note: '中巴團體包場，價格請私訊客服報價。' },
     '29seat': { name: '29人座', photos: ['images/fleet/v-29seat.jpg'], tiers: [], priceOnRequest: true, note: '大型團體包場，價格請私訊客服報價。' },
@@ -295,7 +314,10 @@
 
   if (city && CITY_NAMES[city]) {
     document.getElementById('vt-city-name').textContent = CITY_NAMES[city];
-    document.getElementById('vt-city-banner').style.display = 'flex';
+    document.getElementById('vt-change-city').textContent = '重新選擇城市 →';
+    document.getElementById('vt-change-city').href = 'fleet.html?city=' + city + '#city-section';
+    var backLink = document.querySelector('.center.mt-lg a');
+    if (backLink) backLink.href = 'fleet.html?city=' + city + '#vehicle-section';
   }
 
   if (!data) {
@@ -347,10 +369,14 @@
   // ===== 行李載放 =====
   if (data.luggage) {
     document.getElementById('dt-luggage').style.display = 'block';
-    document.getElementById('dt-luggage-img').src = data.luggage.photo;
     document.getElementById('dt-luggage-head').textContent = data.name + '行李載放數量';
-    document.getElementById('dt-luggage-list').innerHTML = data.luggage.items.map(function (it) {
-      return '<li><span>' + it[0] + '</span><strong>' + it[1] + '</strong></li>';
+    var opts = data.luggage.options || [{ photo: data.luggage.photo, items: data.luggage.items }];
+    document.getElementById('dt-luggage-wrap').innerHTML = opts.map(function (o, i) {
+      var li = o.items ? o.items.map(function (it) {
+        return '<li><span>' + it[0] + '</span><strong>' + it[1] + '</strong></li>';
+      }).join('') : '<li><span>可載放</span><strong>' + o.label + '</strong></li>';
+      return (i ? '<p class="luggage-or">或</p>' : '') +
+        '<div class="luggage-box"><img src="' + o.photo + '" alt="行李載放示意" loading="lazy"><ul class="luggage-list">' + li + '</ul></div>';
     }).join('');
   }
 

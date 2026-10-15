@@ -83,65 +83,89 @@
   </div>
 </div>
 
-<section>
+<section id="city-section">
   <div class="wrap">
     <div class="city-select-head">
       <div>
-        <span class="eyebrow">服務範圍 · Choose Your City</span>
+        <span class="eyebrow">Step 1 · 選擇城市</span>
         <h2>先選城市，再選車</h2>
         <p>點一下您要出發的城市（選填），接著往下選車型，就能看到完整報價；不只這6個城市——越南全境皆可調度，其餘城市歡迎私訊客服確認。</p>
       </div>
       <a class="view-all" href="#vehicle-section">直接選車型 ↓</a>
     </div>
     <div class="city-grid-v2">
-      <a class="city-card-v2" href="city-guide.html?city=danang" data-city="danang" data-city-name="峴港">
+      <div class="city-pick">
+        <button type="button" class="city-card-v2" data-city="danang" data-city-name="峴港" aria-pressed="false">
         <img src="images/cities/danang.jpg" alt="峴港">
         <span class="ccv2-eyebrow">中部 · Central</span>
         <span class="ccv2-bottom">
           <span><span class="ccv2-name">峴港</span><span class="ccv2-en">Da Nang</span></span>
-          <span class="ccv2-arrow">↗</span>
+          
         </span>
-      </a>
-      <a class="city-card-v2" href="city-guide.html?city=hanoi" data-city="hanoi" data-city-name="河內">
+          <span class="ccv2-check" aria-hidden="true">✓</span>
+        </button>
+        <a class="city-guide-link" href="city-guide.html?city=danang">城市攻略 ↗</a>
+      </div>
+      <div class="city-pick">
+        <button type="button" class="city-card-v2" data-city="hanoi" data-city-name="河內" aria-pressed="false">
         <img src="images/cities/hanoi.jpg" alt="河內">
         <span class="ccv2-eyebrow">北部 · North</span>
         <span class="ccv2-bottom">
           <span><span class="ccv2-name">河內</span><span class="ccv2-en">Hanoi</span></span>
-          <span class="ccv2-arrow">↗</span>
+          
         </span>
-      </a>
-      <a class="city-card-v2" href="city-guide.html?city=hcmc" data-city="hcmc" data-city-name="胡志明">
+          <span class="ccv2-check" aria-hidden="true">✓</span>
+        </button>
+        <a class="city-guide-link" href="city-guide.html?city=hanoi">城市攻略 ↗</a>
+      </div>
+      <div class="city-pick">
+        <button type="button" class="city-card-v2" data-city="hcmc" data-city-name="胡志明" aria-pressed="false">
         <img src="images/cities/hcmc.jpg" alt="胡志明市">
         <span class="ccv2-eyebrow">南部 · South</span>
         <span class="ccv2-bottom">
           <span><span class="ccv2-name">胡志明</span><span class="ccv2-en">Ho Chi Minh City</span></span>
-          <span class="ccv2-arrow">↗</span>
+          
         </span>
-      </a>
-      <a class="city-card-v2" href="city-guide.html?city=nhatrang" data-city="nhatrang" data-city-name="芽莊">
+          <span class="ccv2-check" aria-hidden="true">✓</span>
+        </button>
+        <a class="city-guide-link" href="city-guide.html?city=hcmc">城市攻略 ↗</a>
+      </div>
+      <div class="city-pick">
+        <button type="button" class="city-card-v2" data-city="nhatrang" data-city-name="芽莊" aria-pressed="false">
         <img src="images/cities/nhatrang.jpg" alt="芽莊">
         <span class="ccv2-eyebrow">中部 · Central Coast</span>
         <span class="ccv2-bottom">
           <span><span class="ccv2-name">芽莊</span><span class="ccv2-en">Nha Trang</span></span>
-          <span class="ccv2-arrow">↗</span>
+          
         </span>
-      </a>
-      <a class="city-card-v2" href="city-guide.html?city=phuquoc" data-city="phuquoc" data-city-name="富國島">
+          <span class="ccv2-check" aria-hidden="true">✓</span>
+        </button>
+        <a class="city-guide-link" href="city-guide.html?city=nhatrang">城市攻略 ↗</a>
+      </div>
+      <div class="city-pick">
+        <button type="button" class="city-card-v2" data-city="phuquoc" data-city-name="富國島" aria-pressed="false">
         <img src="images/cities/phuquoc.jpg" alt="富國島">
         <span class="ccv2-eyebrow">南部島嶼 · South Island</span>
         <span class="ccv2-bottom">
           <span><span class="ccv2-name">富國島</span><span class="ccv2-en">Phu Quoc</span></span>
-          <span class="ccv2-arrow">↗</span>
+          
         </span>
-      </a>
-      <a class="city-card-v2" href="city-guide.html?city=dalat" data-city="dalat" data-city-name="大叻">
+          <span class="ccv2-check" aria-hidden="true">✓</span>
+        </button>
+        <a class="city-guide-link" href="city-guide.html?city=phuquoc">城市攻略 ↗</a>
+      </div>
+      <div class="city-pick">
+        <button type="button" class="city-card-v2" data-city="dalat" data-city-name="大叻" aria-pressed="false">
         <img src="images/cities/dalat.jpg" alt="大叻">
         <span class="ccv2-eyebrow">中部高原 · Highlands</span>
         <span class="ccv2-bottom">
           <span><span class="ccv2-name">大叻</span><span class="ccv2-en">Da Lat</span></span>
-          <span class="ccv2-arrow">↗</span>
+          
         </span>
-      </a>
+          <span class="ccv2-check" aria-hidden="true">✓</span>
+        </button>
+        <a class="city-guide-link" href="city-guide.html?city=dalat">城市攻略 ↗</a>
+      </div>
     </div>
   </div>
 </section>
@@ -149,9 +173,10 @@
 <section class="alt" id="vehicle-section">
   <div class="wrap">
     <div class="sec-head">
-      <span class="eyebrow">選擇車型</span>
+      <span class="eyebrow">Step 2 · 選擇車型</span>
       <h2>4人座到45人座，按小時計費</h2>
-      <p id="vehicle-city-hint">尚未選擇城市也沒關係，送出需求時客服會直接確認調度地點。</p>
+      <p class="vehicle-rule-note">16人座以下 4 小時起租，18人座 8 小時起租；24人座以上請私訊客服報價。</p>
+      <p id="vehicle-city-hint" class="city-bar">尚未選擇城市也沒關係，送出需求時客服會直接確認調度地點。</p>
     </div>
     <div class="vcard-grid">
       <a class="vcard" data-type="4seat" href="fleet-vehicle-detail.html?type=4seat">
@@ -207,7 +232,7 @@
       <a class="vcard" data-type="18seat" href="fleet-vehicle-detail.html?type=18seat">
         <div class="vcard-photo"><img src="images/fleet/v-18seat.jpg" alt="18人座"></div>
         <div class="vcard-body">
-          <span class="vcard-tag">明確報價</span>
+          <span class="vcard-tag">明確報價</span><span class="vcard-tag vcard-tag-badge">8小時起租</span>
           <h3>18人座</h3>
           <p class="vcard-price">4,000,000₫起／8小時</p>
           <p class="vcard-note">團體活動、商務考察團首選。</p>
@@ -258,7 +283,21 @@
   </div>
 </section>
 
-<section class="alt">
+<section id="fee-info">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Fees</span>
+      <h2>費用說明</h2>
+    </div>
+    <div class="grid cols-3">
+      <div class="card"><h3>費用已包含</h3><ul class="fee-list"><li>專屬司機服務</li><li>油資</li><li>過路費</li><li>停車費</li><li>司機餐費</li></ul></div>
+      <div class="card"><h3>里程</h3><ul class="fee-list"><li>每次包車含 100 公里。</li><li>超出 100 公里的部分，每公里加收 50,000₫。</li></ul></div>
+      <div class="card"><h3>超時費</h3><ul class="fee-list"><li>超出包車時數的部分，依車型及當日司機時薪計算。</li><li>越南法定假日的司機時薪與平日不同，假日超時費率會另外計算。</li><li>確切金額由客服在確認行程時一併告知，實際費用以客服確認為準。</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<section class="alt" id="member">
   <div class="wrap">
     <div class="member-promo">
       <div>
@@ -306,7 +345,9 @@
       <div>
         <h4>升龍旅行社 ShenLong Travel</h4>
         <p>您在越南的專屬私人管家</p>
+        <p>CÔNG TY TNHH DU LỊCH SHEN LONG TRAVEL</p>
         <p>Căn 50 San Hô 20, Khu đô thị Vinhomes Ocean Park 2,<br>Xã Nghĩa Trụ, Tỉnh Hưng Yên, Việt Nam</p>
+        <p>稅號（MST）：0901220145</p>
         <p>成立於 2025 年 12 月</p>
       </div>
       <div>
@@ -377,34 +418,86 @@
 <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
 <script src="js/firebase-config.js"></script>
+<script src="js/member-auth.js"></script>
 <script src="js/widget.js"></script>
 <script>
 (function () {
-  // ===== 從網址帶入城市（由城市介紹頁的「直接選車型」按鈕導回） =====
+  // ===== 先選城市，再選車：選取城市（可取消）→ 寫入網址與 localStorage → 車型連結自動帶城市 =====
   var CITY_NAMES = { danang: '峴港', hanoi: '河內', hcmc: '胡志明', nhatrang: '芽莊', phuquoc: '富國島', dalat: '大叻' };
-  var cityCards = document.querySelectorAll('.city-card-v2');
+  var STORE_KEY = 'slSelectedCity';
+  var cityCards = document.querySelectorAll('button.city-card-v2');
   var vehicleLinks = document.querySelectorAll('.vcard[data-type]');
-  var vehicleCityHint = document.getElementById('vehicle-city-hint');
-  var selectedCity = new URLSearchParams(location.search).get('city');
+  var cityBar = document.getElementById('vehicle-city-hint');
+  var DEFAULT_HINT = cityBar ? cityBar.textContent : '';
+  var selectedCity = null;
 
-  if (selectedCity && CITY_NAMES[selectedCity]) {
+  function storeGet() { try { return localStorage.getItem(STORE_KEY); } catch (e) { return null; } }
+  function storeSet(v) { try { if (v) localStorage.setItem(STORE_KEY, v); else localStorage.removeItem(STORE_KEY); } catch (e) {} }
+
+  vehicleLinks.forEach(function (a) { a.setAttribute('data-base-href', a.getAttribute('href')); });
+
+  function render() {
     cityCards.forEach(function (c) {
-      c.classList.toggle('active', c.dataset.city === selectedCity);
+      var on = c.dataset.city === selectedCity;
+      c.classList.toggle('active', on);
+      c.setAttribute('aria-pressed', on ? 'true' : 'false');
     });
-    if (vehicleCityHint) {
-      vehicleCityHint.textContent = '已選擇城市：' + CITY_NAMES[selectedCity] + '——往下選車型即可送出需求。';
-    }
     vehicleLinks.forEach(function (a) {
-      var url = new URL(a.getAttribute('href'), location.href);
-      url.searchParams.set('city', selectedCity);
-      a.setAttribute('href', url.pathname + url.search);
+      var url = new URL(a.getAttribute('data-base-href'), location.href);
+      if (selectedCity) url.searchParams.set('city', selectedCity);
+      a.setAttribute('href', url.pathname.split('/').pop() + url.search);
     });
+    if (cityBar) {
+      if (selectedCity) {
+        cityBar.classList.add('has-city');
+        cityBar.innerHTML = '目前城市：<strong>' + CITY_NAMES[selectedCity] + '</strong>｜<a href="#city-section" id="change-city-link">更改</a>';
+        var link = document.getElementById('change-city-link');
+        link.addEventListener('click', function (e) {
+          e.preventDefault();
+          var sec = document.getElementById('city-section');
+          if (sec) sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+      } else {
+        cityBar.classList.remove('has-city');
+        cityBar.textContent = DEFAULT_HINT;
+      }
+    }
   }
+
+  function syncUrl() {
+    try {
+      var url = new URL(location.href);
+      if (selectedCity) url.searchParams.set('city', selectedCity); else url.searchParams.delete('city');
+      history.replaceState(null, '', url.pathname + url.search + url.hash);
+    } catch (e) {}
+  }
+
+  function setCity(code, scroll) {
+    selectedCity = (code && CITY_NAMES[code] && code !== selectedCity) ? code : null;
+    storeSet(selectedCity);
+    syncUrl();
+    render();
+    if (scroll && selectedCity) {
+      var target = document.getElementById('vehicle-section');
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+
+  cityCards.forEach(function (c) {
+    c.addEventListener('click', function () { setCity(c.dataset.city, true); });
+  });
+
+  // 初始狀態：網址參數優先，其次 localStorage
+  var fromUrl = new URLSearchParams(location.search).get('city');
+  if (fromUrl && CITY_NAMES[fromUrl]) selectedCity = fromUrl;
+  else if (storeGet() && CITY_NAMES[storeGet()]) selectedCity = storeGet();
+  if (selectedCity) { storeSet(selectedCity); syncUrl(); }
+  render();
 })();
 </script>
 <script>
 (function () {
-  // ===== 免費註冊會員，9折起（Google 帳號登入） =====
+  // ===== 免費註冊會員，9折起（登入邏輯在 js/member-auth.js，與首頁共用） =====
   var googleBtn = document.getElementById('google-signin-btn');
   var memberPromo = document.querySelector('.member-promo');
   var memberStatus = document.getElementById('member-status');
@@ -415,78 +508,37 @@
   var nationalitySelect = document.getElementById('member-nationality');
   var nationalitySaveBtn = document.getElementById('member-nationality-save');
 
-  if (typeof FIREBASE_READY === 'undefined' || !FIREBASE_READY || typeof firebase === 'undefined' || !firebase.auth) {
+  if (!window.SLMember || !SLMember.available) {
     if (googleBtn) {
-      googleBtn.addEventListener('click', function () {
-        alert('會員系統尚未設定完成，請直接私訊右下角客服，我們幫您手動開通會員優惠。');
-      });
+      googleBtn.addEventListener('click', function () { alert(window.SLMember ? SLMember.msg('unavailable') : ''); });
     }
     return;
   }
 
-  var auth = firebase.auth();
-  var googleProvider = new firebase.auth.GoogleAuthProvider();
-
   if (googleBtn) {
     googleBtn.addEventListener('click', function () {
       googleBtn.disabled = true;
-      auth.signInWithPopup(googleProvider).catch(function (err) {
-        alert('登入失敗，請再試一次，或直接私訊右下角客服註冊會員。');
-        console.error(err);
-      }).finally(function () { googleBtn.disabled = false; });
+      SLMember.signIn().then(function () { googleBtn.disabled = false; });
     });
   }
-
-  if (memberSignoutBtn) {
-    memberSignoutBtn.addEventListener('click', function () { auth.signOut(); });
-  }
-
+  if (memberSignoutBtn) memberSignoutBtn.addEventListener('click', function () { SLMember.signOut(); });
   if (nationalitySaveBtn) {
     nationalitySaveBtn.addEventListener('click', function () {
-      var user = auth.currentUser;
-      if (!user) return;
-      db.collection('members').doc(user.uid).set({
-        nationality: nationalitySelect.value || null
-      }, { merge: true }).then(function () {
-        nationalityForm.classList.remove('show');
-      });
+      SLMember.saveNationality(nationalitySelect.value).then(function () { nationalityForm.classList.remove('show'); });
     });
   }
 
-  auth.onAuthStateChanged(function (user) {
+  SLMember.onChange(function (user, info) {
     if (user) {
       if (memberPromo) memberPromo.style.display = 'none';
       if (memberStatus) memberStatus.classList.add('show');
       if (memberAvatar) memberAvatar.src = user.photoURL || 'images/logo.png';
       if (memberStatusText) memberStatusText.textContent = '已登入會員：' + (user.email || user.displayName || '') + '，包車服務9折已套用';
-      try { localStorage.setItem('slMemberEmail', user.email || ''); } catch (e) {}
-
-      db.collection('members').doc(user.uid).get().then(function (doc) {
-        if (!doc.exists) {
-          db.collection('members').doc(user.uid).set({
-            email: user.email || null,
-            displayName: user.displayName || null,
-            photoURL: user.photoURL || null,
-            nationality: null,
-            points: 0,
-            discountTier: '9折',
-            registeredAt: firebase.firestore.FieldValue.serverTimestamp(),
-            lastLoginAt: firebase.firestore.FieldValue.serverTimestamp()
-          }).then(function () {
-            if (nationalityForm) nationalityForm.classList.add('show');
-          });
-        } else {
-          db.collection('members').doc(user.uid).set({
-            lastLoginAt: firebase.firestore.FieldValue.serverTimestamp()
-          }, { merge: true });
-          if (nationalityForm && !doc.data().nationality) nationalityForm.classList.add('show');
-        }
-      });
+      if (nationalityForm && !info.hasNationality) nationalityForm.classList.add('show');
     } else {
       if (memberPromo) memberPromo.style.display = '';
       if (memberStatus) memberStatus.classList.remove('show');
       if (nationalityForm) nationalityForm.classList.remove('show');
-      try { localStorage.removeItem('slMemberEmail'); } catch (e) {}
     }
   });
 })();
