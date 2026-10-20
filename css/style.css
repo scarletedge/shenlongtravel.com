@@ -949,26 +949,26 @@ button.city-card-v2{font:inherit;background:none;appearance:none;-webkit-appeara
 /* ===== 右下角聯絡浮窗：聯絡管道卡片（.sl-contact-*） ===== */
 .contact-panel.sl-contact-panel{
   width:360px;max-width:calc(100vw - 32px);box-sizing:border-box;
-  background:#0B1219;border:1px solid #2A3D4A;border-radius:24px;padding:20px;
-  box-shadow:0 18px 48px rgba(0,0,0,.45);
+  background:#F7F0E3;border:1.5px solid #C9A24B;border-radius:24px;padding:20px;
+  box-shadow:0 8px 24px rgba(120,80,30,.18);
   flex-direction:column;gap:0;position:relative;
   max-height:calc(100vh - 120px);overflow-y:auto;overscroll-behavior:contain;
 }
-.sl-contact-close{position:absolute;top:14px;right:16px;width:32px;height:32px;border:0;background:transparent;color:#8FA3AE;font-size:24px;line-height:32px;cursor:pointer;border-radius:50%;padding:0}
-.sl-contact-close:hover,.sl-contact-close:focus-visible{color:#E6F1F5}
-.sl-contact-title{color:#E6F1F5;font-weight:600;font-size:18px;margin:0 40px 4px 0}
-.sl-contact-sub{color:#8FA3AE;font-size:14px;line-height:1.5;margin-bottom:16px}
+.sl-contact-close{position:absolute;top:14px;right:16px;width:32px;height:32px;border:0;background:transparent;color:#8A6A2F;font-size:24px;line-height:32px;cursor:pointer;border-radius:50%;padding:0}
+.sl-contact-close:hover,.sl-contact-close:focus-visible{color:#B8401F}
+.sl-contact-title{color:#B8401F;font-weight:600;font-size:18px;margin:0 40px 4px 0}
+.sl-contact-sub{color:#8A6A2F;font-size:14px;line-height:1.5;margin-bottom:16px}
 .sl-contact-list{display:flex;flex-direction:column;gap:12px}
-.sl-contact-card{display:flex;align-items:center;gap:0;padding:16px 20px;border:1px solid #2A3D4A;border-radius:18px;background:linear-gradient(135deg,#12262E 0%,#131B26 100%);text-decoration:none;transition:border-color .2s,background .2s}
-.sl-contact-card:hover,.sl-contact-card:focus-visible{border-color:#7FD8C0;background:linear-gradient(135deg,#16303A 0%,#18222E 100%);outline:none}
+.sl-contact-card{display:flex;align-items:center;gap:0;padding:16px 20px;border:1px solid #E4D3AE;border-radius:18px;background:#FFFDF8;text-decoration:none;transition:border-color .2s,background .2s}
+.sl-contact-card:hover,.sl-contact-card:active,.sl-contact-card:focus-visible{border-color:#E8562A;background:#FDF1E6;outline:none}
 .sl-contact-logo{width:40px;height:40px;border-radius:10px;display:grid;place-items:center;flex-shrink:0}
 .sl-contact-logo img{width:24px;height:24px;object-fit:contain;display:block}
-.sl-contact-name{margin-left:16px;color:#E6F1F5;font-weight:600;font-size:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;flex:1 1 auto}
-.sl-contact-arrow{margin-left:auto;padding-left:12px;color:#7FD8C0;font-size:18px;flex-shrink:0}
-.sl-contact-qr-btn{display:block;margin:6px 0 0 4px;padding:2px 0;border:0;background:none;color:#7FD8C0;font-size:13px;cursor:pointer;font-family:inherit}
+.sl-contact-name{margin-left:16px;color:#3A2A18;font-weight:600;font-size:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;flex:1 1 auto}
+.sl-contact-arrow{margin-left:auto;padding-left:12px;color:#E8562A;font-size:18px;flex-shrink:0}
+.sl-contact-qr-btn{display:block;margin:6px 0 0 4px;padding:2px 0;border:0;background:none;color:#B8401F;font-size:13px;cursor:pointer;font-family:inherit}
 .sl-contact-qr-btn:hover{text-decoration:underline}
 .sl-contact-qr{margin-top:10px;display:flex;justify-content:center}
 .sl-contact-qr[hidden]{display:none}
-.sl-contact-qr img{width:160px;height:auto;background:#fff;border-radius:12px;padding:8px;box-sizing:content-box;display:block}
+.sl-contact-qr img{width:160px;height:auto;background:#fff;border:1px solid #E4D3AE;border-radius:12px;padding:8px;box-sizing:content-box;display:block}
 @media(max-width:768px){.sl-contact-qr-btn,.sl-contact-qr{display:none!important}}
 @media(max-width:520px){.contact-panel.sl-contact-panel{width:calc(100vw - 32px);margin-right:-6px}}
