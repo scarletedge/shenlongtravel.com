@@ -117,6 +117,32 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
+  // ===== 聯絡浮窗：關閉按鈕、QR code 展開／收起（同時只展開一個） =====
+  var closeBtn = panel.querySelector('.sl-contact-close');
+  if (closeBtn) {
+    closeBtn.addEventListener('click', function () {
+      panel.classList.remove('open');
+      toggle.setAttribute('aria-expanded', 'false');
+    });
+  }
+  var qrButtons = panel.querySelectorAll('.sl-contact-qr-btn');
+  qrButtons.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var box = btn.parentNode.querySelector('.sl-contact-qr');
+      var willOpen = box.hasAttribute('hidden');
+      qrButtons.forEach(function (b) {
+        b.parentNode.querySelector('.sl-contact-qr').setAttribute('hidden', '');
+        b.setAttribute('aria-expanded', 'false');
+        b.textContent = b.getAttribute('data-show');
+      });
+      if (willOpen) {
+        box.removeAttribute('hidden');
+        btn.setAttribute('aria-expanded', 'true');
+        btn.textContent = btn.getAttribute('data-hide');
+      }
+    });
+  });
+
   // 手機版選單開關
   var menuToggle = document.querySelector('.menu-toggle');
   var menu = document.querySelector('nav.menu');

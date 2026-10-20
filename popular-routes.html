@@ -146,37 +146,53 @@
 </footer>
 
 <div class="contact-widget">
-  <div class="contact-panel" role="dialog" aria-label="聯絡我們">
-    <div class="ch">
-      <img class="qr qr-only" src="images/qr-line.png" alt="LINE 官方帳號 QR code" width="64" height="64" loading="lazy">
-      <div>
-        <span class="ch-name">LINE</span><br>
-        <span class="ch-hint qr-only">掃碼加好友</span>
-        <a class="chat-link link-only" href="https://line.me/ti/p/tg6LUFsHGD" target="_blank" rel="noopener">點擊開始對話</a>
+  <div class="contact-panel sl-contact-panel" role="dialog" aria-label="聯絡我們">
+    <button type="button" class="sl-contact-close" aria-label="關閉">×</button>
+    <div class="sl-contact-title">聯絡升龍客服</div>
+    <div class="sl-contact-sub">選擇您習慣的通訊軟體，1–2 小時內回覆</div>
+    <div class="sl-contact-list">
+      <div class="sl-contact-item">
+        <a class="sl-contact-card" href="https://line.me/ti/p/tg6LUFsHGD" target="_blank" rel="noopener" aria-label="開啟LINE對話（新分頁）">
+          <span class="sl-contact-logo" style="background:#06C755"><img src="images/icons/line.svg" alt="" width="24" height="24"></span>
+          <span class="sl-contact-name">官方 LINE</span>
+          <span class="sl-contact-arrow" aria-hidden="true">↗</span>
+        </a>
+        <button type="button" class="sl-contact-qr-btn" aria-expanded="false" data-show="顯示 QR code" data-hide="收起 QR code">顯示 QR code</button>
+        <div class="sl-contact-qr" hidden><img src="images/qr-line.png" alt="官方 LINE QR code" loading="lazy"></div>
       </div>
-    </div>
-    <div class="ch">
-      <img class="qr qr-only" src="images/qr-whatsapp.png" alt="WhatsApp QR code" width="64" height="64" loading="lazy">
-      <div>
-        <span class="ch-name">WhatsApp</span><br>
-        <span class="ch-hint qr-only">掃碼開始對話</span>
-        <a class="chat-link link-only" href="https://wa.me/85268746147" target="_blank" rel="noopener">點擊開始對話</a>
+      <div class="sl-contact-item">
+        <a class="sl-contact-card" href="https://wa.me/qr/O264YVQPDFH4G1" target="_blank" rel="noopener" aria-label="開啟WhatsApp對話（新分頁）">
+          <span class="sl-contact-logo" style="background:#25D366"><img src="images/icons/whatsapp.svg" alt="" width="24" height="24"></span>
+          <span class="sl-contact-name">WhatsApp</span>
+          <span class="sl-contact-arrow" aria-hidden="true">↗</span>
+        </a>
+        <button type="button" class="sl-contact-qr-btn" aria-expanded="false" data-show="顯示 QR code" data-hide="收起 QR code">顯示 QR code</button>
+        <div class="sl-contact-qr" hidden><img src="images/qr-whatsapp.png" alt="WhatsApp QR code" loading="lazy"></div>
       </div>
-    </div>
-    <div class="ch">
-      <div class="ch-icon-fallback">Z</div>
-      <div>
-        <span class="ch-name">Zalo</span><br>
-        <span class="ch-hint">越南在地聯絡首選</span>
-        <a class="chat-link" href="https://zalo.me/84975898625" target="_blank" rel="noopener">點擊開始對話</a>
+      <div class="sl-contact-item">
+        <a class="sl-contact-card" href="https://work.weixin.qq.com/kfid/kfcf51e145c6ff71335" target="_blank" rel="noopener" aria-label="開啟企業微信對話（新分頁）">
+          <span class="sl-contact-logo" style="background:#07C160"><img src="images/icons/wechat.svg" alt="" width="24" height="24"></span>
+          <span class="sl-contact-name">企業微信</span>
+          <span class="sl-contact-arrow" aria-hidden="true">↗</span>
+        </a>
+        <button type="button" class="sl-contact-qr-btn" aria-expanded="false" data-show="顯示 QR code" data-hide="收起 QR code">顯示 QR code</button>
+        <div class="sl-contact-qr" hidden><img src="images/qr-wechat.png" alt="企業微信 QR code" loading="lazy"></div>
       </div>
-    </div>
-    <div class="ch">
-      <img class="qr" src="images/qr-wechat.png" alt="企業微信客服 QR code" width="64" height="64" loading="lazy">
-      <div>
-        <span class="ch-name">WeChat</span><br>
-        <span class="ch-hint">掃描二維碼，添加我的企業微信</span>
-        <a class="chat-link" href="https://work.weixin.qq.com/kfid/kfc223a3b9c102b6a18" target="_blank" rel="noopener">點擊開始對話</a>
+      <div class="sl-contact-item">
+        <a class="sl-contact-card" href="https://zalo.me/84975898625" target="_blank" rel="noopener" aria-label="開啟Zalo對話（新分頁）">
+          <span class="sl-contact-logo" style="background:#0068FF"><img src="images/icons/zalo.svg" alt="" width="24" height="24"></span>
+          <span class="sl-contact-name">Zalo（越南在地）</span>
+          <span class="sl-contact-arrow" aria-hidden="true">↗</span>
+        </a>
+        <button type="button" class="sl-contact-qr-btn" aria-expanded="false" data-show="顯示 QR code" data-hide="收起 QR code">顯示 QR code</button>
+        <div class="sl-contact-qr" hidden><img src="images/qr-zalo.png" alt="Zalo（越南在地） QR code" loading="lazy"></div>
+      </div>
+      <div class="sl-contact-item">
+        <a class="sl-contact-card" href="https://xhslink.cn/o/3lHdMc5D4pj" target="_blank" rel="noopener" aria-label="開啟小紅書（新分頁）">
+          <span class="sl-contact-logo" style="background:#FF2442"><img src="images/icons/xiaohongshu.svg" alt="" width="24" height="24"></span>
+          <span class="sl-contact-name">小紅書</span>
+          <span class="sl-contact-arrow" aria-hidden="true">↗</span>
+        </a>
       </div>
     </div>
   </div>

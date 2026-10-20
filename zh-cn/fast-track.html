@@ -137,7 +137,7 @@
       <div class="qcb-buttons">
         <a class="qcb-btn" href="https://wa.me/qr/O264YVQPDFH4G1?text=我在快速通关页面，想咨询服务" target="_blank" rel="noopener">WhatsApp</a>
         <a class="qcb-btn" href="https://zalo.me/84975898625" target="_blank" rel="noopener">Zalo</a>
-        <a class="qcb-btn" href="https://work.weixin.qq.com/kfid/kfc223a3b9c102b6a18" target="_blank" rel="noopener">微信</a>
+        <a class="qcb-btn" href="https://work.weixin.qq.com/kfid/kfcf51e145c6ff71335" target="_blank" rel="noopener">微信</a>
         <a class="qcb-btn" href="https://line.me/ti/p/tg6LUFsHGD" target="_blank" rel="noopener">LINE</a>
       </div>
     </div>
@@ -290,37 +290,53 @@
 </footer>
 
 <div class="contact-widget">
-  <div class="contact-panel" role="dialog" aria-label="联系我们">
-    <div class="ch">
-      <img class="qr" src="../images/qr-wechat.png" alt="企业微信客服 QR code" width="64" height="64" loading="lazy">
-      <div>
-        <span class="ch-name">微信 WeChat</span><br>
-        <span class="ch-hint">扫描二维码，添加我的企业微信</span>
-        <a class="chat-link" href="https://work.weixin.qq.com/kfid/kfc223a3b9c102b6a18" target="_blank" rel="noopener">点击开始对话</a>
+  <div class="contact-panel sl-contact-panel" role="dialog" aria-label="联系我们">
+    <button type="button" class="sl-contact-close" aria-label="关闭">×</button>
+    <div class="sl-contact-title">联系升龙客服</div>
+    <div class="sl-contact-sub">选择您习惯的通讯软件，1–2 小时内回复</div>
+    <div class="sl-contact-list">
+      <div class="sl-contact-item">
+        <a class="sl-contact-card" href="https://line.me/ti/p/tg6LUFsHGD" target="_blank" rel="noopener" aria-label="开启LINE对话（新标签页）">
+          <span class="sl-contact-logo" style="background:#06C755"><img src="../images/icons/line.svg" alt="" width="24" height="24"></span>
+          <span class="sl-contact-name">官方 LINE</span>
+          <span class="sl-contact-arrow" aria-hidden="true">↗</span>
+        </a>
+        <button type="button" class="sl-contact-qr-btn" aria-expanded="false" data-show="显示 QR code" data-hide="收起 QR code">显示 QR code</button>
+        <div class="sl-contact-qr" hidden><img src="../images/qr-line.png" alt="官方 LINE QR code" loading="lazy"></div>
       </div>
-    </div>
-    <div class="ch">
-      <img class="qr qr-only" src="../images/qr-line.png" alt="LINE 二维码" width="64" height="64" loading="lazy">
-      <div>
-        <span class="ch-name">LINE</span><br>
-        <span class="ch-hint qr-only">扫码加好友</span>
-        <a class="chat-link link-only" href="https://line.me/ti/p/tg6LUFsHGD" target="_blank" rel="noopener">点击开始对话</a>
+      <div class="sl-contact-item">
+        <a class="sl-contact-card" href="https://wa.me/qr/O264YVQPDFH4G1" target="_blank" rel="noopener" aria-label="开启WhatsApp对话（新标签页）">
+          <span class="sl-contact-logo" style="background:#25D366"><img src="../images/icons/whatsapp.svg" alt="" width="24" height="24"></span>
+          <span class="sl-contact-name">WhatsApp</span>
+          <span class="sl-contact-arrow" aria-hidden="true">↗</span>
+        </a>
+        <button type="button" class="sl-contact-qr-btn" aria-expanded="false" data-show="显示 QR code" data-hide="收起 QR code">显示 QR code</button>
+        <div class="sl-contact-qr" hidden><img src="../images/qr-whatsapp.png" alt="WhatsApp QR code" loading="lazy"></div>
       </div>
-    </div>
-    <div class="ch">
-      <img class="qr qr-only" src="../images/qr-whatsapp.png" alt="WhatsApp 二维码" width="64" height="64" loading="lazy">
-      <div>
-        <span class="ch-name">WhatsApp</span><br>
-        <span class="ch-hint qr-only">扫码开始对话</span>
-        <a class="chat-link link-only" href="https://wa.me/qr/O264YVQPDFH4G1" target="_blank" rel="noopener">点击开始对话</a>
+      <div class="sl-contact-item">
+        <a class="sl-contact-card" href="https://work.weixin.qq.com/kfid/kfcf51e145c6ff71335" target="_blank" rel="noopener" aria-label="开启企业微信对话（新标签页）">
+          <span class="sl-contact-logo" style="background:#07C160"><img src="../images/icons/wechat.svg" alt="" width="24" height="24"></span>
+          <span class="sl-contact-name">企业微信</span>
+          <span class="sl-contact-arrow" aria-hidden="true">↗</span>
+        </a>
+        <button type="button" class="sl-contact-qr-btn" aria-expanded="false" data-show="显示 QR code" data-hide="收起 QR code">显示 QR code</button>
+        <div class="sl-contact-qr" hidden><img src="../images/qr-wechat.png" alt="企业微信 QR code" loading="lazy"></div>
       </div>
-    </div>
-    <div class="ch">
-      <div class="ch-icon-fallback">Z</div>
-      <div>
-        <span class="ch-name">Zalo</span><br>
-        <span class="ch-hint">越南在地联系首选</span>
-        <a class="chat-link" href="https://zalo.me/84975898625" target="_blank" rel="noopener">点击开始对话</a>
+      <div class="sl-contact-item">
+        <a class="sl-contact-card" href="https://zalo.me/84975898625" target="_blank" rel="noopener" aria-label="开启Zalo对话（新标签页）">
+          <span class="sl-contact-logo" style="background:#0068FF"><img src="../images/icons/zalo.svg" alt="" width="24" height="24"></span>
+          <span class="sl-contact-name">Zalo（越南在地）</span>
+          <span class="sl-contact-arrow" aria-hidden="true">↗</span>
+        </a>
+        <button type="button" class="sl-contact-qr-btn" aria-expanded="false" data-show="显示 QR code" data-hide="收起 QR code">显示 QR code</button>
+        <div class="sl-contact-qr" hidden><img src="../images/qr-zalo.png" alt="Zalo（越南在地） QR code" loading="lazy"></div>
+      </div>
+      <div class="sl-contact-item">
+        <a class="sl-contact-card" href="https://xhslink.cn/o/3lHdMc5D4pj" target="_blank" rel="noopener" aria-label="开启小红书（新标签页）">
+          <span class="sl-contact-logo" style="background:#FF2442"><img src="../images/icons/xiaohongshu.svg" alt="" width="24" height="24"></span>
+          <span class="sl-contact-name">小红书</span>
+          <span class="sl-contact-arrow" aria-hidden="true">↗</span>
+        </a>
       </div>
     </div>
   </div>
@@ -491,7 +507,7 @@
           '<a class="qcb-btn" target="_blank" rel="noopener" href="' + whatsappLink(summary) + '">WhatsApp' + (WHATSAPP_NUMBER.indexOf('PASTE_') === 0 ? '' : '（已自动带入内容）') + '</a>' +
           '<a class="qcb-btn" target="_blank" rel="noopener" href="https://zalo.me/84975898625">Zalo</a>' +
           '<a class="qcb-btn" target="_blank" rel="noopener" href="https://line.me/ti/p/tg6LUFsHGD">LINE</a>' +
-          '<a class="qcb-btn" target="_blank" rel="noopener" href="https://work.weixin.qq.com/kfid/kfc223a3b9c102b6a18">微信</a>' +
+          '<a class="qcb-btn" target="_blank" rel="noopener" href="https://work.weixin.qq.com/kfid/kfcf51e145c6ff71335">微信</a>' +
           '<a class="qcb-btn" target="_blank" rel="noopener" href="https://m.me/61592091476467">Messenger</a>' +
         '</div>' +
         '<button type="button" class="btn-ghost" id="ft-copy-btn" style="margin-top:12px" data-text="' + esc + '">📋 复制需求内容（LINE／Zalo／微信／Messenger请贴上后发送）</button>' +
