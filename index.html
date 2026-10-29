@@ -101,18 +101,23 @@
 
 <div class="gold-band"></div>
 
-<!-- ===== 主視覺：左右服務按鈕 + 中間小紅書最新動態 ===== -->
+<!-- ===== 主視覺：YouTube + 小紅書最新動態 ===== -->
 <section class="hero-dragon-banner">
   <div class="wrap hdb-grid">
-    <div class="hdb-btns">
-      <a class="hdb-btn" href="fleet.html">
-        <span class="hdb-btn-title">包車服務 →</span>
-        <span class="hdb-btn-sub">5–11人座保母車，按小時計費，司機熟路</span>
+    <div class="sl-yt" id="sl-yt">
+      <div class="sl-xhs-head"><span class="sl-xhs-badge" style="background:#FF0000">YouTube</span><span class="sl-xhs-headtitle">升龍旅行社・最新影片</span></div>
+      <a class="sl-xhs-card" href="https://www.youtube.com/@ShenLongVietNam" target="_blank" rel="noopener">
+        <span class="sl-xhs-cover"><img src="https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg" alt="YouTube" style="width:100%;height:100%;object-fit:cover" onerror="this.style.display='none'"><span class="sl-xhs-ph" style="position:absolute">YouTube</span></span>
+        <span class="sl-xhs-body">
+          <span class="sl-xhs-date">最新影片</span>
+          <strong class="sl-xhs-posttitle">越南在地推薦，歡迎訂閱頻道</strong>
+          <span class="sl-xhs-go">在 YouTube 查看 ↗</span>
+        </span>
       </a>
-      <a class="hdb-btn" href="popular-routes.html">
-        <span class="hdb-btn-title">熱門路線 →</span>
-        <span class="hdb-btn-sub">真實報價行程，4條路線直接看</span>
-      </a>
+      <div class="sl-xhs-nav">
+        <span></span>
+        <a class="sl-xhs-follow" href="https://www.youtube.com/@ShenLongVietNam" target="_blank" rel="noopener">訂閱 YouTube ↗</a>
+      </div>
     </div>
     <div class="sl-xhs" id="sl-xhs" data-src="data/xhs.json" data-pre="" data-cn="0">
       <!-- 小紅書最新動態：內容讀取 data/xhs.json（每日由你／Grok 更新該檔）。沒有資料時顯示預設的追蹤卡片。 -->
@@ -130,16 +135,24 @@
         <a class="sl-xhs-follow" id="sl-xhs-follow" href="https://xhslink.cn/o/3lHdMc5D4pj" target="_blank" rel="noopener">追蹤小紅書 ↗</a>
       </div>
     </div>
-    <div class="hdb-btns right">
-      <a class="hdb-btn" href="premium-experience.html#guides">
-        <span class="hdb-btn-title">地陪導遊 →</span>
-        <span class="hdb-btn-sub">不只帶路，更懂在地門道</span>
-      </a>
-      <a class="hdb-btn" href="partner-stores.html">
-        <span class="hdb-btn-title">合作店家 →</span>
-        <span class="hdb-btn-sub">在地嚴選商家與夥伴品牌</span>
-      </a>
-    </div>
+  </div>
+  <div class="wrap hdb-bottom" style="margin-top:28px;display:grid;grid-template-columns:repeat(4,1fr);gap:16px">
+    <a class="hdb-btn" href="fleet.html">
+      <span class="hdb-btn-title">包車服務 →</span>
+      <span class="hdb-btn-sub">5–11人座保母車，按小時計費，司機熟路</span>
+    </a>
+    <a class="hdb-btn" href="popular-routes.html">
+      <span class="hdb-btn-title">熱門路線 →</span>
+      <span class="hdb-btn-sub">真實報價行程，4條路線直接看</span>
+    </a>
+    <a class="hdb-btn" href="premium-experience.html#guides">
+      <span class="hdb-btn-title">地陪導遊 →</span>
+      <span class="hdb-btn-sub">不只帶路，更懂在地門道</span>
+    </a>
+    <a class="hdb-btn" href="partner-stores.html">
+      <span class="hdb-btn-title">合作店家 →</span>
+      <span class="hdb-btn-sub">在地嚴選商家與夥伴品牌</span>
+    </a>
   </div>
 </section>
 

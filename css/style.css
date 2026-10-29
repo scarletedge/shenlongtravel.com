@@ -738,7 +738,7 @@ nav.menu a{white-space:nowrap}
 
 /* ===== 首頁：主視覺龍+車banner，左右按鈕組 ===== */
 .hero-dragon-banner{padding:52px 0}
-.hdb-grid{display:grid;grid-template-columns:1fr minmax(260px,420px) 1fr;gap:28px;align-items:center}
+.hdb-grid{display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:start}
 .hdb-img-wrap{text-align:center}
 .hdb-img-wrap img{width:100%;border-radius:var(--radius);box-shadow:0 16px 40px rgba(33,28,21,.16)}
 .hdb-img-wrap .hdb-caption{font-size:13px;color:var(--muted);margin-top:10px}
