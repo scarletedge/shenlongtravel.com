@@ -99,7 +99,7 @@
 
 <div class="gold-band"></div>
 
-<!-- ===== 主视觉：龙+车，左右服务按钮 ===== -->
+<!-- ===== 主视觉：左右服务按钮 + 中间小红书最新动态 ===== -->
 <section class="hero-dragon-banner">
   <div class="wrap hdb-grid">
     <div class="hdb-btns">
@@ -112,9 +112,21 @@
         <span class="hdb-btn-sub">真实报价行程，4条路线直接看</span>
       </a>
     </div>
-    <div class="hdb-img-wrap">
-      <img src="../images/hero-dragon-van.jpg" alt="升龙旅行社接机包车——河内在地车队" loading="lazy">
-      <p class="hdb-caption">越南签证、接机包车与客制私人行程，一条龙服务</p>
+    <div class="sl-xhs" id="sl-xhs" data-src="../data/xhs.json" data-pre="../" data-cn="1">
+      <!-- 小紅書最新動態：內容讀取 data/xhs.json（每日由你／Grok 更新該檔）。沒有資料時顯示預設的追蹤卡片。 -->
+      <div class="sl-xhs-head"><span class="sl-xhs-badge">小红书</span><span class="sl-xhs-headtitle">升龙旅行社・最新动态</span></div>
+      <a class="sl-xhs-card" id="sl-xhs-card" href="https://xhslink.cn/o/3lHdMc5D4pj" target="_blank" rel="noopener">
+        <span class="sl-xhs-cover" id="sl-xhs-cover"><span class="sl-xhs-ph">小红书</span></span>
+        <span class="sl-xhs-body">
+          <span class="sl-xhs-date" id="sl-xhs-date"></span>
+          <strong class="sl-xhs-posttitle" id="sl-xhs-posttitle">每日更新越南在地推荐，欢迎关注</strong>
+          <span class="sl-xhs-go">在小红书查看 ↗</span>
+        </span>
+      </a>
+      <div class="sl-xhs-nav">
+        <span class="sl-xhs-dots" id="sl-xhs-dots"></span>
+        <a class="sl-xhs-follow" id="sl-xhs-follow" href="https://xhslink.cn/o/3lHdMc5D4pj" target="_blank" rel="noopener">关注小红书 ↗</a>
+      </div>
     </div>
     <div class="hdb-btns right">
       <a class="hdb-btn" href="premium-experience.html#guides">
@@ -396,6 +408,64 @@
 <script src="../js/firebase-config.js"></script>
 <script src="../js/member-auth.js"></script>
 <script src="../js/widget.js"></script>
+<script>
+(function () {
+  // ===== 小紅書最新動態：讀取 data/xhs.json，顯示最新 5 則；失敗或沒資料時維持預設追蹤卡片 =====
+  var box = document.getElementById('sl-xhs');
+  if (!box) return;
+  var isCn = box.getAttribute('data-cn') === '1';
+  var pre = box.getAttribute('data-pre') || '';
+  var card = document.getElementById('sl-xhs-card');
+  var coverEl = document.getElementById('sl-xhs-cover');
+  var dateEl = document.getElementById('sl-xhs-date');
+  var titleEl = document.getElementById('sl-xhs-posttitle');
+  var dotsEl = document.getElementById('sl-xhs-dots');
+  var follow = document.getElementById('sl-xhs-follow');
+
+  function safeUrl(u) { return typeof u === 'string' && /^https:\/\//.test(u) ? u : null; }
+  function coverUrl(c) {
+    if (typeof c !== 'string' || !c) return null;
+    if (/^https:\/\//.test(c)) return c;
+    if (/^[\w\-\/\.]+$/.test(c) && c.indexOf('..') === -1) return pre + c;
+    return null;
+  }
+
+  fetch(box.getAttribute('data-src'), { cache: 'no-store' })
+    .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then(function (data) {
+      var profile = safeUrl(data.profile);
+      if (profile) { card.href = profile; follow.href = profile; }
+      var posts = (data.posts || []).filter(function (p) { return p && p.title && safeUrl(p.url); });
+      posts.sort(function (a, b) { return String(b.date || '').localeCompare(String(a.date || '')); });
+      posts = posts.slice(0, 5);
+      if (!posts.length) return;
+
+      function show(i) {
+        var p = posts[i];
+        card.href = safeUrl(p.url);
+        titleEl.textContent = (isCn && p.titleSimp) ? p.titleSimp : p.title;
+        dateEl.textContent = p.date || '';
+        var cu = coverUrl(p.cover);
+        coverEl.textContent = '';
+        if (cu) {
+          var img = document.createElement('img');
+          img.src = cu; img.alt = titleEl.textContent; img.loading = 'lazy';
+          coverEl.appendChild(img);
+        }
+        Array.prototype.forEach.call(dotsEl.children, function (d, k) { d.classList.toggle('active', k === i); });
+      }
+      posts.forEach(function (p, i) {
+        var d = document.createElement('button');
+        d.type = 'button'; d.className = 'sl-xhs-dot';
+        d.setAttribute('aria-label', (isCn ? '第' : '第') + (i + 1) + (isCn ? '则' : '則'));
+        d.addEventListener('click', function () { show(i); });
+        dotsEl.appendChild(d);
+      });
+      show(0);
+    })
+    .catch(function () { /* 維持預設追蹤卡片 */ });
+})();
+</script>
 <script>
 (function () {
   var track = document.getElementById('hero-carousel');
