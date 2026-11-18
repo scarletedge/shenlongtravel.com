@@ -97,10 +97,11 @@
     <div class="sec-head">
       <span class="eyebrow">合作名单</span>
       <h2>目前合作店家</h2>
-      <p>后台会持续添加更多合作店家，若您是越南在地商家、想与升龙合作，欢迎私讯右下角客服联系。</p>
+      <p>我们会持续添加更多合作店家。若您是越南在地商家、想与升龙合作，欢迎私讯右下角客服联系。</p>
     </div>
     <div class="ps-grid" id="ps-grid-content">
-      <div class="ps-loading" style="grid-column:1/-1;text-align:center;padding:30px;color:var(--muted)">加载中…</div>
+      <div class="ps-card"><div style="aspect-ratio:16/10;background:var(--paper-alt);display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:13px">图片准备中</div><div class="ps-body"><span class="ps-tag">科技伙伴</span><h3>Soltech 共享充电宝</h3><p>越南在地共享充电宝服务，升龙旅游客户可顺路租借，随处还机。</p><a href="https://soltechvn.com" target="_blank" rel="noopener" class="btn-ghost" style="margin-top:10px;display:inline-block;font-size:12.5px">前往了解 →</a></div></div>
+      <div class="ps-card" style="display:flex;align-items:center;justify-content:center;min-height:160px;background:var(--paper-alt);border-style:dashed"><span style="color:var(--muted);font-size:13px;text-align:center;padding:0 16px">更多合作店家<br>持续更新中</span></div>
     </div>
   </div>
 </section>
@@ -236,17 +237,28 @@
       '<span style="color:var(--muted);font-size:13px;text-align:center;padding:0 16px">更多合作店家<br>持续更新中</span></div>';
   }
 
-  if (typeof FIREBASE_READY === 'undefined' || !FIREBASE_READY) {
-    render(FALLBACK_STORES);
-    return;
+  render(FALLBACK_STORES);
+
+  if (typeof FIREBASE_READY === 'undefined' || !FIREBASE_READY || typeof db === 'undefined' || !db) return;
+  var settled = false;
+  var timeoutId = setTimeout(function () { settled = true; }, 3000);
+  try {
+    db.collection('partnerStores').where('active', '==', true).get().then(function (snap) {
+      if (settled) return;
+      clearTimeout(timeoutId);
+      settled = true;
+      var list = [];
+      snap.forEach(function (doc) { list.push(doc.data()); });
+      if (list.length) render(list);
+    }).catch(function () {
+      if (settled) return;
+      clearTimeout(timeoutId);
+      settled = true;
+    });
+  } catch (e) {
+    clearTimeout(timeoutId);
+    settled = true;
   }
-  db.collection('partnerStores').where('active', '==', true).get().then(function (snap) {
-    var list = [];
-    snap.forEach(function (doc) { list.push(doc.data()); });
-    render(list.length ? list : FALLBACK_STORES);
-  }).catch(function () {
-    render(FALLBACK_STORES);
-  });
 })();
 </script>
 </body>

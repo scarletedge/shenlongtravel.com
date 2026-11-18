@@ -93,11 +93,66 @@
 
 <!-- ===== Hero ===== -->
 <div class="hero-carousel" id="hero-carousel">
-  <div class="hc-loading" style="padding:120px 0;text-align:center;color:var(--muted)">載入中…</div>
+  <div class="hc-slide theme-dark active">
+    <div class="wrap hero-inner">
+      <span class="eyebrow">ShenLong Travel · Vietnam</span>
+      <h2>人生很難，<em>就來越南</em>。</h2>
+      <p class="hc-desc">升龍，源自河內古名「飛升之龍」——您在越南的專屬靠山。「授人以魚，不如授人以漁——我們不只帶路，更讓您看懂在地門道。」越難辦的事，就越要在越南辦，這條路我們比您熟。</p>
+      <div class="hero-actions">
+        <a href="essential-services.html" class="btn-solid">專治各種難</a><a href="premium-experience.html" class="btn-ghost">再來玩大的</a>
+      </div>
+    </div>
+  </div>
+  <div class="hc-slide theme-dark">
+    <div class="wrap hero-inner">
+      <span class="eyebrow">越難越行　快速通關</span>
+      <h2>下機就有人等您——<em>機場快速通關</em></h2>
+      <p class="hc-desc">「知者不排隊，排隊者不知。」VIP禮遇通道，免排隊，全越南主要機場皆可預約——下機第一步，就贏在起跑點。</p>
+      <div class="hero-actions">
+        <a href="fast-track.html" class="btn-solid">查看快速通關報價</a>
+      </div>
+    </div>
+  </div>
+  <div class="hc-slide theme-light">
+    <div class="wrap hero-inner">
+      <span class="eyebrow">熱門路線</span>
+      <h2>路線都幫您排好了，<em>直接上車就好</em></h2>
+      <p class="hc-desc">路，我們都探過了，您只管上車。富國島、芽莊美奈胡志明、吉婆島團建⋯⋯精選熱門路線，10人成團即可報價。</p>
+      <div class="hero-actions">
+        <a href="popular-routes.html" class="btn-solid">查看熱門路線</a>
+      </div>
+    </div>
+  </div>
+  <div class="hc-slide theme-dark">
+    <div class="wrap hero-inner">
+      <span class="eyebrow">越難越行　簽證代辦</span>
+      <h2>有『簽』有保庇，<em>越南簽證代辦</em></h2>
+      <p class="hc-desc">「有簽走遍天下，無簽寸步難行。」商務簽、旅遊簽、長期簽，2–3個工作天出簽，成功率99.9%。</p>
+      <div class="hero-actions">
+        <a href="visa.html" class="btn-solid">查看簽證代辦</a>
+      </div>
+    </div>
+  </div>
+  <div class="hc-slide theme-navy">
+    <div class="wrap hero-inner">
+      <span class="eyebrow">合作夥伴 · Soltech</span>
+      <h2>出門在外，<em>電永遠不斷</em></h2>
+      <p class="hc-desc">「工欲善其事，必先有電。」升龍旅遊客戶專屬合作——Soltech共享充電寶，越南各大景點、機場、商圈都借得到。</p>
+      <div class="hero-actions">
+        <a href="https://soltechvn.com" class="btn-solid" target="_blank" rel="noopener">前往 Soltech 官網</a>
+      </div>
+    </div>
+  </div>
   <button class="hc-arrow prev" id="hc-prev" aria-label="上一張">‹</button>
   <button class="hc-arrow next" id="hc-next" aria-label="下一張">›</button>
 </div>
-<div class="hc-dots" id="hc-dots"></div>
+<div class="hc-dots" id="hc-dots">
+  <button class="hc-dot active" aria-label="第1張"></button>
+  <button class="hc-dot" aria-label="第2張"></button>
+  <button class="hc-dot" aria-label="第3張"></button>
+  <button class="hc-dot" aria-label="第4張"></button>
+  <button class="hc-dot" aria-label="第5張"></button>
+</div>
 
 <div class="gold-band"></div>
 
@@ -494,6 +549,7 @@
   var nextBtn = document.getElementById('hc-next');
   var current = 0;
   var timer = null;
+  var controlsBound = false;
 
   var FALLBACK_SLIDES = [
     {
@@ -529,10 +585,45 @@
     }
   ];
 
+  function goTo(idx) {
+    var slideEls = track.querySelectorAll('.hc-slide');
+    var dotEls = dotsBox.querySelectorAll('.hc-dot');
+    if (!slideEls.length) return;
+    current = (idx + slideEls.length) % slideEls.length;
+    slideEls.forEach(function (el, i) { el.classList.toggle('active', i === current); });
+    dotEls.forEach(function (el, i) { el.classList.toggle('active', i === current); });
+  }
+
+  function startTimer() {
+    clearInterval(timer);
+    if (track.querySelectorAll('.hc-slide').length <= 1) return;
+    timer = setInterval(function () { goTo(current + 1); }, 6000);
+  }
+  function resetTimer() { startTimer(); }
+
+  function bindControls() {
+    if (controlsBound) return;
+    prevBtn.addEventListener('click', function () { goTo(current - 1); resetTimer(); });
+    nextBtn.addEventListener('click', function () { goTo(current + 1); resetTimer(); });
+    track.addEventListener('mouseenter', function () { clearInterval(timer); });
+    track.addEventListener('mouseleave', startTimer);
+    controlsBound = true;
+  }
+
+  function bindDots() {
+    dotsBox.querySelectorAll('.hc-dot').forEach(function (dot, i) {
+      dot.addEventListener('click', function () { goTo(i); resetTimer(); });
+    });
+  }
+
   function renderSlides(slides) {
-    slides.sort(function (a, b) { return (a.order || 0) - (b.order || 0); });
+    slides = slides.slice().sort(function (a, b) { return (a.order || 0) - (b.order || 0); });
+    clearInterval(timer);
+    track.querySelectorAll('.hc-slide').forEach(function (el) { el.remove(); });
     var loading = track.querySelector('.hc-loading');
     if (loading) loading.remove();
+    dotsBox.innerHTML = '';
+    current = 0;
 
     slides.forEach(function (s, i) {
       var slideEl = document.createElement('div');
@@ -553,47 +644,44 @@
       var dot = document.createElement('button');
       dot.className = 'hc-dot' + (i === 0 ? ' active' : '');
       dot.setAttribute('aria-label', '第' + (i + 1) + '張');
-      dot.addEventListener('click', function () { goTo(i); resetTimer(); });
       dotsBox.appendChild(dot);
     });
 
-    var slideEls = track.querySelectorAll('.hc-slide');
-    var dotEls = dotsBox.querySelectorAll('.hc-dot');
-
-    function goTo(idx) {
-      current = (idx + slideEls.length) % slideEls.length;
-      slideEls.forEach(function (el, i) { el.classList.toggle('active', i === current); });
-      dotEls.forEach(function (el, i) { el.classList.toggle('active', i === current); });
-    }
-
-    prevBtn.addEventListener('click', function () { goTo(current - 1); resetTimer(); });
-    nextBtn.addEventListener('click', function () { goTo(current + 1); resetTimer(); });
-
-    function startTimer() {
-      if (slideEls.length <= 1) return;
-      timer = setInterval(function () { goTo(current + 1); }, 6000);
-    }
-    function resetTimer() { clearInterval(timer); startTimer(); }
+    bindDots();
+    bindControls();
     startTimer();
-    track.addEventListener('mouseenter', function () { clearInterval(timer); });
-    track.addEventListener('mouseleave', startTimer);
   }
 
-  if (typeof FIREBASE_READY === 'undefined' || !FIREBASE_READY) {
-    renderSlides(FALLBACK_SLIDES);
-  } else {
-    db.collection('heroSlides').where('active', '==', true).get().then(function (snap) {
-      var slides = [];
-      snap.forEach(function (doc) {
-        var d = doc.data();
-        slides.push({
-          order: d.order || 0, theme: d.theme, eyebrow: d.eyebrowHant, title: d.titleHant,
-          desc: d.descHant, ctaText: d.ctaTextHant, ctaLink: d.ctaLink, ctaExternal: d.ctaExternal,
-          cta2Text: d.cta2TextHant, cta2Link: d.cta2Link
+  if (!track.querySelector('.hc-slide')) renderSlides(FALLBACK_SLIDES);
+  else { bindDots(); bindControls(); startTimer(); }
+
+  if (typeof FIREBASE_READY !== 'undefined' && FIREBASE_READY && typeof db !== 'undefined' && db) {
+    var settled = false;
+    var timeoutId = setTimeout(function () { settled = true; }, 3000);
+    try {
+      db.collection('heroSlides').where('active', '==', true).get().then(function (snap) {
+        if (settled) return;
+        clearTimeout(timeoutId);
+        settled = true;
+        var slides = [];
+        snap.forEach(function (doc) {
+          var d = doc.data();
+          slides.push({
+            order: d.order || 0, theme: d.theme, eyebrow: d.eyebrowHant, title: d.titleHant,
+            desc: d.descHant, ctaText: d.ctaTextHant, ctaLink: d.ctaLink, ctaExternal: d.ctaExternal,
+            cta2Text: d.cta2TextHant, cta2Link: d.cta2Link
+          });
         });
+        if (slides.length) renderSlides(slides);
+      }).catch(function () {
+        if (settled) return;
+        clearTimeout(timeoutId);
+        settled = true;
       });
-      renderSlides(slides.length ? slides : FALLBACK_SLIDES);
-    }).catch(function () { renderSlides(FALLBACK_SLIDES); });
+    } catch (e) {
+      clearTimeout(timeoutId);
+      settled = true;
+    }
   }
 })();
 </script>
