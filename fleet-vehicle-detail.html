@@ -79,11 +79,16 @@
 
 <main>
 
-<div class="hero" style="padding:52px 0 36px">
+<div class="hero dt-hero">
   <div class="wrap hero-inner">
     <span class="eyebrow">Step 3 · 車型詳情</span>
     <h1 id="dt-title" style="font-size:clamp(26px,3.6vw,38px)">車型詳情</h1>
     <p class="lead" id="dt-lead">實拍照片、報價與計費方式，一次看清楚。</p>
+    <div id="dt-9seat-summary" class="dt-9seat-summary" hidden>
+      <p class="dt-9seat-price">2,600,000₫起／8小時</p>
+      <p class="dt-9seat-specs">最大乘坐 8 位客人。行李可放 4 個小行李箱＋3 個大行李箱，或 2 個小行李箱＋4 個大行李箱。</p>
+      <div class="dt-9seat-photos" id="dt-9seat-photos" aria-label="車輛外觀與內裝"></div>
+    </div>
   </div>
 </div>
 
@@ -94,6 +99,7 @@
       <a class="change-city" href="fleet.html#city-section" id="vt-change-city">選擇城市 →</a>
     </div>
 
+    <div id="dt-gallery-block">
     <div class="sec-head">
       <span class="eyebrow" id="dt-gallery-eyebrow">實拍照片</span>
       <h2 id="dt-gallery-head">車輛外觀與內裝</h2>
@@ -102,6 +108,7 @@
     <p class="hint" id="dt-interior-label" style="display:none;margin:14px 0 10px">車內實拍：</p>
     <div class="gallery-grid" id="dt-gallery-interior"></div>
     <p class="hint" id="dt-gallery-note" style="display:none"></p>
+    </div>
 
     <div id="dt-luggage" style="display:none">
       <div class="sec-head" style="margin-top:36px">
@@ -109,6 +116,11 @@
         <h2 id="dt-luggage-head">行李載放數量</h2>
       </div>
       <div id="dt-luggage-wrap"></div>
+    </div>
+
+    <div id="dt-9seat-history" class="dt-9seat-history" hidden>
+      <h2>為什麼在越南常見這款車</h2>
+      <p>越南常見的 9 人座 Limousine，多半是把原本 16 人座等級的商務廂型車減少座椅、加大間距，改成較寬敞的獨立座位。這種改裝在泰國等亞洲地區較早出現，越南約在 2010 年代前半期開始流行，先用於接機與商務出行，後來也成為家庭與小團體包車的常見選擇。比起傳統 16 人座，每人空間更大；比起 7 人座，一家人或小團體可以同車出行，行李也更夠用。</p>
     </div>
 
     <div class="sec-head" style="margin-top:36px">
@@ -357,11 +369,59 @@
   document.getElementById('dt-lead').textContent = data.note || '實拍照片、報價與計費方式，一次看清楚。';
   document.getElementById('dt-gallery-head').textContent = data.name + '：車輛外觀' + (data.photos.length > 1 ? '與內裝' : '');
 
+  // 9人座：首屏改為核定文案（價格、規格、三張照片不延遲載入）。其他車型維持原版面。
+  var is9seat = type === '9seat';
+  if (is9seat) {
+    document.body.classList.add('is-9seat');
+    document.title = '9人座Limousine・照片與報價｜升龍旅行社包車服務';
+    var nineDesc = '9人座Limousine，2,600,000₫起／8小時。最大乘坐 8 位客人，行李可放 4 小 3 大或 2 小 4 大行李箱。主推車型，適合一家大小出行，乘坐寬敞舒適。';
+    var metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) metaDesc.setAttribute('content', nineDesc);
+    var ogTitle = document.querySelector('meta[property="og:title"]');
+    if (ogTitle) ogTitle.setAttribute('content', '9人座Limousine・照片與報價｜升龍旅行社');
+    var ogDesc = document.querySelector('meta[property="og:description"]');
+    if (ogDesc) ogDesc.setAttribute('content', nineDesc);
+    document.getElementById('dt-9seat-summary').hidden = false;
+    document.getElementById('dt-9seat-history').hidden = false;
+    document.getElementById('dt-gallery-block').hidden = true;
+    var photoRow = document.getElementById('dt-9seat-photos');
+    photoRow.innerHTML = data.photos.map(function (src, i) {
+      var kind = i === 0 ? '（外觀）' : '（內裝）';
+      var w = i === 0 ? 700 : 1500;
+      var h = i === 0 ? 488 : 1125;
+      return '<img src="' + src + '" alt="' + data.name + kind + '" width="' + w + '" height="' + h + '" loading="eager" fetchpriority="high">';
+    }).join('');
+    var fitPhotos = function () {
+      var imgs = photoRow.querySelectorAll('img');
+      photoRow.style.height = '';
+      photoRow.style.gridTemplateRows = '';
+      imgs.forEach(function (img) {
+        img.style.height = '';
+        img.style.aspectRatio = '';
+      });
+      var clearance = window.innerWidth < 1188 ? 88 : 16;
+      var rect = photoRow.getBoundingClientRect();
+      var overflow = rect.bottom - (window.innerHeight - clearance);
+      if (overflow > 1) {
+        photoRow.style.height = Math.max(72, rect.height - overflow) + 'px';
+        photoRow.style.gridTemplateRows = '1fr';
+        imgs.forEach(function (img) {
+          img.style.height = '100%';
+          img.style.aspectRatio = 'auto';
+        });
+      }
+    };
+    fitPhotos();
+    window.addEventListener('resize', fitPhotos);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitPhotos);
+    window.addEventListener('load', fitPhotos);
+  }
+
   // ===== 相片：第一張是外觀（單張大圖），其餘最多4張內裝排成2x2 =====
   var exteriorEl = document.getElementById('dt-gallery-exterior');
   var interiorEl = document.getElementById('dt-gallery-interior');
   var interiorLabel = document.getElementById('dt-interior-label');
-  if (data.photos.length) {
+  if (!is9seat && data.photos.length) {
     exteriorEl.innerHTML = '<img src="' + data.photos[0] + '" alt="' + data.name + '（外觀）" loading="lazy">';
     var interiorPhotos = data.photos.slice(1, 5);
     if (interiorPhotos.length) {
@@ -372,7 +432,7 @@
     } else {
       interiorEl.style.display = 'none';
     }
-  } else {
+  } else if (!is9seat) {
     exteriorEl.style.display = 'none';
     interiorEl.style.display = 'none';
     var note = document.getElementById('dt-gallery-note');
