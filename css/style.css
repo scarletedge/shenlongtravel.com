@@ -876,7 +876,7 @@ nav.menu a{white-space:nowrap}
 
 /* ===== 包車：車型挑選頁 / 車輛詳情頁 ===== */
 .vt-city-banner{background:var(--paper-alt);border:1px solid var(--line-strong);border-radius:var(--radius);padding:14px 18px;margin-bottom:28px;font-size:14px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
-.vt-city-banner .change-city{font-size:13px;color:var(--accent-deep)}
+.vt-city-banner .change-city{font-size:13px;color:var(--accent-deep);background:none;border:0;padding:0 2px;min-height:44px;cursor:pointer;font-family:inherit;text-decoration:underline;text-underline-offset:3px;appearance:none;-webkit-appearance:none;display:inline-flex;align-items:center}
 .gallery-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:0 auto 28px;max-width:480px}
 .gallery-grid img{width:100%;aspect-ratio:1/1;object-fit:contain;background:#fff;border-radius:var(--radius);box-shadow:0 8px 20px rgba(33,28,21,.14)}
 .gallery-grid.single{max-width:360px;grid-template-columns:1fr}
@@ -1018,3 +1018,49 @@ body.is-9seat section{padding-top:32px}
 body.is-9seat .dt-9seat-history{max-width:46em;margin:0 0 4px}
 body.is-9seat .dt-9seat-history h2{font-size:clamp(24px,3vw,34px);line-height:1.4;margin-bottom:12px}
 body.is-9seat .dt-9seat-history p{font-size:15.5px;line-height:1.85;color:var(--ink)}
+
+/* ===== 車型詳情：同頁更換城市、可選欄位、詢問稿 ===== */
+.vt-city-picker{margin:-16px 0 28px;padding:12px;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius)}
+.vt-city-picker[hidden]{display:none}
+.vt-city-options{display:grid;grid-template-columns:repeat(auto-fill,minmax(108px,1fr));gap:8px}
+.vt-city-option{
+  font-family:inherit;font-size:14.5px;line-height:1.4;color:var(--ink);
+  background:var(--paper);border:1px solid var(--line-strong);border-radius:var(--radius);
+  padding:10px 12px;min-height:44px;cursor:pointer;text-align:center;
+  appearance:none;-webkit-appearance:none;
+}
+.vt-city-option:hover{border-color:var(--gold-dark)}
+.vt-city-option[aria-pressed="true"]{border-color:var(--gold-dark);box-shadow:0 0 0 3px rgba(199,160,89,.18)}
+.dt-plan-head{margin-bottom:16px}
+.dt-plan-label{font-family:var(--font-serif),serif;font-weight:700;font-size:18px;margin:0 0 12px;color:var(--ink)}
+.dt-plan-label[hidden]{display:none}
+.dt-optional{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin:28px 0 8px}
+.dt-optional[hidden]{display:none}
+@media(max-width:700px){.dt-optional{grid-template-columns:1fr;gap:18px}}
+.dt-optional .field input{width:100%;max-width:100%;min-width:0}
+.dt-opt-mark{margin-left:8px;font-size:12px;font-weight:400;color:var(--muted);letter-spacing:0}
+.dt-field-hint{font-size:12.5px;color:var(--muted);line-height:1.6}
+.dt-field-hint[hidden]{display:none}
+.dt-contact-promo{align-items:flex-start}
+.dt-contact-promo > div:first-child{flex:1 1 280px;min-width:0}
+.dt-inquiry{margin-top:14px;max-width:40em}
+.dt-inquiry-text{font-size:14px;line-height:1.75;margin:0 0 12px;word-break:break-word}
+.member-promo .dt-inquiry-text{max-width:40em;color:#C9BFA8}
+.dt-copy-btn{
+  font-family:inherit;font-size:14px;letter-spacing:.04em;cursor:pointer;
+  background:transparent;color:var(--gold);border:1px solid var(--gold);
+  border-radius:var(--radius);padding:10px 16px;min-height:44px;
+  appearance:none;-webkit-appearance:none;
+}
+.dt-copy-btn:hover{background:var(--gold);color:var(--ink)}
+.dt-panel-inquiry{
+  background:#FFFDF8;border:1px solid #E4D3AE;border-radius:18px;
+  padding:12px 14px 14px;margin:0 0 12px;
+}
+.dt-panel-inquiry[hidden]{display:none}
+.dt-panel-inquiry .dt-inquiry-text{color:#3A2A18;font-size:13px;line-height:1.65;margin:0 0 10px}
+.dt-panel-inquiry .dt-copy-btn{width:100%;color:var(--ink);border-color:var(--line-strong);background:var(--paper)}
+.dt-panel-inquiry .dt-copy-btn:hover{border-color:var(--gold-dark);background:var(--paper-alt);color:var(--ink)}
+@media(max-width:700px){
+  .dt-contact-promo .btn-solid{width:100%}
+}
