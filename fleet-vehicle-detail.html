@@ -96,7 +96,10 @@
   <div class="wrap">
     <div class="vt-city-banner" id="vt-city-banner">
       <span>您選擇的城市：<strong id="vt-city-name">尚未選擇（客服會與您確認調度地點）</strong></span>
-      <a class="change-city" href="fleet.html#city-section" id="vt-change-city">選擇城市 →</a>
+      <button type="button" class="change-city" id="vt-change-city" aria-expanded="false" aria-controls="vt-city-picker">選擇城市</button>
+    </div>
+    <div class="vt-city-picker" id="vt-city-picker" hidden>
+      <div class="vt-city-options" id="vt-city-options" role="group" aria-label="選擇出發城市"></div>
     </div>
 
     <div id="dt-gallery-block">
@@ -123,10 +126,11 @@
       <p>越南常見的 9 人座 Limousine，多半是把原本 16 人座等級的商務廂型車減少座椅、加大間距，改成較寬敞的獨立座位。這種改裝在泰國等亞洲地區較早出現，越南約在 2010 年代前半期開始流行，先用於接機與商務出行，後來也成為家庭與小團體包車的常見選擇。比起傳統 16 人座，每人空間更大；比起 7 人座，一家人或小團體可以同車出行，行李也更夠用。</p>
     </div>
 
-    <div class="sec-head" style="margin-top:36px">
+    <div class="sec-head dt-plan-head" style="margin-top:36px">
       <span class="eyebrow">報價與時長</span>
       <h2>按小時計費</h2>
     </div>
+    <p class="dt-plan-label" id="dt-plan-label" hidden>請選擇方案</p>
     <div class="tier-grid" id="dt-tiers"></div>
     <div class="fee-box" id="dt-fee-box" style="display:none"></div>
     <p class="hint" id="dt-request-quote" style="display:none">此車型價格請私訊右下角客服報價。</p>
@@ -145,10 +149,26 @@
     </div>
 
 
-    <div class="member-promo" style="margin-top:36px">
+    <div class="dt-optional" id="dt-optional">
+      <div class="field">
+        <label for="dt-pax">用車人數<span class="dt-opt-mark">可留空</span></label>
+        <input type="number" id="dt-pax" inputmode="numeric" step="1" autocomplete="off">
+        <p class="dt-field-hint" id="dt-pax-hint" hidden></p>
+      </div>
+      <div class="field">
+        <label for="dt-date">預計包車日期<span class="dt-opt-mark">可留空</span></label>
+        <input type="date" id="dt-date" autocomplete="off">
+      </div>
+    </div>
+
+    <div class="member-promo dt-contact-promo" style="margin-top:36px">
       <div>
         <h3>看中這台車？直接私訊客服</h3>
-        <p id="dt-contact-note">把您想要的城市、時段告訴客服，1–2小時內確認調度與報價，不需要另外填表。</p>
+        <p id="dt-contact-note"></p>
+        <div class="dt-inquiry" id="dt-inquiry">
+          <p class="dt-inquiry-text" id="dt-inquiry-text"></p>
+          <button type="button" class="dt-copy-btn" id="dt-copy-inquiry">複製詢問稿</button>
+        </div>
       </div>
       <button type="button" class="btn-solid" id="dt-open-contact">私訊右下角客服 →</button>
     </div>
@@ -200,6 +220,10 @@
     <button type="button" class="sl-contact-close" aria-label="關閉">×</button>
     <div class="sl-contact-title">聯絡升龍客服</div>
     <div class="sl-contact-sub">選擇您習慣的通訊軟體，1–2 小時內回覆</div>
+    <div class="dt-panel-inquiry" id="dt-panel-inquiry">
+      <p class="dt-inquiry-text" id="dt-panel-inquiry-text"></p>
+      <button type="button" class="dt-copy-btn" id="dt-panel-copy">複製詢問稿</button>
+    </div>
     <div class="sl-contact-list">
       <div class="sl-contact-item">
         <a class="sl-contact-card" href="https://line.me/ti/p/tg6LUFsHGD" target="_blank" rel="noopener" aria-label="開啟LINE對話（新分頁）">
@@ -342,24 +366,184 @@
     '45seat': { name: '45人座', photos: ['images/fleet/v-45seat.jpg'], tiers: [], priceOnRequest: true, note: '大型遊覽車，公司員旅、大型活動包場首選，價格請私訊客服報價。' }
   };
 
+  var STORE_KEY = 'slSelectedCity';
+  var QUOTE = "報價";
+  var UI = {
+    change: "更改城市",
+    choose: "選擇城市",
+    skip: "先不選城市",
+    copied: "已複製",
+    noted: "已為您記下：",
+    notedWith: "點下方或右下角客服後，可複製詢問稿再貼上。",
+    notedWithout: "出發城市可在上方選擇，或私訊時再告訴客服。",
+    hello: "你好，我想預訂包車：",
+    depart: "出發城市",
+    vehicle: "車型 ",
+    plan: "方案 ",
+    ask: "想詢問",
+    pax: "用車人數 ",
+    paxUnit: " 人",
+    date: "預計包車日期 ",
+    pleasePrefix: "請幫忙確認調度與",
+    pleaseSuffix: "，謝謝。"
+  };
+
   var params = new URLSearchParams(location.search);
   var type = params.get('type');
-  var city = params.get('city');
   var data = VEHICLE_DATA[type];
+  var selectedCity = null;
+  var selectedTier = null;
+  var pageReady = false;
+  var nameEl = document.getElementById('vt-city-name');
+  var EMPTY_CITY = nameEl ? nameEl.textContent : '';
 
-  if (city && CITY_NAMES[city]) {
-    document.getElementById('vt-city-name').textContent = CITY_NAMES[city];
-    document.getElementById('vt-change-city').textContent = '重新選擇城市 →';
-    document.getElementById('vt-change-city').href = 'fleet.html?city=' + city + '#city-section';
-    var backLink = document.querySelector('.center.mt-lg a');
-    if (backLink) backLink.href = 'fleet.html?city=' + city + '#vehicle-section';
+  function storeGet() {
+    try { return localStorage.getItem(STORE_KEY); } catch (e) { return null; }
   }
+  function storeSet(v) {
+    try {
+      if (v) localStorage.setItem(STORE_KEY, v);
+      else localStorage.removeItem(STORE_KEY);
+    } catch (e) {}
+  }
+  function syncUrl() {
+    try {
+      var url = new URL(location.href);
+      if (selectedCity) url.searchParams.set('city', selectedCity);
+      else url.searchParams.delete('city');
+      history.replaceState(null, '', url.pathname + url.search + url.hash);
+    } catch (e) {}
+  }
+  function closePicker() {
+    var picker = document.getElementById('vt-city-picker');
+    var changeBtn = document.getElementById('vt-change-city');
+    if (picker) picker.hidden = true;
+    if (changeBtn) changeBtn.setAttribute('aria-expanded', 'false');
+  }
+  function getPax() {
+    var el = document.getElementById('dt-pax');
+    if (!el) return '';
+    var raw = (el.value || '').trim();
+    if (!raw) return '';
+    var n = Number(raw);
+    if (!isFinite(n) || n <= 0) return '';
+    return String(n);
+  }
+  function getDate() {
+    var el = document.getElementById('dt-date');
+    if (!el) return '';
+    var raw = (el.value || '').trim();
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(raw)) return '';
+    return raw;
+  }
+  function buildInquiry() {
+    if (!data) return '';
+    var bits = [];
+    if (selectedCity && CITY_NAMES[selectedCity]) bits.push(UI.depart + CITY_NAMES[selectedCity]);
+    bits.push(UI.vehicle + data.name);
+    if (selectedTier && selectedTier.label) bits.push(UI.plan + selectedTier.label);
+    else bits.push(UI.ask + QUOTE);
+    var pax = getPax();
+    if (pax) bits.push(UI.pax + pax + UI.paxUnit);
+    var date = getDate();
+    if (date) bits.push(UI.date + date);
+    return UI.hello + bits.join('，') + '。' + UI.pleasePrefix + QUOTE + UI.pleaseSuffix;
+  }
+  function buildNote() {
+    if (!data) return '';
+    var bits = [];
+    if (selectedCity && CITY_NAMES[selectedCity]) bits.push(CITY_NAMES[selectedCity]);
+    bits.push(data.name);
+    if (selectedTier && selectedTier.label) bits.push(selectedTier.label);
+    var pax = getPax();
+    if (pax) bits.push(UI.pax + pax + UI.paxUnit);
+    var date = getDate();
+    if (date) bits.push(UI.date + date);
+    var tail = (selectedCity && CITY_NAMES[selectedCity]) ? UI.notedWith : UI.notedWithout;
+    return UI.noted + bits.join('、') + '。' + tail;
+  }
+  function refreshInquiry() {
+    if (!pageReady || !data) return;
+    var noteEl = document.getElementById('dt-contact-note');
+    if (noteEl) noteEl.textContent = buildNote();
+    var inquiry = buildInquiry();
+    var pageText = document.getElementById('dt-inquiry-text');
+    var panelText = document.getElementById('dt-panel-inquiry-text');
+    if (pageText) pageText.textContent = inquiry;
+    if (panelText) panelText.textContent = inquiry;
+  }
+  function renderCity() {
+    var changeBtn = document.getElementById('vt-change-city');
+    if (nameEl) {
+      if (selectedCity && CITY_NAMES[selectedCity]) nameEl.textContent = CITY_NAMES[selectedCity];
+      else nameEl.textContent = EMPTY_CITY;
+    }
+    if (changeBtn) changeBtn.textContent = (selectedCity && CITY_NAMES[selectedCity]) ? UI.change : UI.choose;
+    var optionBtns = document.querySelectorAll('#vt-city-options [data-city]');
+    optionBtns.forEach(function (btn) {
+      var on = btn.getAttribute('data-city') === (selectedCity || '');
+      btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+    var backLink = document.querySelector('.center.mt-lg a');
+    if (backLink) {
+      backLink.href = (selectedCity && CITY_NAMES[selectedCity])
+        ? 'fleet.html?city=' + selectedCity + '#vehicle-section'
+        : 'fleet.html#vehicle-section';
+    }
+    refreshInquiry();
+  }
+  function setCity(code) {
+    selectedCity = (code && CITY_NAMES[code]) ? code : null;
+    storeSet(selectedCity);
+    syncUrl();
+    renderCity();
+    closePicker();
+  }
+
+  var optionsEl = document.getElementById('vt-city-options');
+  if (optionsEl) {
+    Object.keys(CITY_NAMES).forEach(function (code) {
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'vt-city-option';
+      btn.setAttribute('data-city', code);
+      btn.textContent = CITY_NAMES[code];
+      btn.addEventListener('click', function () { setCity(code); });
+      optionsEl.appendChild(btn);
+    });
+    var clearBtn = document.createElement('button');
+    clearBtn.type = 'button';
+    clearBtn.className = 'vt-city-option';
+    clearBtn.setAttribute('data-city', '');
+    clearBtn.textContent = UI.skip;
+    clearBtn.addEventListener('click', function () { setCity(''); });
+    optionsEl.appendChild(clearBtn);
+  }
+  var changeBtn = document.getElementById('vt-change-city');
+  if (changeBtn) {
+    changeBtn.addEventListener('click', function () {
+      var picker = document.getElementById('vt-city-picker');
+      if (!picker) return;
+      var willOpen = picker.hidden;
+      picker.hidden = !willOpen;
+      changeBtn.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+    });
+  }
+  var fromUrl = params.get('city');
+  if (fromUrl && CITY_NAMES[fromUrl]) selectedCity = fromUrl;
+  else if (storeGet() && CITY_NAMES[storeGet()]) selectedCity = storeGet();
+  if (selectedCity) { storeSet(selectedCity); syncUrl(); }
+  renderCity();
 
   if (!data) {
     document.getElementById('dt-title').textContent = '請先選擇車型';
     document.getElementById('dt-lead').textContent = '這個連結看起來不完整，請返回選擇車型頁面重新挑選。';
     document.querySelector('.member-promo').style.display = 'none';
     document.getElementById('dt-gallery-head').parentElement.style.display = 'none';
+    var optionalBlock = document.getElementById('dt-optional');
+    if (optionalBlock) optionalBlock.hidden = true;
+    var panelInquiry = document.getElementById('dt-panel-inquiry');
+    if (panelInquiry) panelInquiry.hidden = true;
     return;
   }
 
@@ -477,11 +661,14 @@
         '</div>';
     }).join('');
     selectedTier = data.tiers[0];
+    var planLabel = document.getElementById('dt-plan-label');
+    if (planLabel) planLabel.hidden = false;
     tiersEl.querySelectorAll('.tier-card').forEach(function (card) {
       card.addEventListener('click', function () {
         tiersEl.querySelectorAll('.tier-card').forEach(function (c) { c.classList.remove('selected'); });
         card.classList.add('selected');
         selectedTier = data.tiers[Number(card.dataset.idx)];
+        refreshInquiry();
       });
     });
   }
@@ -492,18 +679,72 @@
     feeBox.innerHTML = '<strong>計費說明：</strong>' + data.feeNote;
   }
 
-  // ===== 直接導去私訊客服（已拿掉送出預約表單） =====
-  var cityLabel = city && CITY_NAMES[city] ? CITY_NAMES[city] : null;
-  var contactNote = document.getElementById('dt-contact-note');
-  if (contactNote) {
-    contactNote.textContent = '把您想要的' + (cityLabel ? cityLabel + '、' : '') + '時段告訴客服' +
-      (selectedTier ? '（參考方案：' + selectedTier.label + '）' : '') +
-      '，1–2小時內確認調度與報價，不需要另外填表。';
+
+  var paxInput = document.getElementById('dt-pax');
+  var dateInput = document.getElementById('dt-date');
+  function onOptional() { refreshInquiry(); }
+  if (paxInput) {
+    paxInput.addEventListener('input', onOptional);
+    paxInput.addEventListener('change', onOptional);
   }
+  if (dateInput) {
+    dateInput.addEventListener('input', onOptional);
+    dateInput.addEventListener('change', onOptional);
+  }
+  if (type === '9seat') {
+    var specs = document.querySelector('.dt-9seat-specs');
+    var hint = document.getElementById('dt-pax-hint');
+    if (specs && hint) {
+      var sentence = (specs.textContent || '').split('。')[0].trim();
+      if (sentence) {
+        hint.textContent = sentence;
+        hint.hidden = false;
+      }
+    }
+  }
+  pageReady = true;
+  refreshInquiry();
+
+  function fallbackCopy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.left = '-9999px';
+    document.body.appendChild(ta);
+    ta.select();
+    var ok = false;
+    try { ok = document.execCommand('copy'); } catch (err) { ok = false; }
+    document.body.removeChild(ta);
+    return ok;
+  }
+  function copyInquiryText(text) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      return navigator.clipboard.writeText(text).catch(function () {
+        return fallbackCopy(text) ? Promise.resolve() : Promise.reject(new Error('copy'));
+      });
+    }
+    return fallbackCopy(text) ? Promise.resolve() : Promise.reject(new Error('copy'));
+  }
+  function bindCopy(btn) {
+    if (!btn) return;
+    var idle = btn.textContent;
+    btn.addEventListener('click', function () {
+      var text = buildInquiry();
+      if (!text) return;
+      copyInquiryText(text).then(function () {
+        btn.textContent = UI.copied;
+        window.setTimeout(function () { btn.textContent = idle; }, 1600);
+      });
+    });
+  }
+  bindCopy(document.getElementById('dt-copy-inquiry'));
+  bindCopy(document.getElementById('dt-panel-copy'));
 
   var openContactBtn = document.getElementById('dt-open-contact');
   if (openContactBtn) {
-    openContactBtn.addEventListener('click', function () {
+    openContactBtn.addEventListener('click', function (e) {
+      e.stopPropagation();
       var toggle = document.querySelector('.widget-toggle');
       if (toggle) {
         toggle.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -512,6 +753,7 @@
     });
   }
 })();
+
 </script>
 </body>
 </html>
