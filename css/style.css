@@ -1064,3 +1064,18 @@ body.is-9seat .dt-9seat-history p{font-size:15.5px;line-height:1.85;color:var(--
 @media(max-width:700px){
   .dt-contact-promo .btn-solid{width:100%}
 }
+
+/* ===== 客戶案例長文（單頁，不改既有規則） ===== */
+section.case-section{padding:64px 0 56px}
+.case-copy{max-width:760px}
+.case-copy h2{font-size:clamp(24px,3vw,34px);line-height:1.4;margin:0 0 22px}
+.case-copy h3{font-size:clamp(18px,2.2vw,22px);line-height:1.45;margin:32px 0 12px}
+.case-copy h2 + h3{margin-top:0}
+.case-copy p{font-size:16px;line-height:1.9;margin:0 0 18px}
+.case-copy p:last-child{margin-bottom:0}
+.case-facts{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+.case-facts li{padding:14px 0;border-bottom:1px solid var(--line);font-size:15.5px;line-height:1.75}
+.case-facts strong{font-family:var(--font-serif),serif;font-weight:700}
+.case-copy figure{margin:8px 0 28px}
+.case-copy figure img{width:100%;height:auto;border-radius:var(--radius);background:var(--paper)}
+.case-copy figcaption{margin-top:10px;font-size:13.5px;line-height:1.6;color:var(--muted);letter-spacing:.04em}
