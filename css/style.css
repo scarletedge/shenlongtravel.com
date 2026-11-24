@@ -1064,3 +1064,81 @@ body.is-9seat .dt-9seat-history p{font-size:15.5px;line-height:1.85;color:var(--
 @media(max-width:700px){
   .dt-contact-promo .btn-solid{width:100%}
 }
+
+/* ===== 繁中首頁捷徑卡（左側金邊）。新類別，不改 .hdb-btn / .hdb-btns ===== */
+.hdb-bottom{
+  margin-top:28px;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:16px;
+}
+.hdb-card{
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:flex-start;
+  min-height:118px;
+  background:var(--paper);
+  color:var(--ink);
+  border:1px solid var(--line);
+  border-left:3px solid var(--gold-dark);
+  border-radius:10px;
+  padding:16px 34px 16px 16px;
+  text-decoration:none;
+  box-shadow:0 8px 22px rgba(33,28,21,.08);
+  transition:border-color .2s,box-shadow .2s,transform .2s;
+}
+.hdb-card:hover{
+  border-color:var(--gold-dark);
+  box-shadow:0 12px 28px rgba(33,28,21,.12);
+  transform:translateY(-2px);
+}
+.hdb-card:focus-visible{
+  outline:2px solid var(--accent);
+  outline-offset:3px;
+  border-color:var(--gold-dark);
+  box-shadow:0 12px 28px rgba(33,28,21,.12);
+}
+.hdb-card-num{
+  font-family:'Cormorant Garamond',serif;
+  font-style:italic;
+  font-weight:500;
+  font-size:13px;
+  letter-spacing:.14em;
+  line-height:1;
+  color:var(--gold-dark);
+  margin-bottom:8px;
+}
+.hdb-card-arrow{
+  position:absolute;
+  right:14px;
+  top:50%;
+  transform:translateY(-50%);
+  font-size:22px;
+  line-height:1;
+  color:var(--gold-dark);
+  pointer-events:none;
+}
+.hdb-card-title{
+  font-family:var(--font-serif),serif;
+  font-weight:700;
+  font-size:17px;
+  line-height:1.35;
+  color:var(--ink);
+  border-bottom:1px solid var(--gold-dark);
+  padding-bottom:3px;
+  margin-bottom:8px;
+}
+.hdb-card-sub{
+  display:block;
+  font-size:13px;
+  line-height:1.55;
+  color:var(--muted);
+  text-align:left;
+  white-space:nowrap;
+}
+@media (max-width:860px){
+  .hdb-bottom{grid-template-columns:repeat(2,1fr);gap:12px}
+  .hdb-card{padding:14px 30px 14px 14px;min-height:108px}
+}
