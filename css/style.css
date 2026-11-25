@@ -738,7 +738,7 @@ footer .bg-bagua{bottom:-80px;right:-40px}
 .vg-amount{color:#8C6100;font-weight:700}
 .vg-ico{display:none;width:14px;height:14px;flex:none}
 
-/* A 圓點＋深灰寬字距（預設） */
+/* A 圓點＋深灰寬字距 */
 body.visa-labels-a .vg-block strong{color:#4E483F;font-size:11px;font-weight:600;letter-spacing:.18em}
 body.visa-labels-a .vg-block strong::before{
   content:"";display:inline-block;width:4px;height:4px;margin:0 8px 1px 0;
@@ -756,6 +756,15 @@ body.visa-labels-b .vg-block strong{
 body.visa-labels-c .vg-block strong{display:flex;align-items:center;gap:6px;color:#4E483F;font-size:11.5px;font-weight:600;letter-spacing:.06em}
 body.visa-labels-c .vg-ico{display:block;stroke:currentColor;fill:none;stroke-width:1.35;stroke-linecap:round;stroke-linejoin:round}
 body.visa-labels-c .vg-ico-dot{fill:currentColor;stroke:none}
+
+/* BC 淺米色膠囊，圖示在膠囊內、文字之前（預設） */
+body.visa-labels-bc .vg-block strong{
+  display:inline-flex;align-items:center;gap:5px;margin-bottom:8px;
+  background:var(--paper-alt);color:#514B43;font-size:11px;font-weight:600;letter-spacing:.06em;line-height:1;
+  padding:4px 11px 4px 8px;border-radius:999px;
+}
+body.visa-labels-bc .vg-ico{display:block;width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:1.35;stroke-linecap:round;stroke-linejoin:round}
+body.visa-labels-bc .vg-ico-dot{fill:currentColor;stroke:none}
 
 .visa-guide-steps{background:var(--paper-alt);border-radius:var(--radius);padding:26px 28px;margin-bottom:24px}
 .visa-guide-steps h4{font-size:15px;margin-bottom:14px}
