@@ -1295,3 +1295,29 @@ section.case-section{padding:64px 0 56px}
 @media(max-width:700px){
   .route-case{grid-template-columns:1fr;gap:16px;padding:16px}
 }
+
+/* ===== 會員中心（member.html／zh-cn/member.html） ===== */
+section.member-center{padding:56px 0 88px}
+.member-center h1{font-size:clamp(28px,4vw,42px);line-height:1.35;margin-bottom:12px}
+.member-account{margin:0 0 28px;font-size:15px;color:var(--muted);word-break:break-all}
+.member-guest p{color:var(--muted);margin-bottom:22px}
+.member-guest .btn-solid{display:inline-block}
+.member-center-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.member-center-card{
+  display:flex;flex-direction:column;justify-content:center;gap:8px;min-height:140px;
+  background:var(--paper);border:1px solid var(--line-strong);border-radius:var(--radius);
+  padding:28px 26px;transition:border-color .2s,box-shadow .2s;
+}
+.member-center-card:hover{border-color:var(--gold-dark);box-shadow:0 8px 22px rgba(33,28,21,.1)}
+.member-center-card h2{font-size:22px;line-height:1.4}
+.member-center-card p{font-size:14.5px;color:var(--muted);line-height:1.7}
+.member-center-logout{
+  margin-top:28px;background:transparent;border:1px solid var(--ink);color:var(--ink);
+  padding:12px 28px;border-radius:var(--radius);font-family:inherit;font-size:14.5px;
+  letter-spacing:.06em;cursor:pointer;
+}
+.member-center-logout:hover{background:var(--ink);color:var(--paper)}
+@media(max-width:760px){
+  .member-center-grid{grid-template-columns:1fr}
+  .member-center-card{min-height:0}
+}
