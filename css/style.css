@@ -718,10 +718,14 @@ footer .bg-bagua{bottom:-80px;right:-40px}
 /* ===== 越南簽證指南（分類卡片） ===== */
 .visa-guide-intro h3{font-size:20px;margin-bottom:6px}
 .visa-guide-intro p{color:var(--muted);font-size:13.5px;margin-bottom:28px}
-.visa-guide-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;margin-bottom:36px}
+.visa-guide-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr));gap:20px;margin-bottom:36px}
 .vg-card{background:var(--paper);border:1px solid var(--line);border-top:4px solid var(--gold);padding:26px 24px;border-radius:var(--radius)}
 .vg-card.vg-accent{border-top-color:var(--accent)}
 .vg-card.vg-jade{border-top-color:var(--jade)}
+.vg-card:has(.vg-banner){padding:0 0 26px;overflow:hidden;min-width:0}
+.vg-card .vg-banner{width:100%;height:auto;aspect-ratio:16/10;object-fit:cover;display:block;margin:0 0 18px}
+.vg-card:has(.vg-banner) > h4,
+.vg-card:has(.vg-banner) > .vg-block{margin-left:24px;margin-right:24px}
 .vg-card h4{font-size:16.5px;margin-bottom:16px;font-family:var(--font-serif)}
 .vg-card.vg-gold h4{color:var(--gold-dark)}
 .vg-card.vg-accent h4{color:var(--accent)}
