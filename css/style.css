@@ -718,10 +718,14 @@ footer .bg-bagua{bottom:-80px;right:-40px}
 /* ===== 越南簽證指南（分類卡片） ===== */
 .visa-guide-intro h3{font-size:20px;margin-bottom:6px}
 .visa-guide-intro p{color:var(--muted);font-size:13.5px;margin-bottom:28px}
-.visa-guide-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;margin-bottom:36px}
+.visa-guide-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr));gap:20px;margin-bottom:36px}
 .vg-card{background:var(--paper);border:1px solid var(--line);border-top:4px solid var(--gold);padding:26px 24px;border-radius:var(--radius)}
 .vg-card.vg-accent{border-top-color:var(--accent)}
 .vg-card.vg-jade{border-top-color:var(--jade)}
+.vg-card:has(.vg-banner){padding:0 0 26px;overflow:hidden;min-width:0}
+.vg-card .vg-banner{width:100%;height:auto;aspect-ratio:16/10;object-fit:cover;display:block;margin:0 0 18px}
+.vg-card:has(.vg-banner) > h4,
+.vg-card:has(.vg-banner) > .vg-block{margin-left:24px;margin-right:24px}
 .vg-card h4{font-size:16.5px;margin-bottom:16px;font-family:var(--font-serif)}
 .vg-card.vg-gold h4{color:var(--gold-dark)}
 .vg-card.vg-accent h4{color:var(--accent)}
@@ -730,6 +734,37 @@ footer .bg-bagua{bottom:-80px;right:-40px}
 .vg-block:last-child{margin-bottom:0}
 .vg-block strong{display:block;font-size:11.5px;letter-spacing:.08em;color:var(--muted);margin-bottom:4px;text-transform:uppercase}
 .vg-block p{font-size:13.5px;line-height:1.75;color:var(--ink)}
+/* 金額：米白底上 #9A6B00 只有 4.27:1，未過 WCAG AA；#8C6100 為 5.00:1，仍是深黃金色 */
+.vg-amount{color:#8C6100;font-weight:700}
+.vg-ico{display:none;width:14px;height:14px;flex:none}
+
+/* A 圓點＋深灰寬字距 */
+body.visa-labels-a .vg-block strong{color:#4E483F;font-size:11px;font-weight:600;letter-spacing:.18em}
+body.visa-labels-a .vg-block strong::before{
+  content:"";display:inline-block;width:4px;height:4px;margin:0 8px 1px 0;
+  border-radius:50%;background:currentColor;vertical-align:middle;
+}
+
+/* B 淺米色膠囊 */
+body.visa-labels-b .vg-block strong{
+  display:inline-flex;align-items:center;margin-bottom:8px;
+  background:var(--paper-alt);color:#514B43;font-size:11px;font-weight:600;letter-spacing:.08em;line-height:1;
+  padding:5px 11px;border-radius:999px;
+}
+
+/* C 線條圖示 */
+body.visa-labels-c .vg-block strong{display:flex;align-items:center;gap:6px;color:#4E483F;font-size:11.5px;font-weight:600;letter-spacing:.06em}
+body.visa-labels-c .vg-ico{display:block;stroke:currentColor;fill:none;stroke-width:1.35;stroke-linecap:round;stroke-linejoin:round}
+body.visa-labels-c .vg-ico-dot{fill:currentColor;stroke:none}
+
+/* BC 淺米色膠囊，圖示在膠囊內、文字之前（預設） */
+body.visa-labels-bc .vg-block strong{
+  display:inline-flex;align-items:center;gap:5px;margin-bottom:8px;
+  background:var(--paper-alt);color:#514B43;font-size:11px;font-weight:600;letter-spacing:.06em;line-height:1;
+  padding:4px 11px 4px 8px;border-radius:999px;
+}
+body.visa-labels-bc .vg-ico{display:block;width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:1.35;stroke-linecap:round;stroke-linejoin:round}
+body.visa-labels-bc .vg-ico-dot{fill:currentColor;stroke:none}
 
 .visa-guide-steps{background:var(--paper-alt);border-radius:var(--radius);padding:26px 28px;margin-bottom:24px}
 .visa-guide-steps h4{font-size:15px;margin-bottom:14px}
