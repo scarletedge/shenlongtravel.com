@@ -101,6 +101,7 @@ nav.menu a:hover .nav-sub,nav.menu a[aria-current="page"] .nav-sub{color:var(--a
 .hero h1{font-size:clamp(28px,4vw,46px);line-height:1.4;margin-bottom:22px}
 .hero h1 em{font-style:normal;color:var(--accent)}
 .hero p.lead{font-size:17px;color:var(--muted);max-width:42em;margin-bottom:34px}
+.hero p.lead strong{font-weight:700;color:inherit}
 .hero-actions{display:flex;gap:14px;flex-wrap:wrap}
 .btn-solid{background:var(--ink);color:var(--paper);padding:13px 28px;border-radius:var(--radius);font-size:14.5px;letter-spacing:.05em;transition:background .2s}
 .btn-solid:hover{background:var(--accent)}
@@ -738,7 +739,7 @@ nav.menu a{white-space:nowrap}
 
 /* ===== 首頁：主視覺龍+車banner，左右按鈕組 ===== */
 .hero-dragon-banner{padding:52px 0}
-.hdb-grid{display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:start}
+.hdb-grid{display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:stretch}
 .hdb-img-wrap{text-align:center}
 .hdb-img-wrap img{width:100%;border-radius:var(--radius);box-shadow:0 16px 40px rgba(33,28,21,.16)}
 .hdb-img-wrap .hdb-caption{font-size:13px;color:var(--muted);margin-top:10px}
@@ -974,8 +975,9 @@ button.city-card-v2{font:inherit;background:none;appearance:none;-webkit-appeara
 @media(max-width:768px){.sl-contact-qr-btn,.sl-contact-qr{display:none!important}}
 @media(max-width:520px){.contact-panel.sl-contact-panel{width:calc(100vw - 32px);margin-right:-6px}}
 
-/* ===== 首頁：小紅書最新動態（.sl-xhs-*），取代原本中間的車輛圖 ===== */
-.sl-xhs{background:#FFFDF8;border:1px solid #E4D3AE;border-radius:var(--radius);padding:16px;box-shadow:0 16px 40px rgba(33,28,21,.12)}
+/* ===== 首頁：YouTube / 小紅書。外層不加框，與左右欄同一結構對齊 ===== */
+.sl-yt,.sl-xhs{display:flex;flex-direction:column;min-width:0}
+.sl-yt > .sl-xhs-card,.sl-xhs > .sl-xhs-card{flex:1 1 auto}
 .sl-xhs-head{display:flex;align-items:center;gap:10px;margin-bottom:12px}
 .sl-xhs-badge{background:#FF2442;color:#fff;font-size:12px;font-weight:700;padding:3px 9px;border-radius:6px;letter-spacing:.04em}
 .sl-xhs-headtitle{font-size:14px;font-weight:700;color:var(--ink)}
