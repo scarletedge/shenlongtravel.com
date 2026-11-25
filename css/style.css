@@ -1300,8 +1300,9 @@ section.case-section{padding:64px 0 56px}
 section.member-center{padding:56px 0 88px}
 .member-center h1{font-size:clamp(28px,4vw,42px);line-height:1.35;margin-bottom:12px}
 .member-account{margin:0 0 28px;font-size:15px;color:var(--muted);word-break:break-all}
-.member-guest p{color:var(--muted);margin-bottom:22px}
-.member-guest .btn-solid{display:inline-block}
+.member-guest{display:flex;flex-direction:column;align-items:flex-start;gap:20px}
+.member-guest p{color:var(--muted);margin:0;line-height:1.6}
+.member-guest .btn-solid{display:inline-block;margin:0;line-height:1.4;vertical-align:top}
 .member-center-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 .member-center-card{
   display:flex;flex-direction:column;justify-content:center;gap:8px;min-height:140px;
