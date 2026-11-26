@@ -1550,6 +1550,12 @@ a.member-center-card:hover{border-color:var(--gold-dark);box-shadow:0 8px 22px r
   letter-spacing:.04em;color:var(--gold-dark);
 }
 .itinerary-row p{margin:0;font-size:15.5px;line-height:1.75}
+.itinerary-mark{
+  font-weight:700;color:var(--ink);
+  background:linear-gradient(transparent 58%, rgba(185,143,69,.38) 58%);
+  padding:0 3px;border-radius:2px;
+  box-decoration-break:clone;-webkit-box-decoration-break:clone;
+}
 
 .itinerary-photo{position:relative;margin:18px 0 0;min-width:0}
 .itinerary-photo img{width:100%;height:auto;display:block;border-radius:2px}
@@ -1708,6 +1714,7 @@ a.member-center-card:hover{border-color:var(--gold-dark);box-shadow:0 8px 22px r
   .itinerary-day-badge{
     -webkit-print-color-adjust:exact;print-color-adjust:exact;
   }
+  .itinerary-mark{-webkit-print-color-adjust:exact;print-color-adjust:exact}
   .itinerary-photo figcaption{
     position:static;display:block;width:auto;max-width:none;
     background:transparent;color:#211C15;padding:6px 0 0;
