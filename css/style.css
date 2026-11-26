@@ -1802,7 +1802,6 @@ a.member-center-card:hover{border-color:var(--gold-dark);box-shadow:0 8px 22px r
   border-radius:20px;
   padding:4px 10px;
 }
-.voucher-notes{margin:12px 0 0;font-size:13.5px;line-height:1.7;color:var(--muted)}
 .voucher-services{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
 .voucher-services a{
   display:inline-block;

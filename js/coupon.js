@@ -211,9 +211,6 @@
       card.appendChild(terms);
     }
 
-    var notes = isHans ? (coupon.notesZhHans || coupon.notesZhHant) : (coupon.notesZhHant || coupon.notesZhHans);
-    if (notes) card.appendChild(el('p', 'voucher-notes', notes));
-
     var names = serviceNames(coupon);
     var links = el('div', 'voucher-services');
     SERVICE_LINKS.forEach(function (item) {
