@@ -1385,8 +1385,17 @@ a.member-center-card:hover{border-color:var(--gold-dark);box-shadow:0 8px 22px r
   font-size:14px;letter-spacing:.18em;text-transform:uppercase;
   color:var(--gold-dark);display:block;margin:0 0 12px;line-height:1.6;
 }
-.hero.itinerary-hero{padding:64px 0 52px}
+.hero.itinerary-hero{padding:48px 0 52px}
 .hero.itinerary-hero .hero-inner{max-width:var(--max)}
+.itinerary-cover{
+  margin:0 0 28px;padding:8px;background:#FFFDF8;
+  border:1px solid rgba(33,28,21,.12);border-top:2px solid var(--gold);
+  box-shadow:0 12px 28px rgba(33,28,21,.1);
+}
+.itinerary-cover img{
+  width:100%;aspect-ratio:900/474;object-fit:cover;object-position:center center;
+  display:block;
+}
 .hero.itinerary-hero h1{
   font-size:clamp(28px,4vw,48px);line-height:1.28;margin-bottom:12px;
 }
@@ -1440,6 +1449,10 @@ a.member-center-card:hover{border-color:var(--gold-dark);box-shadow:0 8px 22px r
 .itinerary-vehicle-note{
   margin:0;padding-bottom:16px;color:#E4D8C4;font-size:14.5px;line-height:1.6;
   border-bottom:1px solid rgba(185,143,69,.45);
+}
+.itinerary-vehicle-photo{margin:16px 0 0;min-width:0;overflow:hidden;border:1px solid rgba(185,143,69,.55)}
+.itinerary-vehicle-photo img{
+  width:100%;aspect-ratio:4/3;object-fit:cover;object-position:center 46%;display:block;
 }
 .itinerary-flights{list-style:none;margin:18px 0 0;padding:0}
 .itinerary-flights li{padding:12px 0;border-bottom:1px dashed rgba(185,143,69,.45)}
@@ -1542,8 +1555,9 @@ a.member-center-card:hover{border-color:var(--gold-dark);box-shadow:0 8px 22px r
   background:rgba(33,28,21,.82);color:var(--paper);
   font-size:12.5px;line-height:1.45;letter-spacing:.03em;padding:5px 10px;
 }
-.itinerary-photo.is-portrait{max-width:520px;margin-left:auto;margin-right:auto}
-.itinerary-photo.is-portrait img{aspect-ratio:1;object-fit:cover;object-position:center 42%}
+.itinerary-photo.is-wide img{aspect-ratio:3/2;object-fit:cover;object-position:center center}
+.itinerary-photo.is-wide.is-church img{object-position:center 36%}
+.itinerary-photo.is-wide.is-market img{object-position:center 38%}
 .itinerary-gallery{
   display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:18px;
 }
@@ -1617,6 +1631,9 @@ a.member-center-card:hover{border-color:var(--gold-dark);box-shadow:0 8px 22px r
   transition:background .2s;
 }
 .itinerary-cta-btn:hover{background:var(--accent-deep)}
+.itinerary-credits{
+  margin:22px 0 0;max-width:46em;font-size:12.5px;line-height:1.7;color:var(--muted);
+}
 
 @media(max-width:860px){
   .itinerary-index .wrap{padding-right:0}
@@ -1639,7 +1656,8 @@ a.member-center-card:hover{border-color:var(--gold-dark);box-shadow:0 8px 22px r
   .itinerary-transport{height:auto}
 }
 @media(max-width:700px){
-  .hero.itinerary-hero{padding:40px 0 32px}
+  .hero.itinerary-hero{padding:28px 0 32px}
+  .itinerary-cover{margin-bottom:22px;padding:6px}
   .itinerary section.itinerary-block{padding:40px 0}
   .itinerary-sheet{padding:24px 0 48px}
   .itinerary-glance a{grid-template-columns:42px minmax(0,1fr);gap:4px 12px}
@@ -1691,7 +1709,7 @@ a.member-center-card:hover{border-color:var(--gold-dark);box-shadow:0 8px 22px r
     position:static;display:block;width:auto;max-width:none;
     background:transparent;color:#211C15;padding:6px 0 0;
   }
-  .itinerary-photo.is-portrait{max-width:280px;margin-left:0}
+  .itinerary-cover,.itinerary-vehicle-photo{break-inside:avoid;box-shadow:none}
   .itinerary-cta{break-inside:avoid}
   .itinerary-cta-btn{
     background:#fff !important;color:#7E2A20 !important;border:1px solid #7E2A20;
