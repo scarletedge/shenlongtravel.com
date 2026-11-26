@@ -1755,6 +1755,17 @@ a.member-center-card:hover{border-color:var(--gold-dark);box-shadow:0 8px 22px r
 .coupon-code-row{display:flex;gap:10px;align-items:center}
 .coupon-code-row input{flex:1;min-width:0;width:auto}
 .coupon-code-row .btn-ghost{white-space:nowrap;padding:10px 16px}
+.coupon-entry + #coupon-preview{margin-top:8px}
+#coupon-preview:empty{display:none}
+.coupon-actions{margin-top:18px}
+.coupon-guest-claim{margin-bottom:4px}
+.coupon-action-row{display:flex;gap:12px;align-items:stretch}
+.coupon-action-row .submit-btn,
+.coupon-action-row .btn-ghost{flex:1;margin:0;text-align:center;padding:13px 12px}
+.coupon-banner{margin-top:16px;padding:16px 18px;background:var(--paper-alt);border-left:3px solid var(--gold-dark)}
+.coupon-banner p{margin:0 0 14px;line-height:1.7}
+.coupon-banner .btn-solid{display:inline-block}
+.voucher-limit{margin:16px 0 0;font-size:13.5px;line-height:1.6;color:var(--muted)}
 .coupon-claim-bar{margin-top:22px}
 .coupon-claim-bar p{margin:0 0 12px;color:var(--ink);font-size:15.5px}
 .coupon-claim-row{display:flex;gap:12px;align-items:center}

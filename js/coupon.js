@@ -36,7 +36,14 @@
     stepPay: isHans ? '结账直接折抵 ' : '結帳直接折抵 ',
     emptyList: isHans ? '这个联系方式目前没有已归户的优惠券。' : '這個聯絡方式目前沒有已歸戶的優惠券。',
     claimedOk: isHans ? '已归户到您留下的联系方式。面额、期限与使用范围如下。' : '已歸戶到您留下的聯絡方式。面額、期限與使用範圍如下。',
-    already: isHans ? '这张优惠券已经归户在这个联系方式。下面是目前的内容。' : '這張優惠券已經歸戶在這個聯絡方式。下面是目前的內容。',
+    already: isHans ? '每个会员账号同款优惠券限归户 1 次，您已完成归户。' : '每個會員帳號同款優惠券限歸戶 1 次，您已完成歸戶。',
+    limitOnce: isHans ? '每个会员账号同款优惠券限归户 1 次' : '每個會員帳號同款優惠券限歸戶 1 次',
+    loginClaimOk: isHans ? '已登录并归户成功！已保存至您的会员帐号（' : '已登入並歸戶成功！已保存至您的會員帳號（',
+    loginClaimTail: isHans ? '），可前往会员中心查看。' : '），可前往會員中心查看。',
+    loginAlready: isHans ? '此帐号已归户过同款优惠券（每个会员账号限归户 1 次），可前往会员中心查看。' : '此帳號已歸戶過同款優惠券（每個會員帳號限歸戶 1 次），可前往會員中心查看。',
+    memberCta: isHans ? '前往会员中心查看我的优惠券' : '前往會員中心查看我的優惠券',
+    loginLabel: isHans ? '登录会员' : '登入會員',
+    claimNow: isHans ? '立即归户' : '立即歸戶',
     boundOk: isHans ? '已绑定到这个 Google 帐号的电子邮件。' : '已綁定到這個 Google 帳號的電子郵件。',
     noEmail: isHans ? '这个 Google 帐号没有电子邮件，无法自动查询。请改用下方手机号码，或前往免密码优惠券页。' : '這個 Google 帳號沒有電子郵件，無法自動查詢。請改用下方手機號碼，或前往免密碼優惠券頁。',
     emailLoading: isHans ? '正在用您的 Google 电子邮件查询已归户的优惠券…' : '正在用您的 Google 電子郵件查詢已歸戶的優惠券…',
@@ -246,6 +253,7 @@
       if (rules.length) facts.appendChild(factRow(COPY.rulesLabel, rules));
       card.appendChild(facts);
     }
+    card.appendChild(el('p', 'voucher-limit', COPY.limitOnce));
     return card;
   }
 
@@ -391,25 +399,35 @@
     return codeKind(code.trim()) || '';
   }
 
+  function signedInEmail() {
+    var user = w.SLMember && SLMember.user;
+    return user && user.email ? String(user.email) : '';
+  }
+
   function mountPage() {
     var entryForm = d.getElementById('coupon-entry-form');
-    var claimBar = d.getElementById('coupon-claim-bar');
     var lookupForm = d.getElementById('coupon-lookup-form');
     var preview = d.getElementById('coupon-preview');
-    if (!entryForm || !claimBar || !lookupForm || !preview) return;
+    var actions = d.getElementById('coupon-actions');
+    if (!entryForm || !lookupForm || !preview || !actions) return;
 
     var claimTab = d.getElementById('coupon-tab-claim');
     var lookupTab = d.getElementById('coupon-tab-lookup');
     var claimPanel = d.getElementById('coupon-panel-claim');
     var lookupPanel = d.getElementById('coupon-panel-lookup');
-    var verifyBtn = d.getElementById('coupon-verify');
     var entryResult = d.getElementById('coupon-entry-result');
     var claimResult = d.getElementById('coupon-claim-result');
     var lookupResult = d.getElementById('coupon-lookup-result');
+    var guestClaim = d.getElementById('coupon-guest-claim');
+    var claimNow = d.getElementById('coupon-claim-now');
+    var loginBtn = d.getElementById('coupon-login');
     var useBlock = d.getElementById('coupon-use');
     var services = d.getElementById('coupon-services');
     var steps = d.getElementById('coupon-steps');
+    var codeInput = entryForm.querySelector('[name="code"]');
+    var guestInput = guestClaim ? guestClaim.querySelector('[name="identifier"]') : null;
     var activeCode = '';
+    var claimAfterLogin = false;
 
     function selectTab(which) {
       var claim = which !== 'lookup';
@@ -422,11 +440,10 @@
     }
 
     function showVoucher(coupon, opts) {
+      activeCode = coupon.code || activeCode;
       clear(preview);
       preview.appendChild(renderVoucher(coupon, opts || {}));
-      entryForm.hidden = true;
-      claimBar.hidden = false;
-      activeCode = coupon.code || activeCode;
+      actions.hidden = false;
       if (services) {
         clear(services);
         var links = serviceLinks(coupon);
@@ -442,103 +459,149 @@
       }
     }
 
-    function failVerify(message) {
-      entryForm.hidden = false;
-      claimBar.hidden = true;
+    function hideVoucher() {
+      activeCoupon = null;
+      actions.hidden = true;
+      if (guestClaim) guestClaim.hidden = true;
       if (useBlock) useBlock.hidden = true;
       if (steps) steps.hidden = true;
       clear(preview);
-      showMessage(entryResult, message, 'err');
+      clear(claimResult);
+    }
+
+    function accountBanner(email, already) {
+      clear(claimResult);
+      var box = el('div', 'coupon-banner');
+      var text = already ? COPY.loginAlready : (COPY.loginClaimOk + email + COPY.loginClaimTail);
+      box.appendChild(el('p', '', text));
+      var link = el('a', 'btn-solid', COPY.memberCta);
+      link.href = 'member.html';
+      box.appendChild(link);
+      claimResult.appendChild(box);
+    }
+
+    function applyClaimResult(res, emailForAccount) {
+      if (!res || !res.ok || !res.data || res.data.ok !== true || !res.data.coupon) {
+        showMessage(claimResult, errorText(res), 'err');
+        return;
+      }
+      var claim = res.data.claim || {};
+      showVoucher(res.data.coupon, {
+        claimed: true,
+        claimedAt: claim.claimedAt,
+        status: claim.status || res.data.coupon.status
+      });
+      if (emailForAccount) accountBanner(emailForAccount, !!res.data.alreadyClaimed);
+      else showMessage(claimResult, res.data.alreadyClaimed ? COPY.already : COPY.claimedOk, '');
+    }
+
+    function claimTo(identifier, asAccount) {
+      var kind = identifierKind(identifier);
+      if (!activeCode) {
+        showMessage(claimResult, COPY.needCode, 'err');
+        return;
+      }
+      if (kind !== 'email' && kind !== 'phone') {
+        showMessage(claimResult, COPY.badId, 'err');
+        return;
+      }
+      showMessage(claimResult, COPY.loading, 'pending');
+      var emailForAccount = asAccount ? identifier.trim() : '';
+      claimWith(identifier.trim(), activeCode).then(function (res) {
+        applyClaimResult(res, emailForAccount);
+      }).catch(function () {
+        showMessage(claimResult, COPY.network, 'err');
+      });
     }
 
     function verifyCode(raw) {
       var validCode = codeKind(raw);
       if (!String(raw || '').trim()) {
-        failVerify(COPY.needCode);
+        hideVoucher();
+        showMessage(entryResult, COPY.needCode, 'err');
         return;
       }
       if (validCode === 'bad') {
-        failVerify(COPY.badCode);
+        hideVoucher();
+        showMessage(entryResult, COPY.badCode, 'err');
         return;
       }
       showMessage(preview, COPY.loading, 'pending');
       clear(entryResult);
       lookupBy({ code: validCode }).then(function (res) {
         if (!res.ok || !res.data || !res.data.found || !res.data.coupon) {
-          failVerify(!res.ok ? errorText(res) : COPY.notFoundCode);
+          hideVoucher();
+          showMessage(entryResult, !res.ok ? errorText(res) : COPY.notFoundCode, 'err');
           return;
         }
         clear(claimResult);
         showVoucher(res.data.coupon, { claimed: false, status: res.data.coupon.status });
       }).catch(function () {
-        failVerify(COPY.network);
-      });
-    }
-
-    function submitClaim(identifier, resultNode, form) {
-      var kind = identifierKind(identifier);
-      if (!activeCode) {
-        showMessage(resultNode, COPY.needCode, 'err');
-        return;
-      }
-      if (kind !== 'email' && kind !== 'phone') {
-        showMessage(resultNode, COPY.badId, 'err');
-        return;
-      }
-      showMessage(resultNode, COPY.loading, 'pending');
-      withBusy(form, function () {
-        return claimWith(identifier.trim(), activeCode);
-      }).then(function (res) {
-        if (!res.ok || !res.data || res.data.ok !== true || !res.data.coupon) {
-          showMessage(resultNode, errorText(res), 'err');
-          return;
-        }
-        var claim = res.data.claim || {};
-        showVoucher(res.data.coupon, {
-          claimed: true,
-          claimedAt: claim.claimedAt,
-          status: claim.status || res.data.coupon.status
-        });
-        showMessage(claimResult, res.data.alreadyClaimed ? COPY.already : COPY.claimedOk, '');
-      }).catch(function () {
-        showMessage(resultNode, COPY.network, 'err');
+        hideVoucher();
+        showMessage(entryResult, COPY.network, 'err');
       });
     }
 
     if (claimTab) claimTab.addEventListener('click', function () { selectTab('claim'); });
     if (lookupTab) lookupTab.addEventListener('click', function () { selectTab('lookup'); });
 
-    if (verifyBtn) {
-      verifyBtn.addEventListener('click', function () {
-        verifyCode(entryForm.querySelector('[name="code"]').value);
+    entryForm.addEventListener('submit', function (event) {
+      event.preventDefault();
+      verifyCode(codeInput.value);
+    });
+
+    if (claimNow) {
+      claimNow.addEventListener('click', function () {
+        if (!activeCode) {
+          showMessage(claimResult, COPY.needCode, 'err');
+          return;
+        }
+        var email = signedInEmail();
+        if (email) {
+          claimTo(email, true);
+          return;
+        }
+        if (guestClaim) guestClaim.hidden = false;
+        var typed = guestInput ? guestInput.value : '';
+        if (!String(typed).trim()) {
+          if (guestInput) guestInput.focus();
+          return;
+        }
+        claimTo(typed, false);
       });
     }
 
-    entryForm.addEventListener('submit', function (event) {
-      event.preventDefault();
-      var rawCode = entryForm.querySelector('[name="code"]').value;
-      var rawId = entryForm.querySelector('[name="identifier"]').value;
-      var validCode = codeKind(rawCode);
-      if (!rawId.trim()) {
-        verifyCode(rawCode);
-        return;
-      }
-      if (!rawCode.trim()) {
-        showMessage(entryResult, COPY.needClaim, 'err');
-        return;
-      }
-      if (validCode === 'bad') {
-        showMessage(entryResult, COPY.badCode, 'err');
-        return;
-      }
-      activeCode = validCode;
-      submitClaim(rawId, entryResult, entryForm);
-    });
+    if (loginBtn) {
+      loginBtn.addEventListener('click', function () {
+        if (!activeCode) {
+          showMessage(claimResult, COPY.needCode, 'err');
+          return;
+        }
+        var email = signedInEmail();
+        if (email) {
+          claimTo(email, true);
+          return;
+        }
+        if (!w.SLMember || !SLMember.available || typeof SLMember.signIn !== 'function') {
+          showMessage(claimResult, (w.SLMember && SLMember.msg) ? SLMember.msg('unavailable') : COPY.errGeneric, 'err');
+          return;
+        }
+        claimAfterLogin = true;
+        Promise.resolve(SLMember.signIn()).then(function () {
+          if (claimAfterLogin && !signedInEmail()) claimAfterLogin = false;
+        }).catch(function () {
+          claimAfterLogin = false;
+        });
+      });
+    }
 
-    claimBar.addEventListener('submit', function (event) {
-      event.preventDefault();
-      submitClaim(claimBar.querySelector('[name="identifier"]').value, claimResult, claimBar);
-    });
+    if (w.SLMember && typeof SLMember.onChange === 'function') {
+      SLMember.onChange(function (user) {
+        if (!(claimAfterLogin && user && user.email && activeCode)) return;
+        claimAfterLogin = false;
+        claimTo(user.email, true);
+      });
+    }
 
     lookupForm.addEventListener('submit', function (event) {
       event.preventDefault();
@@ -563,8 +626,8 @@
     });
 
     var fromUrl = prefillCode();
-    if (fromUrl) {
-      entryForm.hidden = true;
+    if (fromUrl && codeInput) {
+      codeInput.value = fromUrl;
       activeCode = fromUrl;
       verifyCode(fromUrl);
     }

@@ -94,34 +94,34 @@
     <noscript><p class="coupon-msg is-err">请启用 JavaScript 后即可查询与归户优惠券。</p></noscript>
     <div class="coupon-stage">
       <div class="coupon-tabs" role="tablist" aria-label="优惠券">
-        <button type="button" class="coupon-tab" id="coupon-tab-claim" role="tab" aria-controls="coupon-panel-claim" aria-selected="true">领取／归户优惠券（免密码）</button>
+        <button type="button" class="coupon-tab" id="coupon-tab-claim" role="tab" aria-controls="coupon-panel-claim" aria-selected="true">领取／归户优惠券</button>
         <button type="button" class="coupon-tab" id="coupon-tab-lookup" role="tab" aria-controls="coupon-panel-lookup" aria-selected="false" tabindex="-1">查询我已归户的优惠券</button>
       </div>
       <div id="coupon-panel-claim" role="tabpanel" aria-labelledby="coupon-tab-claim">
-        <div id="coupon-preview" aria-live="polite"></div>
-        <form id="coupon-claim-bar" class="coupon-claim-bar" hidden novalidate>
-          <p>输入手机号码或电子邮件，一键归户保存</p>
-          <div class="coupon-claim-row">
-            <input id="coupon-claim-id" name="identifier" type="text" autocomplete="off" aria-label="手机号码或电子邮件" placeholder="手机号码或电子邮件">
-            <button type="submit" class="submit-btn">立即归户保存</button>
-          </div>
-          <div id="coupon-claim-result" aria-live="polite"></div>
-        </form>
         <form id="coupon-entry-form" class="coupon-form coupon-entry" novalidate>
           <div class="field">
             <label for="coupon-entry-code">优惠码</label>
             <div class="coupon-code-row">
               <input id="coupon-entry-code" name="code" type="text" autocomplete="off" maxlength="40">
-              <button type="button" class="btn-ghost" id="coupon-verify">验证优惠码</button>
+              <button type="submit" class="btn-ghost" id="coupon-verify">查询／验证</button>
             </div>
           </div>
-          <div class="field">
-            <label for="coupon-entry-id">手机号码或电子邮件</label>
-            <input id="coupon-entry-id" name="identifier" type="text" autocomplete="off">
-          </div>
-          <button type="submit" class="submit-btn">立即归户保存</button>
           <div id="coupon-entry-result" aria-live="polite"></div>
         </form>
+        <div id="coupon-preview" aria-live="polite"></div>
+        <div id="coupon-actions" class="coupon-actions" hidden>
+          <form id="coupon-guest-claim" class="coupon-form coupon-guest-claim" hidden novalidate>
+            <div class="field">
+              <label for="coupon-claim-id">手机号码或电子邮件</label>
+              <input id="coupon-claim-id" name="identifier" type="text" autocomplete="off" placeholder="手机号码或电子邮件">
+            </div>
+          </form>
+          <div class="coupon-action-row">
+            <button type="button" class="submit-btn" id="coupon-claim-now">立即归户</button>
+            <button type="button" class="btn-ghost" id="coupon-login">登录会员</button>
+          </div>
+          <div id="coupon-claim-result" aria-live="polite"></div>
+        </div>
         <div id="coupon-use" class="coupon-use" hidden>
           <h2>立即使用这张优惠券</h2>
           <div id="coupon-services" class="voucher-services"></div>
