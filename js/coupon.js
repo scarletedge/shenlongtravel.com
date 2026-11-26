@@ -682,9 +682,10 @@
     }
 
     if (claimForm) {
+      var claimInput = claimForm.querySelector('[name="code"]');
       claimForm.addEventListener('submit', function (event) {
         event.preventDefault();
-        var validCode = codeKind(claimForm.querySelector('[name="code"]').value);
+        var validCode = codeKind(claimInput ? claimInput.value : '');
         if (!email || identifierKind(email) !== 'email') {
           showMessage(claimResult, COPY.noEmail, 'err');
           return;
@@ -703,14 +704,7 @@
         }).then(function (res) {
           if (res.ok && res.data && res.data.ok === true && res.data.coupon) {
             showMessage(claimResult, res.data.alreadyClaimed ? COPY.already : COPY.boundOk, '');
-            var list = el('div', 'coupon-list');
-            var claim = res.data.claim || {};
-            list.appendChild(renderVoucher(res.data.coupon, {
-              claimed: true,
-              claimedAt: claim.claimedAt,
-              status: claim.status || (res.data.coupon && res.data.coupon.status)
-            }));
-            claimResult.appendChild(list);
+            if (!res.data.alreadyClaimed && claimInput) claimInput.value = '';
             loadEmail(email);
           } else {
             renderClaim(res, claimResult);
