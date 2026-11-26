@@ -724,6 +724,13 @@ footer .bg-bagua{bottom:-80px;right:-40px}
 .hc-slide.theme-light h2{color:var(--ink)}
 .hc-slide:not(.theme-light) h2{color:var(--paper)}
 .hc-slide p.hc-desc{font-size:15px;max-width:36em;margin-bottom:26px;opacity:.85}
+/* 段落整體維持 85% 淡色；strong 不能突破父層 opacity，所以含 strong 的說明改用文字色淡化，粗體才看得到全亮 */
+.hc-slide p.hc-desc:has(strong){opacity:1}
+.hc-slide:not(.theme-light) p.hc-desc:has(strong){color:rgba(247,244,236,.85)}
+.hc-slide.theme-light p.hc-desc:has(strong){color:rgba(33,28,21,.85)}
+.hc-slide p.hc-desc strong{font-weight:700}
+.hc-slide:not(.theme-light) p.hc-desc strong{color:var(--paper)}
+.hc-slide.theme-light p.hc-desc strong{color:var(--ink)}
 .hc-slide:not(.theme-light) .btn-solid{background:var(--accent);color:var(--paper)}
 .hc-slide:not(.theme-light) .btn-solid:hover{background:var(--gold);color:var(--ink)}
 .hc-slide:not(.theme-light) .btn-ghost{border-color:rgba(247,244,236,.5);color:var(--paper)}
