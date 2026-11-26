@@ -1308,10 +1308,15 @@ section.case-section{padding:64px 0 56px}
 .hero.hero-with-art .hero-inner{max-width:var(--max)}
 .hero.hero-with-art .visa-hero-grid{
   display:grid;
-  grid-template-columns:minmax(0,1fr) minmax(220px,420px);
-  column-gap:clamp(24px,4vw,56px);
+  grid-template-columns:minmax(0,1.35fr) minmax(0,0.85fr);
+  column-gap:clamp(20px,3vw,40px);
   align-items:center;
 }
+.hero.hero-with-art h1{
+  font-size:clamp(28px,2.9vw,38px);
+  line-height:1.35;
+}
+.hero.hero-with-art h1 .nowrap{white-space:nowrap}
 .hero.hero-with-art .visa-hero-copy{min-width:0}
 .hero.hero-with-art .visa-hero-copy p.lead{margin-bottom:0}
 .hero.hero-with-art .visa-hero-art{
