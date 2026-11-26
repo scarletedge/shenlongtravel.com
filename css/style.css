@@ -1301,6 +1301,7 @@ section.member-center{padding:56px 0 88px}
 .member-center h1{font-size:clamp(28px,4vw,42px);line-height:1.35;margin-bottom:12px}
 .member-account{margin:0 0 28px;font-size:15px;color:var(--muted);word-break:break-all}
 .member-guest{display:flex;flex-direction:column;align-items:flex-start;gap:20px}
+.member-guest[hidden],#member-panel[hidden]{display:none !important}
 .member-guest p{color:var(--muted);margin:0;line-height:1.6}
 .member-guest .btn-solid{display:inline-block;margin:0;line-height:1.4;vertical-align:top}
 .member-center-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
@@ -1309,7 +1310,8 @@ section.member-center{padding:56px 0 88px}
   background:var(--paper);border:1px solid var(--line-strong);border-radius:var(--radius);
   padding:28px 26px;transition:border-color .2s,box-shadow .2s;
 }
-.member-center-card:hover{border-color:var(--gold-dark);box-shadow:0 8px 22px rgba(33,28,21,.1)}
+a.member-center-card:hover{border-color:var(--gold-dark);box-shadow:0 8px 22px rgba(33,28,21,.1)}
+.member-center-card-info{cursor:default}
 .member-center-card h2{font-size:22px;line-height:1.4}
 .member-center-card p{font-size:14.5px;color:var(--muted);line-height:1.7}
 .member-center-logout{
