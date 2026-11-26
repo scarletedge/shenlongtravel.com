@@ -101,7 +101,8 @@ nav.menu a:hover .nav-sub,nav.menu a[aria-current="page"] .nav-sub{color:var(--a
 .hero h1{font-size:clamp(28px,4vw,46px);line-height:1.4;margin-bottom:22px}
 .hero h1 em{font-style:normal;color:var(--accent)}
 .hero p.lead{font-size:17px;color:var(--muted);max-width:42em;margin-bottom:34px}
-.hero p.lead strong{font-weight:700;color:inherit}
+/* 內頁 hero 是米白紙底（lead 用灰色、沒有 opacity）。strong 改墨色，才會比周圍文字更深、在淺底上清楚加粗。 */
+.hero p.lead strong{font-weight:700;color:var(--ink)}
 .hero-actions{display:flex;gap:14px;flex-wrap:wrap}
 .btn-solid{background:var(--ink);color:var(--paper);padding:13px 28px;border-radius:var(--radius);font-size:14.5px;letter-spacing:.05em;transition:background .2s}
 .btn-solid:hover{background:var(--accent)}
@@ -724,6 +725,13 @@ footer .bg-bagua{bottom:-80px;right:-40px}
 .hc-slide.theme-light h2{color:var(--ink)}
 .hc-slide:not(.theme-light) h2{color:var(--paper)}
 .hc-slide p.hc-desc{font-size:15px;max-width:36em;margin-bottom:26px;opacity:.85}
+/* 段落整體維持 85% 淡色；strong 不能突破父層 opacity，所以含 strong 的說明改用文字色淡化，粗體才看得到全亮 */
+.hc-slide p.hc-desc:has(strong){opacity:1}
+.hc-slide:not(.theme-light) p.hc-desc:has(strong){color:rgba(247,244,236,.85)}
+.hc-slide.theme-light p.hc-desc:has(strong){color:rgba(33,28,21,.85)}
+.hc-slide p.hc-desc strong{font-weight:700}
+.hc-slide:not(.theme-light) p.hc-desc strong{color:var(--paper)}
+.hc-slide.theme-light p.hc-desc strong{color:var(--ink)}
 .hc-slide:not(.theme-light) .btn-solid{background:var(--accent);color:var(--paper)}
 .hc-slide:not(.theme-light) .btn-solid:hover{background:var(--gold);color:var(--ink)}
 .hc-slide:not(.theme-light) .btn-ghost{border-color:rgba(247,244,236,.5);color:var(--paper)}
@@ -1323,4 +1331,43 @@ a.member-center-card:hover{border-color:var(--gold-dark);box-shadow:0 8px 22px r
 @media(max-width:760px){
   .member-center-grid{grid-template-columns:1fr}
   .member-center-card{min-height:0}
+}
+
+/* ===== 簽證頁 Hero 插畫。只作用在 .hero.hero-with-art，其他頁的 .hero 不受影響 ===== */
+.hero.hero-with-art .hero-inner{max-width:var(--max)}
+.hero.hero-with-art .visa-hero-grid{
+  display:grid;
+  grid-template-columns:minmax(0,1.35fr) minmax(0,0.85fr);
+  column-gap:clamp(20px,3vw,40px);
+  align-items:center;
+}
+.hero.hero-with-art h1{
+  font-size:clamp(28px,2.9vw,38px);
+  line-height:1.35;
+}
+.hero.hero-with-art h1 .nowrap{white-space:nowrap}
+.hero.hero-with-art .visa-hero-copy{min-width:0}
+.hero.hero-with-art .visa-hero-copy p.lead{margin-bottom:0}
+.hero.hero-with-art .visa-hero-art{
+  margin:0;
+  min-width:0;
+  width:100%;
+  padding:8px;
+  background:#FFFDF8;
+  border:1px solid rgba(33,28,21,.1);
+  border-radius:16px;
+  box-shadow:0 12px 28px rgba(33,28,21,.12);
+}
+.hero.hero-with-art .visa-hero-art img{
+  width:100%;
+  height:auto;
+  aspect-ratio:4/3;
+  object-fit:cover;
+  border-radius:10px;
+}
+@media(max-width:760px){
+  .hero.hero-with-art .visa-hero-grid{
+    grid-template-columns:minmax(0,1fr);
+    row-gap:28px;
+  }
 }
