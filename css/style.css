@@ -1303,3 +1303,42 @@ section.case-section{padding:64px 0 56px}
 @media(max-width:700px){
   .route-case{grid-template-columns:1fr;gap:16px;padding:16px}
 }
+
+/* ===== 簽證頁 Hero 插畫。只作用在 .hero.hero-with-art，其他頁的 .hero 不受影響 ===== */
+.hero.hero-with-art .hero-inner{max-width:var(--max)}
+.hero.hero-with-art .visa-hero-grid{
+  display:grid;
+  grid-template-columns:minmax(0,1.35fr) minmax(0,0.85fr);
+  column-gap:clamp(20px,3vw,40px);
+  align-items:center;
+}
+.hero.hero-with-art h1{
+  font-size:clamp(28px,2.9vw,38px);
+  line-height:1.35;
+}
+.hero.hero-with-art h1 .nowrap{white-space:nowrap}
+.hero.hero-with-art .visa-hero-copy{min-width:0}
+.hero.hero-with-art .visa-hero-copy p.lead{margin-bottom:0}
+.hero.hero-with-art .visa-hero-art{
+  margin:0;
+  min-width:0;
+  width:100%;
+  padding:8px;
+  background:#FFFDF8;
+  border:1px solid rgba(33,28,21,.1);
+  border-radius:16px;
+  box-shadow:0 12px 28px rgba(33,28,21,.12);
+}
+.hero.hero-with-art .visa-hero-art img{
+  width:100%;
+  height:auto;
+  aspect-ratio:4/3;
+  object-fit:cover;
+  border-radius:10px;
+}
+@media(max-width:760px){
+  .hero.hero-with-art .visa-hero-grid{
+    grid-template-columns:minmax(0,1fr);
+    row-gap:28px;
+  }
+}
