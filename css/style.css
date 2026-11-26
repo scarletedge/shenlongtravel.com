@@ -1726,3 +1726,115 @@ a.member-center-card:hover{border-color:var(--gold-dark);box-shadow:0 8px 22px r
   }
   a{text-decoration:none}
 }
+
+/* ===== 優惠券查詢／歸戶（coupon.html、會員中心） =====
+   桌面主選單在 1080px 內容寬度裡已經排滿，再加入「優惠券查詢」會擠出橫向溢位。
+   入口放在每頁頁尾；手機選單是直向的，另外顯示同一條連結。 */
+@media(min-width:861px){
+  nav.menu a.nav-coupon{display:none}
+}
+.coupon-page{padding:0 0 72px}
+.coupon-page .hero{padding:64px 0 36px}
+.coupon-page section{padding-top:8px;border-top:0}
+.coupon-page h1{font-size:clamp(28px,4vw,42px);line-height:1.35;margin:0 0 14px}
+.coupon-lead{color:var(--muted);font-size:16.5px;max-width:40em;margin:0}
+.coupon-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start;margin-top:36px}
+.coupon-card{
+  background:var(--paper);
+  border:1px solid var(--line-strong);
+  border-top:3px solid var(--gold-dark);
+  padding:28px 26px 30px;
+}
+.coupon-card h2{font-size:22px;line-height:1.45;margin:0 0 8px}
+.coupon-h-or,.coupon-member-jump{white-space:nowrap}
+.coupon-card-lead{color:var(--muted);font-size:14.5px;line-height:1.7;margin:0 0 22px}
+.coupon-form .field{margin-bottom:18px}
+.coupon-form .field input{width:100%}
+.coupon-form .submit-btn:disabled{opacity:.55;cursor:progress}
+.coupon-msg{margin:14px 0 0;font-size:14.5px;line-height:1.7;color:var(--ink)}
+.coupon-msg.is-err{color:var(--accent-deep)}
+.coupon-msg.is-pending{color:var(--muted)}
+.coupon-list{display:flex;flex-direction:column;gap:14px;margin-top:16px}
+.coupon-list:empty{display:none}
+.voucher{
+  background:var(--paper-alt);
+  border:1px solid var(--line-strong);
+  border-left:3px solid var(--gold-dark);
+  padding:20px 18px 16px;
+}
+.voucher-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.voucher-amount{
+  font-family:var(--font-serif),serif;
+  font-size:clamp(28px,3vw,36px);
+  line-height:1.15;
+  color:var(--accent);
+}
+.voucher-title{margin-top:6px;font-size:14.5px;line-height:1.5;color:var(--ink)}
+.voucher-code{
+  margin-top:10px;
+  font-family:var(--font-serif),serif;
+  font-size:16px;
+  letter-spacing:.08em;
+}
+.voucher-badge{
+  flex-shrink:0;
+  font-size:12.5px;
+  letter-spacing:.08em;
+  line-height:1.4;
+  padding:4px 10px;
+  border-radius:20px;
+  border:1px solid var(--gold-dark);
+  color:var(--gold-dark);
+  white-space:nowrap;
+}
+.voucher-badge.is-used,.voucher-badge.is-void{color:var(--muted);border-color:var(--line-strong)}
+.voucher-badge.is-expired{color:var(--accent);border-color:var(--accent)}
+.voucher-meta{margin:14px 0 0;padding:0;list-style:none}
+.voucher-meta li{font-size:14px;line-height:1.7;color:var(--muted)}
+.voucher-meta strong{color:var(--ink);font-weight:500}
+.voucher-terms{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 0;padding:0;list-style:none}
+.voucher-terms li{
+  max-width:100%;
+  min-width:0;
+  font-size:12.5px;line-height:1.5;color:var(--ink);
+  background:var(--paper);
+  border:1px solid var(--line-strong);
+  border-radius:20px;
+  padding:4px 10px;
+}
+.voucher-notes{margin:12px 0 0;font-size:13.5px;line-height:1.7;color:var(--muted)}
+.voucher-services{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.voucher-services a{
+  display:inline-block;
+  font-size:13px;
+  letter-spacing:.04em;
+  line-height:1.4;
+  color:var(--ink);
+  border:1px solid var(--ink);
+  border-radius:var(--radius);
+  padding:7px 12px;
+}
+.voucher-services a:hover{background:var(--ink);color:var(--paper)}
+.coupon-footnote{margin-top:28px;font-size:14.5px;line-height:1.8;color:var(--muted)}
+.coupon-footnote a{color:var(--accent);border-bottom:1px solid var(--accent)}
+.member-public-coupon,
+.member-coupons{
+  margin-top:28px;
+  background:var(--paper);
+  border:1px solid var(--line-strong);
+  border-top:3px solid var(--gold-dark);
+  padding:28px 26px 30px;
+}
+.member-public-coupon[hidden],.member-coupons[hidden]{display:none !important}
+.member-public-coupon h2,.member-coupons h2{font-size:22px;line-height:1.4;margin:0 0 8px}
+.member-public-coupon p,.member-coupons > p{color:var(--muted);font-size:14.5px;line-height:1.7;margin:0}
+.member-public-coupon .btn-solid{display:inline-block;margin-top:18px}
+.member-coupons .coupon-inline{margin-top:26px;padding-top:22px;border-top:1px solid var(--line);max-width:520px}
+.member-coupons .coupon-inline h3{font-size:17px;margin:0 0 6px}
+.member-coupons .coupon-inline p{color:var(--muted);font-size:14px;margin:0 0 14px}
+.coupon-alt-link{margin:22px 0 0;font-size:14px}
+.coupon-alt-link a{color:var(--accent);border-bottom:1px solid var(--accent)}
+@media(max-width:800px){
+  .coupon-grid{grid-template-columns:1fr}
+  .coupon-card,.member-public-coupon,.member-coupons{padding:22px 18px 24px}
+}

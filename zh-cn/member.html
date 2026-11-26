@@ -53,6 +53,7 @@
       <a href="partner-stores.html"><span class="nav-main">合作店家</span></a>
       <a href="local-insider.html"><span class="nav-main">探店</span></a>
       <a href="about.html"><span class="nav-main">关于</span></a>
+      <a href="coupon.html" class="nav-coupon"><span class="nav-main">优惠券查询</span></a>
     </nav>
     <div class="lang-switch"><a class="active">简</a><span>／</span><a href="../member.html">繁</a></div>
     <div style="display:flex;align-items:center;gap:14px">
@@ -74,6 +75,11 @@
       <p>请先登录会员。</p>
       <a href="fleet.html#member" class="btn-solid" id="member-login">登录会员</a>
     </div>
+    <div id="member-public-coupon" class="member-public-coupon">
+      <h2>我的优惠券</h2>
+      <p>登录后会用您的 Google 电子邮件自动查出已归户的优惠券，也可以把优惠码绑到这个帐号。还没有登录、或不想用 Google，可以直接到免密码页面领取与查询。</p>
+      <a href="coupon.html" class="btn-solid">免登录查询／领取优惠券</a>
+    </div>
     <div id="member-panel" hidden>
       <p class="member-account" id="member-account" hidden></p>
       <div class="member-center-grid">
@@ -86,6 +92,34 @@
           <h2>订单查询</h2>
           <p>用预留手机查询订单进度</p>
         </a>
+      </div>
+
+      <div class="member-coupons" id="member-coupons">
+        <h2>我的优惠券</h2>
+        <p>以下用您的 Google 电子邮件查询。输入优惠码可绑定到这个帐号；若先前是用手机号码归户，也可以用那个号码查回来。</p>
+        <div id="member-coupon-email-status" aria-live="polite"></div>
+        <div id="member-coupon-list" class="coupon-list"></div>
+        <form id="member-coupon-claim" class="coupon-form coupon-inline" novalidate>
+          <h3>用优惠码绑定到这个帐号</h3>
+          <p>归户对象是您目前登录的 Google 电子邮件。</p>
+          <div class="field">
+            <label for="member-coupon-code">优惠码</label>
+            <input id="member-coupon-code" name="code" type="text" autocomplete="off" maxlength="40">
+          </div>
+          <button type="submit" class="submit-btn">绑定到这个帐号</button>
+        </form>
+        <div id="member-coupon-claim-result" aria-live="polite"></div>
+        <form id="member-coupon-phone" class="coupon-form coupon-inline" novalidate>
+          <h3>用手机号码查询</h3>
+          <p>若这张券先前是用手机号码归户，请输入同一个号码。这里只查询，不会重新归户。</p>
+          <div class="field">
+            <label for="member-coupon-phone-input">手机号码</label>
+            <input id="member-coupon-phone-input" name="phone" type="text" inputmode="tel" autocomplete="tel">
+          </div>
+          <button type="submit" class="submit-btn">查询</button>
+        </form>
+        <div id="member-coupon-phone-result" aria-live="polite"></div>
+        <p class="coupon-alt-link"><a href="coupon.html">改走免密码优惠券页</a></p>
       </div>
       <button type="button" class="member-center-logout" id="member-logout">登出</button>
     </div>
@@ -113,6 +147,7 @@
         <a href="partner-stores.html">合作店家</a>
         <a href="local-insider.html">在地探店</a>
         <a href="about.html">关于我们</a>
+        <a href="coupon.html">优惠券查询</a>
       </div>
       <div>
         <h4>联系与关注</h4>
@@ -191,12 +226,14 @@
 <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
 <script src="../js/firebase-config.js"></script>
 <script src="../js/member-auth.js"></script>
+<script src="../js/coupon.js"></script>
 <script src="../js/widget.js"></script>
 <script>
 (function () {
   var guest = document.getElementById('member-guest');
   var panel = document.getElementById('member-panel');
   var account = document.getElementById('member-account');
+  var publicCoupon = document.getElementById('member-public-coupon');
   var loginLink = document.getElementById('member-login');
   var logoutBtn = document.getElementById('member-logout');
 
@@ -209,10 +246,12 @@
   function showGuest() {
     if (panel) panel.hidden = true;
     if (guest) guest.hidden = false;
+    if (publicCoupon) publicCoupon.hidden = false;
     if (account) { account.textContent = ''; account.hidden = true; }
   }
   function showMember(user) {
     if (guest) guest.hidden = true;
+    if (publicCoupon) publicCoupon.hidden = true;
     if (panel) panel.hidden = false;
     var label = accountLabel(user);
     if (account) {
