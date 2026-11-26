@@ -28,7 +28,7 @@
     typeof firebase !== 'undefined' && !!firebase.auth &&
     typeof auth !== 'undefined' && !!auth && typeof db !== 'undefined' && !!db;
 
-  var CTA_TEXT = isHans ? { out: '我也要成龙', in: '会员已登录' } : { out: '我也要成龍', in: '會員已登入' };
+  var CTA_TEXT = isHans ? { out: '我也要成龙', in: '会员中心' } : { out: '我也要成龍', in: '會員中心' };
 
   var SLMember = {
     available: available,
@@ -68,8 +68,9 @@
     listeners.slice().forEach(function (cb) { cb(user, info); });
   }
 
-  // ===== 導覽列主 CTA（id="nav-member-cta"）：未登入 → 點擊開 Google 登入彈窗；已登入 → 「會員已登入」連到車型區 =====
+  // ===== 導覽列主 CTA（id="nav-member-cta"）：未登入 → 點擊開 Google 登入彈窗；已登入 → 「會員中心」連到會員中心 =====
   // 會員系統不可用時不接手，按鈕維持頁面上原本的連結（fleet.html#member）。
+  // href 用相對路徑：繁體頁在網站根目錄、簡體頁在 zh-cn/，各自連到同目錄的 member.html。
   function wireNavCta() {
     var btn = document.getElementById('nav-member-cta');
     if (!btn) return;
@@ -79,7 +80,7 @@
       SLMember.signIn();
     });
     SLMember.onChange(function (user) {
-      if (user) { btn.textContent = CTA_TEXT['in']; btn.href = 'fleet.html#vehicle-section'; }
+      if (user) { btn.textContent = CTA_TEXT['in']; btn.href = 'member.html'; }
       else { btn.textContent = CTA_TEXT.out; btn.href = 'fleet.html#member'; }
     });
   }
