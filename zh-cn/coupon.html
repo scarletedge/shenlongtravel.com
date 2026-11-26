@@ -92,39 +92,52 @@
 <section>
   <div class="wrap">
     <noscript><p class="coupon-msg is-err">请启用 JavaScript 后即可查询与归户优惠券。</p></noscript>
-    <div class="coupon-grid">
-      <article class="coupon-card" id="coupon-claim-card">
-        <h2>领取／归户优惠券（免密码）</h2>
-        <p class="coupon-card-lead">填写优惠码，以及手机号码或电子邮件。归户之后，用同一个联系方式就能再查回来。</p>
-        <form id="coupon-claim-form" class="coupon-form" novalidate>
-          <div class="field">
-            <label for="coupon-claim-code">优惠码</label>
-            <input id="coupon-claim-code" name="code" type="text" autocomplete="off" maxlength="40" required>
+    <div class="coupon-stage">
+      <div class="coupon-tabs" role="tablist" aria-label="优惠券">
+        <button type="button" class="coupon-tab" id="coupon-tab-claim" role="tab" aria-controls="coupon-panel-claim" aria-selected="true">领取／归户优惠券（免密码）</button>
+        <button type="button" class="coupon-tab" id="coupon-tab-lookup" role="tab" aria-controls="coupon-panel-lookup" aria-selected="false" tabindex="-1">查询我已归户的优惠券</button>
+      </div>
+      <div id="coupon-panel-claim" role="tabpanel" aria-labelledby="coupon-tab-claim">
+        <div id="coupon-preview" aria-live="polite"></div>
+        <form id="coupon-claim-bar" class="coupon-claim-bar" hidden novalidate>
+          <p>输入手机号码或电子邮件，一键归户保存</p>
+          <div class="coupon-claim-row">
+            <input id="coupon-claim-id" name="identifier" type="text" autocomplete="off" aria-label="手机号码或电子邮件" placeholder="手机号码或电子邮件">
+            <button type="submit" class="submit-btn">立即归户保存</button>
           </div>
-          <div class="field">
-            <label for="coupon-claim-id">手机号码或电子邮件</label>
-            <input id="coupon-claim-id" name="identifier" type="text" autocomplete="off" required>
-          </div>
-          <button type="submit" class="submit-btn">归户这张优惠券</button>
+          <div id="coupon-claim-result" aria-live="polite"></div>
         </form>
-        <div id="coupon-claim-result" aria-live="polite"></div>
-      </article>
-      <article class="coupon-card" id="coupon-lookup-card">
-        <h2>查询已归户优惠券<span class="coupon-h-or">／验证优惠码</span></h2>
-        <p class="coupon-card-lead">输入手机号码或电子邮件，查看已经归到这个联系方式的券；或只输入优惠码，先确认面额、期限与使用范围。两项请只填一项。</p>
+        <form id="coupon-entry-form" class="coupon-form coupon-entry" novalidate>
+          <div class="field">
+            <label for="coupon-entry-code">优惠码</label>
+            <div class="coupon-code-row">
+              <input id="coupon-entry-code" name="code" type="text" autocomplete="off" maxlength="40">
+              <button type="button" class="btn-ghost" id="coupon-verify">验证优惠码</button>
+            </div>
+          </div>
+          <div class="field">
+            <label for="coupon-entry-id">手机号码或电子邮件</label>
+            <input id="coupon-entry-id" name="identifier" type="text" autocomplete="off">
+          </div>
+          <button type="submit" class="submit-btn">立即归户保存</button>
+          <div id="coupon-entry-result" aria-live="polite"></div>
+        </form>
+        <div id="coupon-use" class="coupon-use" hidden>
+          <h2>立即使用这张优惠券</h2>
+          <div id="coupon-services" class="voucher-services"></div>
+        </div>
+        <ol id="coupon-steps" class="coupon-steps" hidden></ol>
+      </div>
+      <div id="coupon-panel-lookup" role="tabpanel" aria-labelledby="coupon-tab-lookup" hidden>
         <form id="coupon-lookup-form" class="coupon-form" novalidate>
           <div class="field">
-            <label for="coupon-lookup-id">手机号码或电子邮件</label>
-            <input id="coupon-lookup-id" name="identifier" type="text" autocomplete="off">
-          </div>
-          <div class="field">
-            <label for="coupon-lookup-code">优惠码</label>
-            <input id="coupon-lookup-code" name="code" type="text" autocomplete="off" maxlength="40">
+            <label for="coupon-lookup-query">手机号码、电子邮件或优惠码</label>
+            <input id="coupon-lookup-query" name="query" type="text" autocomplete="off" maxlength="80">
           </div>
           <button type="submit" class="submit-btn">查询</button>
         </form>
         <div id="coupon-lookup-result" aria-live="polite"></div>
-      </article>
+      </div>
     </div>
     <p class="coupon-footnote">已有 Google 帐号？<a class="coupon-member-jump" href="member.html">前往会员中心查看「我的优惠券」</a>。如有疑问，请写信至 <a href="mailto:vietnam@shenlongtravel.com">vietnam@shenlongtravel.com</a>。</p>
   </div>

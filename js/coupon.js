@@ -16,7 +16,7 @@
   var COPY = {
     loading: isHans ? '正在查询…' : '正在查詢…',
     needClaim: isHans ? '请填写优惠码，以及手机号码或电子邮件。' : '請填寫優惠碼，以及手機號碼或電子郵件。',
-    needLookup: isHans ? '请填写手机号码、电子邮件，或优惠码。两项请只填一项。' : '請填寫手機號碼、電子郵件，或優惠碼。兩項請只填一項。',
+    needLookup: isHans ? '请填写手机号码、电子邮件或优惠码。' : '請填寫手機號碼、電子郵件或優惠碼。',
     needCode: isHans ? '请填写优惠码。' : '請填寫優惠碼。',
     badCode: isHans ? '优惠码格式无法辨识，请再核对一次。' : '優惠碼格式無法辨識，請再核對一次。',
     badId: isHans ? '请输入电子邮件，或至少 8 码数字的手机号码。' : '請輸入電子郵件，或至少 8 碼數字的手機號碼。',
@@ -28,6 +28,12 @@
     errUnavailable: isHans ? '查询服务暂时忙碌，请稍后再试。' : '查詢服務暫時忙碌，請稍後再試。',
     errGeneric: isHans ? '查询没有完成，请稍后再试。' : '查詢沒有完成，請稍後再試。',
     notFoundCode: isHans ? '查无此优惠码。' : '查無此優惠碼。',
+    badQuery: isHans ? '请输入电子邮件、至少 8 码数字的手机号码，或优惠码。' : '請輸入電子郵件、至少 8 碼數字的手機號碼，或優惠碼。',
+    scopeLabel: isHans ? '适用范围' : '適用範圍',
+    rulesLabel: isHans ? '使用规则' : '使用規則',
+    stepSave: isHans ? '输入电话或 Email 归户保存' : '輸入電話或 Email 歸戶保存',
+    stepShow: isHans ? '预约任一服务时出示优惠码' : '預約任一服務時出示優惠碼',
+    stepPay: isHans ? '结账直接折抵 ' : '結帳直接折抵 ',
     emptyList: isHans ? '这个联系方式目前没有已归户的优惠券。' : '這個聯絡方式目前沒有已歸戶的優惠券。',
     claimedOk: isHans ? '已归户到您留下的联系方式。面额、期限与使用范围如下。' : '已歸戶到您留下的聯絡方式。面額、期限與使用範圍如下。',
     already: isHans ? '这张优惠券已经归户在这个联系方式。下面是目前的内容。' : '這張優惠券已經歸戶在這個聯絡方式。下面是目前的內容。',
@@ -40,7 +46,6 @@
     localTime: isHans ? '当地时间' : '當地時間',
     noMin: isHans ? '无最低消费' : '不設低消',
     minSpend: isHans ? '满额后可使用' : '滿額後可使用',
-    servicesSuffix: isHans ? '均可抵用' : '均可抵用',
     noCash: isHans ? '不可兑现' : '不可兌現',
     cashOk: isHans ? '可兑现' : '可兌現',
     once: isHans ? '限用一次' : '限用一次',
@@ -140,19 +145,48 @@
     return list.filter(function (item) { return typeof item === 'string' && item.trim(); });
   }
 
-  function termChips(coupon) {
-    var chips = [];
-    if (coupon.minSpend === 0) chips.push(COPY.noMin);
-    else if (typeof coupon.minSpend === 'number' && coupon.minSpend > 0) {
-      chips.push(COPY.minSpend + ' ' + coupon.minSpend);
+  function scopeLabels(names) {
+    var out = [];
+    var seen = {};
+    function add(label) {
+      if (!label || seen[label]) return;
+      seen[label] = true;
+      out.push(label);
     }
-    var names = serviceNames(coupon);
-    if (names.length) chips.push(names.join('／') + COPY.servicesSuffix);
-    if (coupon.cashable === false) chips.push(COPY.noCash);
-    else if (coupon.cashable === true) chips.push(COPY.cashOk);
-    if (coupon.singleUse === true) chips.push(COPY.once);
-    if (coupon.transferableOnce === true) chips.push(COPY.transfer);
-    return chips;
+    names.forEach(function (name) {
+      if (/行程/.test(name)) add(isHans ? '定制行程' : '客製行程');
+      else if (/訂房|订房|住宿/.test(name)) add(isHans ? '订房／住宿' : '訂房／住宿');
+      else if (/導遊|导游/.test(name)) add(isHans ? '导游' : '導遊');
+      else if (/簽證|签证/.test(name)) add(isHans ? '签证' : '簽證');
+      else if (/包[車车]|車隊|车队/.test(name)) add(isHans ? '包车' : '包車');
+      else add(name.trim());
+    });
+    return out;
+  }
+
+  function ruleLabels(coupon) {
+    var rules = [];
+    if (coupon.minSpend === 0) rules.push(COPY.noMin);
+    else if (typeof coupon.minSpend === 'number' && coupon.minSpend > 0) {
+      rules.push(COPY.minSpend + ' ' + coupon.minSpend);
+    }
+    if (coupon.cashable === false) rules.push(COPY.noCash);
+    else if (coupon.cashable === true) rules.push(COPY.cashOk);
+    if (coupon.singleUse === true) rules.push(COPY.once);
+    if (coupon.transferableOnce === true) rules.push(COPY.transfer);
+    return rules;
+  }
+
+  function factRow(label, parts) {
+    var row = el('div', 'voucher-fact');
+    row.appendChild(el('span', 'voucher-fact-label', label));
+    var value = el('span', 'voucher-fact-value');
+    parts.forEach(function (part, index) {
+      if (index) value.appendChild(d.createTextNode(' · '));
+      value.appendChild(el('span', 'voucher-token', part));
+    });
+    row.appendChild(value);
+    return row;
   }
 
   function statusMeta(status, claimed) {
@@ -204,24 +238,34 @@
     }
     if (meta.childNodes.length) card.appendChild(meta);
 
-    var chips = termChips(coupon);
-    if (chips.length) {
-      var terms = el('ul', 'voucher-terms');
-      chips.forEach(function (chip) { terms.appendChild(el('li', '', chip)); });
-      card.appendChild(terms);
+    var scope = scopeLabels(serviceNames(coupon));
+    var rules = ruleLabels(coupon);
+    if (scope.length || rules.length) {
+      var facts = el('div', 'voucher-facts');
+      if (scope.length) facts.appendChild(factRow(COPY.scopeLabel, scope));
+      if (rules.length) facts.appendChild(factRow(COPY.rulesLabel, rules));
+      card.appendChild(facts);
     }
+    return card;
+  }
 
+  function serviceLinks(coupon) {
     var names = serviceNames(coupon);
-    var links = el('div', 'voucher-services');
+    var wrap = el('div', 'voucher-services');
     SERVICE_LINKS.forEach(function (item) {
       var hit = names.some(function (name) { return item.test.test(name); });
       if (!hit) return;
       var a = el('a', '', isHans ? item.hans : item.hant);
       a.href = item.href;
-      links.appendChild(a);
+      wrap.appendChild(a);
     });
-    if (links.childNodes.length) card.appendChild(links);
-    return card;
+    return wrap;
+  }
+
+  function stepItems(coupon) {
+    var pay = COPY.stepPay + formatAmount(coupon);
+    if (coupon.transferableOnce) pay += isHans ? '（可转介亲友使用一次）' : '（可轉介親友使用一次）';
+    return [COPY.stepSave, COPY.stepShow, pay];
   }
 
   function messageNode(text, kind) {
@@ -348,63 +392,167 @@
   }
 
   function mountPage() {
-    var claimForm = d.getElementById('coupon-claim-form');
+    var entryForm = d.getElementById('coupon-entry-form');
+    var claimBar = d.getElementById('coupon-claim-bar');
     var lookupForm = d.getElementById('coupon-lookup-form');
-    if (!claimForm || !lookupForm) return;
+    var preview = d.getElementById('coupon-preview');
+    if (!entryForm || !claimBar || !lookupForm || !preview) return;
+
+    var claimTab = d.getElementById('coupon-tab-claim');
+    var lookupTab = d.getElementById('coupon-tab-lookup');
+    var claimPanel = d.getElementById('coupon-panel-claim');
+    var lookupPanel = d.getElementById('coupon-panel-lookup');
+    var verifyBtn = d.getElementById('coupon-verify');
+    var entryResult = d.getElementById('coupon-entry-result');
     var claimResult = d.getElementById('coupon-claim-result');
     var lookupResult = d.getElementById('coupon-lookup-result');
+    var useBlock = d.getElementById('coupon-use');
+    var services = d.getElementById('coupon-services');
+    var steps = d.getElementById('coupon-steps');
+    var activeCode = '';
 
-    claimForm.addEventListener('submit', function (event) {
-      event.preventDefault();
-      var codeField = claimForm.querySelector('[name="code"]').value;
-      var idField = claimForm.querySelector('[name="identifier"]').value;
-      var validCode = codeKind(codeField);
-      var kind = identifierKind(idField);
-      if (!codeField.trim() || !idField.trim()) {
-        showMessage(claimResult, COPY.needClaim, 'err');
+    function selectTab(which) {
+      var claim = which !== 'lookup';
+      if (claimTab) claimTab.setAttribute('aria-selected', claim ? 'true' : 'false');
+      if (lookupTab) lookupTab.setAttribute('aria-selected', claim ? 'false' : 'true');
+      if (claimTab) claimTab.tabIndex = claim ? 0 : -1;
+      if (lookupTab) lookupTab.tabIndex = claim ? -1 : 0;
+      if (claimPanel) claimPanel.hidden = !claim;
+      if (lookupPanel) lookupPanel.hidden = claim;
+    }
+
+    function showVoucher(coupon, opts) {
+      clear(preview);
+      preview.appendChild(renderVoucher(coupon, opts || {}));
+      entryForm.hidden = true;
+      claimBar.hidden = false;
+      activeCode = coupon.code || activeCode;
+      if (services) {
+        clear(services);
+        var links = serviceLinks(coupon);
+        while (links.firstChild) services.appendChild(links.firstChild);
+      }
+      if (useBlock) useBlock.hidden = !services || !services.childNodes.length;
+      if (steps) {
+        clear(steps);
+        stepItems(coupon).forEach(function (text, index) {
+          steps.appendChild(el('li', '', (index + 1) + '. ' + text));
+        });
+        steps.hidden = false;
+      }
+    }
+
+    function failVerify(message) {
+      entryForm.hidden = false;
+      claimBar.hidden = true;
+      if (useBlock) useBlock.hidden = true;
+      if (steps) steps.hidden = true;
+      clear(preview);
+      showMessage(entryResult, message, 'err');
+    }
+
+    function verifyCode(raw) {
+      var validCode = codeKind(raw);
+      if (!String(raw || '').trim()) {
+        failVerify(COPY.needCode);
         return;
       }
       if (validCode === 'bad') {
-        showMessage(claimResult, COPY.badCode, 'err');
+        failVerify(COPY.badCode);
+        return;
+      }
+      showMessage(preview, COPY.loading, 'pending');
+      clear(entryResult);
+      lookupBy({ code: validCode }).then(function (res) {
+        if (!res.ok || !res.data || !res.data.found || !res.data.coupon) {
+          failVerify(!res.ok ? errorText(res) : COPY.notFoundCode);
+          return;
+        }
+        clear(claimResult);
+        showVoucher(res.data.coupon, { claimed: false, status: res.data.coupon.status });
+      }).catch(function () {
+        failVerify(COPY.network);
+      });
+    }
+
+    function submitClaim(identifier, resultNode, form) {
+      var kind = identifierKind(identifier);
+      if (!activeCode) {
+        showMessage(resultNode, COPY.needCode, 'err');
         return;
       }
       if (kind !== 'email' && kind !== 'phone') {
-        showMessage(claimResult, COPY.badId, 'err');
+        showMessage(resultNode, COPY.badId, 'err');
         return;
       }
-      showMessage(claimResult, COPY.loading, 'pending');
-      withBusy(claimForm, function () {
-        return claimWith(idField.trim(), validCode);
+      showMessage(resultNode, COPY.loading, 'pending');
+      withBusy(form, function () {
+        return claimWith(identifier.trim(), activeCode);
       }).then(function (res) {
-        renderClaim(res, claimResult);
+        if (!res.ok || !res.data || res.data.ok !== true || !res.data.coupon) {
+          showMessage(resultNode, errorText(res), 'err');
+          return;
+        }
+        var claim = res.data.claim || {};
+        showVoucher(res.data.coupon, {
+          claimed: true,
+          claimedAt: claim.claimedAt,
+          status: claim.status || res.data.coupon.status
+        });
+        showMessage(claimResult, res.data.alreadyClaimed ? COPY.already : COPY.claimedOk, '');
       }).catch(function () {
-        showMessage(claimResult, COPY.network, 'err');
+        showMessage(resultNode, COPY.network, 'err');
       });
+    }
+
+    if (claimTab) claimTab.addEventListener('click', function () { selectTab('claim'); });
+    if (lookupTab) lookupTab.addEventListener('click', function () { selectTab('lookup'); });
+
+    if (verifyBtn) {
+      verifyBtn.addEventListener('click', function () {
+        verifyCode(entryForm.querySelector('[name="code"]').value);
+      });
+    }
+
+    entryForm.addEventListener('submit', function (event) {
+      event.preventDefault();
+      var rawCode = entryForm.querySelector('[name="code"]').value;
+      var rawId = entryForm.querySelector('[name="identifier"]').value;
+      var validCode = codeKind(rawCode);
+      if (!rawId.trim()) {
+        verifyCode(rawCode);
+        return;
+      }
+      if (!rawCode.trim()) {
+        showMessage(entryResult, COPY.needClaim, 'err');
+        return;
+      }
+      if (validCode === 'bad') {
+        showMessage(entryResult, COPY.badCode, 'err');
+        return;
+      }
+      activeCode = validCode;
+      submitClaim(rawId, entryResult, entryForm);
     });
 
-    function runLookup(codeValue, idValue) {
-      var validCode = codeKind(codeValue);
-      var kind = identifierKind(idValue);
-      var hasCode = !!validCode && validCode !== 'bad';
-      var hasId = kind === 'email' || kind === 'phone';
-      if (validCode === 'bad') {
-        showMessage(lookupResult, COPY.badCode, 'err');
-        return;
-      }
-      if (idValue.trim() && !hasId) {
-        showMessage(lookupResult, COPY.badId, 'err');
-        return;
-      }
-      if (hasCode && hasId) {
-        showMessage(lookupResult, COPY.needLookup, 'err');
-        return;
-      }
-      if (!hasCode && !hasId) {
-        showMessage(lookupResult, COPY.needLookup, 'err');
+    claimBar.addEventListener('submit', function (event) {
+      event.preventDefault();
+      submitClaim(claimBar.querySelector('[name="identifier"]').value, claimResult, claimBar);
+    });
+
+    lookupForm.addEventListener('submit', function (event) {
+      event.preventDefault();
+      var raw = lookupForm.querySelector('[name="query"]').value;
+      var kind = identifierKind(raw);
+      var validCode = codeKind(raw);
+      var body = null;
+      if (kind === 'email' || kind === 'phone') body = { identifier: raw.trim() };
+      else if (validCode && validCode !== 'bad') body = { code: validCode };
+      else {
+        showMessage(lookupResult, raw.trim() ? COPY.badQuery : COPY.needLookup, 'err');
         return;
       }
       showMessage(lookupResult, COPY.loading, 'pending');
-      var body = hasCode ? { code: validCode } : { identifier: idValue.trim() };
       withBusy(lookupForm, function () {
         return lookupBy(body);
       }).then(function (res) {
@@ -412,21 +560,13 @@
       }).catch(function () {
         showMessage(lookupResult, COPY.network, 'err');
       });
-    }
-
-    lookupForm.addEventListener('submit', function (event) {
-      event.preventDefault();
-      runLookup(
-        lookupForm.querySelector('[name="code"]').value,
-        lookupForm.querySelector('[name="identifier"]').value
-      );
     });
 
     var fromUrl = prefillCode();
     if (fromUrl) {
-      claimForm.querySelector('[name="code"]').value = fromUrl;
-      lookupForm.querySelector('[name="code"]').value = fromUrl;
-      runLookup(fromUrl, '');
+      entryForm.hidden = true;
+      activeCode = fromUrl;
+      verifyCode(fromUrl);
     }
   }
 
