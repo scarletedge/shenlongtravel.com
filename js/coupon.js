@@ -5,7 +5,10 @@
    - localhost、127.0.0.1、pages.dev 以及其他預覽網域預設打
      https://coupon-preview.shenlong-order-inquiry.pages.dev
    - 只讀查詢：POST /api/coupons/lookup
-   - 歸戶：POST /api/coupons/claim（僅在使用者送出表單時）
+   - 歸戶：POST /api/coupons/claim（僅在使用者送出表單，或登入後自動歸戶時）
+   - 優惠券頁的「登入會員」若走同視窗導向，跳轉前把優惠碼寫進
+     sessionStorage.slPendingCouponClaim。回到本頁且已登入時自動歸戶並清掉。
+     仍打原本的 claim API，每帳號同款限歸戶 1 次的規則不變。
    ========================================================= */
 (function (w, d) {
   var PROD_API = 'https://query.shenlongtravel.com';
@@ -404,6 +407,33 @@
     return user && user.email ? String(user.email) : '';
   }
 
+  var PENDING_CLAIM_KEY = 'slPendingCouponClaim';
+
+  function rememberPendingClaim(code) {
+    try {
+      sessionStorage.setItem(PENDING_CLAIM_KEY, JSON.stringify({ code: code }));
+    } catch (e) {}
+  }
+
+  function readPendingClaim() {
+    var raw = '';
+    try { raw = sessionStorage.getItem(PENDING_CLAIM_KEY) || ''; } catch (e) { return ''; }
+    if (!raw) return '';
+    var code = '';
+    try {
+      var parsed = JSON.parse(raw);
+      if (parsed && typeof parsed.code === 'string') code = parsed.code;
+    } catch (e) {
+      code = '';
+    }
+    var valid = codeKind(String(code).trim());
+    return valid && valid !== 'bad' ? valid : '';
+  }
+
+  function clearPendingClaim() {
+    try { sessionStorage.removeItem(PENDING_CLAIM_KEY); } catch (e) {}
+  }
+
   function mountPage() {
     var entryForm = d.getElementById('coupon-entry-form');
     var lookupForm = d.getElementById('coupon-lookup-form');
@@ -428,6 +458,20 @@
     var guestInput = guestClaim ? guestClaim.querySelector('[name="identifier"]') : null;
     var activeCode = '';
     var claimAfterLogin = false;
+    var claimGeneration = 0;
+    var pendingClaimStarted = false;
+
+    function claimPendingIfNeeded(user) {
+      if (pendingClaimStarted || !user || !user.email) return;
+      var pending = readPendingClaim();
+      var code = pending || (claimAfterLogin ? activeCode : '');
+      if (!code || codeKind(code) === 'bad') return;
+      pendingClaimStarted = true;
+      claimAfterLogin = false;
+      clearPendingClaim();
+      activeCode = code;
+      claimTo(user.email, true);
+    }
 
     function selectTab(which) {
       var claim = which !== 'lookup';
@@ -529,6 +573,8 @@
       showMessage(preview, COPY.loading, 'pending');
       clear(entryResult);
       lookupBy({ code: validCode }).then(function (res) {
+        // 同視窗登入回來時，歸戶與網址預填會一起跑。歸戶已開始就不要清掉結果。
+        if (pendingClaimStarted) return;
         if (!res.ok || !res.data || !res.data.found || !res.data.coupon) {
           hideVoucher();
           showMessage(entryResult, !res.ok ? errorText(res) : COPY.notFoundCode, 'err');
@@ -537,6 +583,7 @@
         clear(claimResult);
         showVoucher(res.data.coupon, { claimed: false, status: res.data.coupon.status });
       }).catch(function () {
+        if (pendingClaimStarted) return;
         hideVoucher();
         showMessage(entryResult, COPY.network, 'err');
       });
@@ -586,20 +633,32 @@
           showMessage(claimResult, (w.SLMember && SLMember.msg) ? SLMember.msg('unavailable') : COPY.errGeneric, 'err');
           return;
         }
+        var validCode = codeKind(activeCode);
+        if (!validCode || validCode === 'bad') {
+          showMessage(claimResult, COPY.badCode, 'err');
+          return;
+        }
+        var generation = ++claimGeneration;
         claimAfterLogin = true;
-        Promise.resolve(SLMember.signIn()).then(function () {
-          if (claimAfterLogin && !signedInEmail()) claimAfterLogin = false;
+        rememberPendingClaim(validCode);
+        Promise.resolve(SLMember.signIn()).then(function (result) {
+          if (generation !== claimGeneration) return;
+          var signedIn = !!(result && result.user && result.user.email) || !!signedInEmail();
+          if (!signedIn) {
+            claimAfterLogin = false;
+            clearPendingClaim();
+          }
         }).catch(function () {
+          if (generation !== claimGeneration) return;
           claimAfterLogin = false;
+          clearPendingClaim();
         });
       });
     }
 
     if (w.SLMember && typeof SLMember.onChange === 'function') {
       SLMember.onChange(function (user) {
-        if (!(claimAfterLogin && user && user.email && activeCode)) return;
-        claimAfterLogin = false;
-        claimTo(user.email, true);
+        claimPendingIfNeeded(user);
       });
     }
 
