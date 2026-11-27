@@ -1,13 +1,14 @@
 /* =========================================================
    會員登入共用模組（Firebase Google 登入）
-   - 首頁、包車頁共用同一套登入與會員資料建立邏輯，不要在頁面裡另外寫一份。
+   - 首頁、包車頁、會員中心、優惠券頁共用這一套，不要在頁面裡另外寫一份。
    - 需先載入：firebase-app-compat、firebase-auth-compat、firebase-firestore-compat、js/firebase-config.js
-   - 本檔會自行載入 Google Identity Services（https://accounts.google.com/gsi/client）。
-     使用者點擊登入時，優先用 GIS 在 accounts.google.com 取得 access token，
-     再以 Firebase signInWithCredential 登入。這樣不會開啟
-     shenlong-travel.firebaseapp.com 的跨網域登入頁，可避開 Safari／iOS Safari／
-     嚴格隱私瀏覽器擋住該網域 sessionStorage（Unable to save initial state）的問題。
-     GIS 還沒載入或被擋住時，才退回原本的 signInWithPopup。
+   - 正式站（shenlongtravel.com／www.shenlongtravel.com）用同視窗 Google OAuth 2.0
+     OIDC（response_type=id_token）導向同源 /auth-callback.html，再以
+     signInWithCredential 登入。這樣不會開 GIS initTokenClient 的
+     storagerelay:// 彈窗，也不會經過 shenlong-travel.firebaseapp.com，
+     可避開 Safari／iOS／手機瀏覽器弄丟 window.opener 或擋住跨網域回傳而停在空白頁。
+   - localhost、預覽站等非正式網域仍用 GIS initTokenClient，載入失敗才退回
+     signInWithPopup，本機與預覽環境不用登記 redirect URI 也能登入。
    - 對外介面：window.SLMember
        .available                是否可用（Firebase 已設定且 auth 已載入）
        .msg(key)                 取得目前語言的提示文字（unavailable / failed / restricted）
@@ -18,6 +19,8 @@
                                  info = { isNew, hasNationality }
        .user                     目前登入者（未登入為 null）
    - 另會自動接管頁面上 id="nav-member-cta" 的導覽列按鈕（見下方 wireNavCta）。
+   - state 只放同源相對路徑。路徑規則與 auth-callback.html 相同：
+     單一「/」開頭、不是「//」、不含反斜線與「://」。
    ========================================================= */
 (function (w) {
   var isHans = (document.documentElement.lang || '').toLowerCase().indexOf('hans') > -1;
@@ -56,12 +59,68 @@
   // 公開的 OAuth Web Client ID（與 Firebase 專案 shenlong-travel 同一個 GCP 專案）。沒有 client secret。
   var GOOGLE_CLIENT_ID = '153795209778-bkg26uninjkb913cf56p9b40difs9fno.apps.googleusercontent.com';
   var GIS_SRC = 'https://accounts.google.com/gsi/client';
+  var NONCE_KEY = 'slAuthNonce';
   var tokenClient = null;
   var pendingResolve = null;
 
   function gisLoaded() {
     return !!(w.google && w.google.accounts && w.google.accounts.oauth2 &&
       typeof w.google.accounts.oauth2.initTokenClient === 'function');
+  }
+
+  function isProductionHost() {
+    var host = (w.location && w.location.hostname ? String(w.location.hostname) : '').toLowerCase();
+    return host === 'shenlongtravel.com' || host === 'www.shenlongtravel.com';
+  }
+
+  // 只接受站內相對路徑，擋掉 //evil、/\evil、https://evil 這類開放重導向。
+  function safeReturnPath(input) {
+    if (typeof input !== 'string') return '';
+    var value = input;
+    if (!value || value.charAt(0) !== '/') return '';
+    if (value.charAt(1) === '/' || value.charAt(1) === '\\') return '';
+    if (value.indexOf('\\') !== -1) return '';
+    if (value.indexOf('://') !== -1) return '';
+    if (/[\u0000-\u001F\u007F\s]/.test(value)) return '';
+    if (value.length > 2048) return '';
+    if (/\/auth-callback\.html(?:$|[?#])/i.test(value)) return '';
+    return value;
+  }
+
+  function currentReturnPath() {
+    var path = (w.location.pathname || '/') + (w.location.search || '');
+    var hash = w.location.hash || '';
+    if (hash.length > 1) path += hash;
+    return safeReturnPath(path) || '/member.html';
+  }
+
+  function randomNonce() {
+    var bytes = new Uint8Array(16);
+    if (w.crypto && typeof w.crypto.getRandomValues === 'function') {
+      w.crypto.getRandomValues(bytes);
+    } else {
+      for (var i = 0; i < bytes.length; i++) bytes[i] = Math.floor(Math.random() * 256);
+    }
+    var hex = '';
+    for (var j = 0; j < bytes.length; j++) hex += ('0' + bytes[j].toString(16)).slice(-2);
+    return hex;
+  }
+
+  function startSameWindowOidc() {
+    var nonce = randomNonce();
+    // 嚴格模式若清掉 sessionStorage，回呼頁仍會用 id_token 完成登入，不在這裡中斷。
+    try { w.sessionStorage.setItem(NONCE_KEY, nonce); } catch (e) {}
+    var back = currentReturnPath();
+    var redirectUri = w.location.origin + '/auth-callback.html';
+    var url = 'https://accounts.google.com/o/oauth2/v2/auth'
+      + '?client_id=' + encodeURIComponent(GOOGLE_CLIENT_ID)
+      + '&redirect_uri=' + encodeURIComponent(redirectUri)
+      + '&response_type=id_token'
+      + '&scope=' + encodeURIComponent('openid email profile')
+      + '&nonce=' + encodeURIComponent(nonce)
+      + '&state=' + encodeURIComponent(back)
+      + '&prompt=select_account';
+    w.location.assign(url);
   }
 
   function settleSignIn(value) {
@@ -132,7 +191,7 @@
     }
   }
 
-  // 每個有載入本檔的頁面都自動補上 GIS，不用逐一改 HTML。
+  // 非正式網域才補上 GIS。正式站改走同視窗導向，不再載入會開 storagerelay 彈窗的腳本。
   function ensureGisScript() {
     if (gisLoaded()) {
       initTokenClient();
@@ -169,8 +228,20 @@
     });
   }
 
-  // 必須在點擊當下同步呼叫 requestAccessToken，Safari 才不會把授權視窗當成非使用者手勢而擋住。
+  // 正式站必須在點擊當下同步 location.assign，瀏覽器才會當成使用者手勢。
+  // 非正式站則在點擊當下同步呼叫 requestAccessToken，Safari 才不會把授權視窗當成非使用者手勢而擋住。
   SLMember.signIn = function () {
+    if (isProductionHost()) {
+      return new Promise(function (resolve) {
+        try {
+          startSameWindowOidc();
+        } catch (err) {
+          console.error(err);
+          alert(MSG.failed);
+          resolve();
+        }
+      });
+    }
     if (gisLoaded()) {
       try {
         if (!tokenClient) initTokenClient();
@@ -187,7 +258,7 @@
     return signInWithPopupFallback();
   };
 
-  ensureGisScript();
+  if (!isProductionHost()) ensureGisScript();
   SLMember.signOut = function () { return auth.signOut(); };
   SLMember.saveNationality = function (value) {
     var user = auth.currentUser;
@@ -206,7 +277,7 @@
     listeners.slice().forEach(function (cb) { cb(user, info); });
   }
 
-  // ===== 導覽列主 CTA（id="nav-member-cta"）：未登入 → 點擊開 Google 登入彈窗；已登入 → 「會員中心」連到會員中心 =====
+  // ===== 導覽列主 CTA（id="nav-member-cta"）：未登入 → 點擊開 Google 登入；已登入 → 「會員中心」連到會員中心 =====
   // 會員系統不可用時不接手，按鈕維持頁面上原本的連結（fleet.html#member）。
   // href 用相對路徑：繁體頁在網站根目錄、簡體頁在 zh-cn/，各自連到同目錄的 member.html。
   function wireNavCta() {

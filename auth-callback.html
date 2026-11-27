@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<title>正在為您完成登入｜升龍旅行社</title>
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" href="images/favicon-32x32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+SC:wght@500;700&family=Noto+Sans+SC:wght@400;500;700&family=Cormorant+Garamond:ital,wght@0,500;1,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<style>
+  .auth-shell{
+    min-height:100vh;display:flex;align-items:center;justify-content:center;
+    padding:32px 20px;background:#F7F4EC;color:#211C15;
+  }
+  .auth-card{
+    width:100%;max-width:440px;background:#F7F4EC;
+    border:1px solid rgba(33,28,21,.12);border-top:3px solid #816430;
+    padding:36px 28px 32px;text-align:center;
+  }
+  .auth-logo{width:48px;height:48px;margin:0 auto 14px;object-fit:contain}
+  .auth-brand{
+    font-family:var(--font-serif),"Noto Serif TC",serif;
+    font-size:18px;letter-spacing:.12em;margin:0 0 8px;
+  }
+  .auth-card .eyebrow{margin-bottom:18px}
+  .auth-card h1{
+    font-family:var(--font-serif),"Noto Serif TC",serif;
+    font-size:clamp(22px,4vw,28px);line-height:1.45;font-weight:700;margin:0 0 12px;
+  }
+  .auth-detail{color:#6B6255;margin:0;min-height:1.7em}
+  .auth-actions{display:flex;flex-direction:column;gap:12px;margin-top:24px}
+  .auth-actions[hidden]{display:none !important}
+  .auth-actions a{display:block;text-align:center}
+  .auth-shell noscript{display:block;margin-top:16px;color:#6B6255}
+</style>
+<script>
+  // 在載入 Firebase 之前先把 id_token 從網址拿掉，避免留在網址列或瀏覽紀錄。
+  window.__SL_AUTH_HASH = window.location.hash || '';
+  if (window.location.hash) {
+    try {
+      history.replaceState(null, document.title, window.location.pathname + window.location.search);
+    } catch (e) {}
+  }
+</script>
+</head>
+<body style="background:#F7F4EC;color:#211C15">
+<main class="auth-shell">
+  <section class="auth-card" id="auth-status" data-state="wait" role="status" aria-live="polite">
+    <img class="auth-logo" src="images/logo.png" alt="" width="48" height="48">
+    <p class="auth-brand">升龍旅行社</p>
+    <p class="eyebrow">Member</p>
+    <h1 id="auth-title">正在為您完成登入，請稍候…</h1>
+    <p class="auth-detail" id="auth-detail"></p>
+    <div class="auth-actions" id="auth-actions" hidden>
+      <a class="btn-ghost" id="auth-back" href="/member.html">返回上一頁</a>
+      <a class="btn-solid" id="auth-member" href="/member.html">會員中心</a>
+    </div>
+    <noscript>
+      <p>請啟用 JavaScript 後再完成登入。</p>
+      <p><a href="/member.html">會員中心</a></p>
+    </noscript>
+  </section>
+</main>
+
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+<script>
+(function () {
+  var CLIENT_ID = '153795209778-bkg26uninjkb913cf56p9b40difs9fno.apps.googleusercontent.com';
+  var NONCE_KEY = 'slAuthNonce';
+  var PENDING_KEY = 'slPendingCouponClaim';
+  var COPY = {
+    hant: {
+      brand: '升龍旅行社',
+      waitTitle: '正在為您完成登入，請稍候…',
+      cancelTitle: '已取消登入',
+      failTitle: '登入沒有完成',
+      cancel: '您已取消 Google 登入，沒有變更會員狀態。可以返回原本的頁面，或前往會員中心再試一次。',
+      fail: '登入沒有完成。請返回原本的頁面再試一次，或直接私訊右下角客服。',
+      back: '返回上一頁',
+      member: '會員中心',
+      docTitleWait: '正在為您完成登入｜升龍旅行社',
+      docTitleCancel: '已取消登入｜升龍旅行社',
+      docTitleFail: '登入沒有完成｜升龍旅行社'
+    },
+    hans: {
+      brand: '升龙旅行社',
+      waitTitle: '正在为您完成登录，请稍候…',
+      cancelTitle: '已取消登录',
+      failTitle: '登录没有完成',
+      cancel: '您已取消 Google 登录，没有变更会员状态。可以返回原本的页面，或前往会员中心再试一次。',
+      fail: '登录没有完成。请返回原本的页面再试一次，或直接私讯右下角客服。',
+      back: '返回上一页',
+      member: '会员中心',
+      docTitleWait: '正在为您完成登录｜升龙旅行社',
+      docTitleCancel: '已取消登录｜升龙旅行社',
+      docTitleFail: '登录没有完成｜升龙旅行社'
+    }
+  };
+
+  var statusEl = document.getElementById('auth-status');
+  var titleEl = document.getElementById('auth-title');
+  var detailEl = document.getElementById('auth-detail');
+  var actionsEl = document.getElementById('auth-actions');
+  var backEl = document.getElementById('auth-back');
+  var memberEl = document.getElementById('auth-member');
+  var brandEl = document.querySelector('.auth-brand');
+  var lang = 'hant';
+
+  function copy() { return COPY[lang]; }
+
+  function prefersHans(state) {
+    return typeof state === 'string' && state.indexOf('/zh-cn/') === 0;
+  }
+
+  // 與 js/member-auth.js 的 safeReturnPath 保持相同規則。
+  function safeReturnPath(input) {
+    if (typeof input !== 'string') return '';
+    var value = input;
+    if (!value || value.charAt(0) !== '/') return '';
+    if (value.charAt(1) === '/' || value.charAt(1) === '\\') return '';
+    if (value.indexOf('\\') !== -1) return '';
+    if (value.indexOf('://') !== -1) return '';
+    if (/[\u0000-\u001F\u007F\s]/.test(value)) return '';
+    if (value.length > 2048) return '';
+    if (/\/auth-callback\.html(?:$|[?#])/i.test(value)) return '';
+    return value;
+  }
+
+  function applyLang(state) {
+    lang = prefersHans(state) ? 'hans' : 'hant';
+    document.documentElement.lang = lang === 'hans' ? 'zh-Hans' : 'zh-Hant';
+    if (lang === 'hans') {
+      document.documentElement.style.setProperty('--font-serif', "'Noto Serif SC'");
+      document.documentElement.style.setProperty('--font-sans', "'Noto Sans SC'");
+    }
+    if (brandEl) brandEl.textContent = copy().brand;
+    if (backEl) backEl.textContent = copy().back;
+    if (memberEl) memberEl.textContent = copy().member;
+  }
+
+  function destination(state) {
+    return safeReturnPath(state) || (lang === 'hans' ? '/zh-cn/member.html' : '/member.html');
+  }
+
+  function memberHome() {
+    return lang === 'hans' ? '/zh-cn/member.html' : '/member.html';
+  }
+
+  function showWait() {
+    if (titleEl) titleEl.textContent = copy().waitTitle;
+    if (detailEl) detailEl.textContent = '';
+    if (actionsEl) actionsEl.hidden = true;
+    if (statusEl) statusEl.setAttribute('data-state', 'wait');
+    document.title = copy().docTitleWait;
+  }
+
+  function showProblem(kind, backHref) {
+    var text = copy();
+    var cancelled = kind === 'cancel';
+    if (titleEl) titleEl.textContent = cancelled ? text.cancelTitle : text.failTitle;
+    if (detailEl) detailEl.textContent = cancelled ? text.cancel : text.fail;
+    if (backEl) backEl.href = backHref || memberHome();
+    if (memberEl) memberEl.href = memberHome();
+    if (actionsEl) actionsEl.hidden = false;
+    if (statusEl) statusEl.setAttribute('data-state', cancelled ? 'cancel' : 'error');
+    document.title = cancelled ? text.docTitleCancel : text.docTitleFail;
+    try { sessionStorage.removeItem(NONCE_KEY); } catch (e) {}
+    try { sessionStorage.removeItem(PENDING_KEY); } catch (e) {}
+  }
+
+  function parseHash(hash) {
+    var text = hash && hash.charAt(0) === '#' ? hash.slice(1) : (hash || '');
+    var params;
+    try { params = new URLSearchParams(text); }
+    catch (e) { params = new URLSearchParams(); }
+    return {
+      idToken: params.get('id_token') || '',
+      state: params.get('state') || '',
+      error: params.get('error') || ''
+    };
+  }
+
+  function decodeJwtPayload(token) {
+    var parts = String(token || '').split('.');
+    if (parts.length !== 3 || !parts[0] || !parts[1] || !parts[2]) return null;
+    try {
+      var b64 = parts[1].replace(/-/g, '+').replace(/_/g, '/');
+      while (b64.length % 4) b64 += '=';
+      var binary = atob(b64);
+      var text = binary;
+      try { text = decodeURIComponent(escape(binary)); } catch (e) { text = binary; }
+      var data = JSON.parse(text);
+      return data && typeof data === 'object' ? data : null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function audOk(payload) {
+    var aud = payload && payload.aud;
+    if (aud === CLIENT_ID) return true;
+    if (Object.prototype.toString.call(aud) === '[object Array]') {
+      for (var i = 0; i < aud.length; i++) if (aud[i] === CLIENT_ID) return true;
+    }
+    return false;
+  }
+
+  function nonceOk(payload) {
+    var expected = '';
+    try { expected = sessionStorage.getItem(NONCE_KEY) || ''; } catch (e) { expected = ''; }
+    try { sessionStorage.removeItem(NONCE_KEY); } catch (e) {}
+    // sessionStorage 被嚴格模式清掉時沒有可比對的 nonce，不要卡死，交給 Firebase 驗 id_token。
+    if (!expected) return true;
+    return !!(payload && payload.nonce && String(payload.nonce) === expected);
+  }
+
+  function tokenUsable(payload) {
+    if (!payload || typeof payload.exp !== 'number') return false;
+    if (payload.exp * 1000 <= Date.now() - 120000) return false;
+    return audOk(payload);
+  }
+
+  function finish() {
+    var rawHash = typeof window.__SL_AUTH_HASH === 'string' ? window.__SL_AUTH_HASH : (window.location.hash || '');
+    if (window.location.hash) {
+      try { history.replaceState(null, document.title, window.location.pathname + window.location.search); } catch (e) {}
+    }
+    var parsed = parseHash(rawHash);
+    applyLang(parsed.state);
+    var back = destination(parsed.state);
+    showWait();
+
+    if (!parsed.idToken) {
+      showProblem(parsed.error === 'access_denied' ? 'cancel' : 'error', back);
+      return;
+    }
+
+    var payload = decodeJwtPayload(parsed.idToken);
+    if (!tokenUsable(payload) || !nonceOk(payload)) {
+      showProblem('error', back);
+      return;
+    }
+
+    if (typeof firebase === 'undefined' || !firebase.auth || typeof auth === 'undefined' || !auth ||
+        typeof FIREBASE_READY === 'undefined' || !FIREBASE_READY) {
+      showProblem('error', back);
+      return;
+    }
+
+    var cred;
+    try {
+      cred = firebase.auth.GoogleAuthProvider.credential(parsed.idToken);
+    } catch (e) {
+      showProblem('error', back);
+      return;
+    }
+
+    var settled = false;
+    var timer = window.setTimeout(function () {
+      if (settled) return;
+      settled = true;
+      showProblem('error', back);
+    }, 20000);
+
+    auth.signInWithCredential(cred).then(function (result) {
+      if (settled) return;
+      settled = true;
+      window.clearTimeout(timer);
+      var email = result && result.user && result.user.email ? result.user.email : '';
+      try { if (email) localStorage.setItem('slMemberEmail', email); } catch (e) {}
+      window.location.replace(back);
+    }).catch(function () {
+      if (settled) return;
+      settled = true;
+      window.clearTimeout(timer);
+      showProblem('error', back);
+    });
+  }
+
+  try {
+    finish();
+  } catch (e) {
+    try { showProblem('error', memberHome()); } catch (e2) {}
+  }
+})();
+</script>
+</body>
+</html>
