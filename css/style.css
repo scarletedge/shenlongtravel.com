@@ -1570,6 +1570,10 @@ a.member-center-card:hover{border-color:var(--gold-dark);box-shadow:0 8px 22px r
 .itinerary-gallery{
   display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:18px;
 }
+.itinerary-gallery.is-two{grid-template-columns:repeat(2,minmax(0,1fr))}
+.itinerary-cta p{margin:8px 0 0;max-width:40em;font-size:15.5px;line-height:1.75}
+.itinerary-cta a[href^="mailto:"]{color:var(--accent);border-bottom:1px solid var(--accent)}
+.itinerary-gallery .itinerary-photo.is-tall img{object-position:center 22%}
 .itinerary-gallery .itinerary-photo{margin:0}
 .itinerary-gallery .itinerary-photo img{aspect-ratio:16/9;object-fit:cover;height:100%}
 
@@ -1676,7 +1680,7 @@ a.member-center-card:hover{border-color:var(--gold-dark);box-shadow:0 8px 22px r
   .itinerary-day-badge{width:60px;height:60px}
   .itinerary-day-badge strong{font-size:24px}
   .itinerary-row{grid-template-columns:minmax(0,1fr);gap:2px;padding:12px 0}
-  .itinerary-gallery,.itinerary-meals,.itinerary-meals.is-two{grid-template-columns:minmax(0,1fr)}
+  .itinerary-gallery,.itinerary-gallery.is-two,.itinerary-meals,.itinerary-meals.is-two{grid-template-columns:minmax(0,1fr)}
   .itinerary-meal{display:grid;grid-template-columns:4.2em minmax(0,1fr);gap:8px;align-items:baseline;padding:10px 12px}
   .itinerary-meal span{margin:0}
   .itinerary-scores,.itinerary-budget-figures{grid-template-columns:minmax(0,1fr)}
